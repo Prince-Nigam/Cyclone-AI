@@ -241,10 +241,17 @@ npm run dev
 docker-compose up --build
 ```
 
-Access:
+Access (Local Development):
 - Frontend: http://localhost:3000
-- Backend API: http://localhost:8000
-- API Docs: http://localhost:8000/docs
+- Backend API: http://localhost:8001
+- API Docs: http://localhost:8001/docs
+
+> ⚠️ **Note:** `localhost` links only work on your own computer.
+> For live public access, use the deployed URLs below.
+
+Live Deployment:
+- Frontend: *(deploy to Vercel — link will be added after deployment)*
+- Backend API: *(deploy to Railway — link will be added after deployment)*
 
 ---
 
