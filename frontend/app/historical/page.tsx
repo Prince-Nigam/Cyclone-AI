@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import { Search, Loader2, AlertTriangle } from "lucide-react";
 import dynamic from "next/dynamic";
@@ -23,6 +23,14 @@ const BASINS = [
 ];
 
 export default function HistoricalPage() {
+  return (
+    <Suspense fallback={<div className="flex items-center justify-center p-16"><Loader2 className="w-8 h-8 animate-spin text-slate-400" /></div>}>
+      <HistoricalContent />
+    </Suspense>
+  );
+}
+
+function HistoricalContent() {
   const searchParams = useSearchParams();
   const [cyclones, setCyclones] = useState<Cyclone[]>([]);
   const [selected, setSelected] = useState<Cyclone | null>(null);
