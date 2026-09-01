@@ -1,0 +1,15 @@
+services:
+  - type: web
+    name: cyclone-ai-backend
+    runtime: python
+    rootDir: backend
+    buildCommand: pip install -r requirements-render.txt
+    startCommand: uvicorn app.main:app --host 0.0.0.0 --port $PORT
+    envVars:
+      - key: DATABASE_URL
+        value: sqlite:///./cyclone_demo.db
+      - key: APP_ENV
+        value: production
+      - key: INFERENCE_DEVICE
+        value: cpu
+    plan: free

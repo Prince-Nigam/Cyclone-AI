@@ -1,0 +1,16 @@
+# Render deployment requirements (lightweight — no torch/ML)
+# ML models run in SIMULATED mode on free tier
+
+fastapi==0.109.0
+uvicorn[standard]==0.27.0
+python-multipart==0.0.7
+sqlalchemy==2.0.25
+pydantic==2.5.3
+pydantic-settings==2.1.0
+python-dotenv==1.0.0
+aiofiles==23.2.1
+python-dateutil==2.8.2
+pytz==2023.3
+loguru==0.7.2
+Pillow==10.1.0
+numpy==1.26.2
