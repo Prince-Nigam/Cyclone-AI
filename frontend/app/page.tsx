@@ -13,7 +13,7 @@ import type { Cyclone, IntensityClass } from "@/types";
 
 const FEATURE_CARDS = [
   { icon: Search,    title: "Cyclone Detection",       desc: "EfficientNet-B0 binary detection from satellite IR imagery", href: "/detection",   color: "blue"   },
-  { icon: Wind,      title: "Pattern Classification",  desc: "ResNet50 intensity classification: TD / TS / CAT1-3+",        href: "/detection",   color: "purple" },
+  { icon: Wind,      title: "Pattern Classification",  desc: "ResNet50 intensity classification: TD / TS / CAT1-3+",        href: "/satellite",   color: "purple" },
   { icon: BarChart3, title: "Intensity Prediction",    desc: "CNN+LSTM regression for wind speed and central pressure",     href: "/prediction",  color: "orange" },
   { icon: Map,       title: "Track Prediction",        desc: "Seq2Seq LSTM 24h future cyclone path prediction",            href: "/prediction",  color: "red"    },
   { icon: Satellite, title: "Satellite Viewer",        desc: "Upload and analyze satellite images with Grad-CAM XAI",      href: "/satellite",   color: "green"  },

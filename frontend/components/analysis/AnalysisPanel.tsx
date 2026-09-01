@@ -132,7 +132,7 @@ export function AnalysisPanel({ result, isLoading, error }: Props) {
       )}
 
       {/* Intensity */}
-      {intensity?.available !== false && intensity?.predicted_wind_kt && (
+      {intensity?.available !== false && intensity?.predicted_wind_kt ? (
         <div className="p-4 rounded-lg border bg-orange-50 border-orange-200">
           <p className="text-xs font-semibold text-orange-700 uppercase mb-2">Intensity Prediction</p>
           <div className="grid grid-cols-2 gap-3">
@@ -153,10 +153,15 @@ export function AnalysisPanel({ result, isLoading, error }: Props) {
             <p className="text-xs text-orange-600 mt-2 italic">{intensity.disclaimer}</p>
           )}
         </div>
-      )}
+      ) : intensity?.available === false ? (
+        <div className="p-3 rounded-lg border border-slate-200 bg-slate-50 text-xs text-slate-500 flex items-center gap-2">
+          <AlertTriangle className="w-4 h-4 text-slate-400 flex-shrink-0" />
+          <span>Intensity prediction unavailable — {(intensity as any)?.reason || "requires historical track data"}</span>
+        </div>
+      ) : null}
 
       {/* Track Summary */}
-      {track?.available !== false && track?.predicted_track && (
+      {track?.available !== false && track?.predicted_track ? (
         <div className="p-4 rounded-lg border bg-blue-50 border-blue-200">
           <p className="text-xs font-semibold text-blue-700 uppercase mb-2">Track Prediction</p>
           <p className="text-sm text-blue-800">
@@ -171,10 +176,15 @@ export function AnalysisPanel({ result, isLoading, error }: Props) {
             <p className="text-xs text-blue-500 mt-2 italic">{track.disclaimer}</p>
           )}
         </div>
-      )}
+      ) : track?.available === false ? (
+        <div className="p-3 rounded-lg border border-slate-200 bg-slate-50 text-xs text-slate-500 flex items-center gap-2">
+          <AlertTriangle className="w-4 h-4 text-slate-400 flex-shrink-0" />
+          <span>Track prediction unavailable — {(track as any)?.reason || "requires historical track data"}</span>
+        </div>
+      ) : null}
 
       {/* Grad-CAM */}
-      {xai?.available !== false && xai?.heatmap_base64 && (
+      {xai?.available !== false && xai?.heatmap_base64 ? (
         <div className="p-4 rounded-lg border bg-slate-50 border-slate-200">
           <p className="text-xs font-semibold text-slate-700 uppercase mb-2">
             Explainable AI — {xai.method}
@@ -186,7 +196,12 @@ export function AnalysisPanel({ result, isLoading, error }: Props) {
           />
           <p className="text-xs text-slate-500 mt-2 italic">{xai.disclaimer}</p>
         </div>
-      )}
+      ) : xai?.available === false ? (
+        <div className="p-3 rounded-lg border border-slate-200 bg-slate-50 text-xs text-slate-500 flex items-center gap-2">
+          <AlertTriangle className="w-4 h-4 text-slate-400 flex-shrink-0" />
+          <span>Grad-CAM XAI unavailable — {(xai as any)?.reason || "model not loaded"}</span>
+        </div>
+      ) : null}
 
       {/* Inference time */}
       {result.metadata?.inference_time_ms && (

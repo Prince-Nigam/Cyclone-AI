@@ -34,9 +34,9 @@ export default function MapPage() {
     setSelected(detail);
     setPredictedTrack([]);
 
-    // Run track prediction if track available
+    // Run track prediction only if enough track points exist
     if (detail.track && detail.track.length >= 2) {
-      setPredicting(true);
+      setPredicting(true); // only set true when we actually predict
       try {
         const history = detail.track.slice(-8).map((pt) => ({
           lat: pt.latitude, lon: pt.longitude,
@@ -47,9 +47,10 @@ export default function MapPage() {
       } catch {
         setPredictedTrack([]);
       } finally {
-        setPredicting(false);
+        setPredicting(false); // always reset
       }
     }
+    // If track < 2 points, predicting stays false — bug fixed
   };
 
   return (

@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import { Loader2, AlertTriangle } from "lucide-react";
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, RadarChart, PolarGrid, PolarAngleAxis, Radar } from "recharts";
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
 import { getModels } from "@/services/cycloneService";
 import type { MLModel } from "@/types";
 
@@ -101,10 +101,12 @@ export default function PerformancePage() {
       {/* Classification metrics chart */}
       <div className="bg-white border border-slate-200 rounded-xl p-5">
         <div className="flex items-center justify-between mb-4">
-          <h2 className="font-semibold text-slate-800">Classification Metrics by Class</h2>
-          <span className="text-xs bg-yellow-100 text-yellow-700 px-2 py-1 rounded-full border border-yellow-200">
-            📊 Example — Replace with actual test metrics after training
-          </span>
+          <h2 className="font-semibold text-slate-800 dark:text-slate-200">Classification Metrics by Class</h2>
+          {!hasMetrics && (
+            <span className="text-xs bg-slate-100 text-slate-500 px-2 py-1 rounded-full border border-slate-200">
+              Placeholder — real metrics after training
+            </span>
+          )}
         </div>
         <ResponsiveContainer width="100%" height={260}>
           <BarChart data={exampleClassMetrics} margin={{ top: 5, right: 20, bottom: 5, left: 0 }}>

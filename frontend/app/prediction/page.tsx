@@ -1,13 +1,13 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import dynamic from "next/dynamic";
 import toast from "react-hot-toast";
-import { Plus, Trash2, Loader2 } from "lucide-react";
+import { Plus, Trash2, Loader2, Database } from "lucide-react";
 import { DataTypeBadge } from "@/components/ui/DataTypeBadge";
 import { IntensityBadge } from "@/components/ui/IntensityBadge";
-import { predictIntensity, predictTrack } from "@/services/cycloneService";
-import type { IntensityClass, IntensityResult, PredictedTrackPoint } from "@/types";
+import { predictIntensity, predictTrack, getCyclones, getCyclone } from "@/services/cycloneService";
+import type { IntensityClass, IntensityResult, PredictedTrackPoint, Cyclone } from "@/types";
 
 const CycloneMap = dynamic(
   () => import("@/components/map/CycloneMap").then((m) => m.CycloneMap),
@@ -28,6 +28,41 @@ export default function PredictionPage() {
   const [intensityResult, setIntensityResult] = useState<IntensityResult | null>(null);
   const [predictedTrack, setPredictedTrack] = useState<PredictedTrackPoint[]>([]);
   const [loading, setLoading] = useState(false);
+  const [cyclones, setCyclones] = useState<Cyclone[]>([]);
+  const [loadingCyclone, setLoadingCyclone] = useState(false);
+
+  // Load cyclone list for "Load from Historical" dropdown
+  useEffect(() => {
+    getCyclones({ basin: "NI", limit: 20 })
+      .then((res) => setCyclones(res.cyclones))
+      .catch(() => {});
+  }, []);
+
+  const loadFromHistorical = async (id: string) => {
+    if (!id) return;
+    setLoadingCyclone(true);
+    try {
+      const detail = await getCyclone(id);
+      if (detail.track && detail.track.length >= 2) {
+        const pts = detail.track.slice(-8).map((pt) => ({
+          lat: String(pt.latitude),
+          lon: String(pt.longitude),
+          wind_kt: String(pt.wind_kt || 50),
+          pressure_hpa: String(pt.pressure_hpa || 990),
+        }));
+        setHistory(pts);
+        setIntensityResult(null);
+        setPredictedTrack([]);
+        toast.success(`Loaded ${detail.name} track (${pts.length} points)`);
+      } else {
+        toast.error("This cyclone has insufficient track data");
+      }
+    } catch {
+      toast.error("Failed to load cyclone track");
+    } finally {
+      setLoadingCyclone(false);
+    }
+  };
 
   const addRow = () =>
     setHistory([...history, { lat: "", lon: "", wind_kt: "", pressure_hpa: "" }]);
@@ -100,10 +135,29 @@ export default function PredictionPage() {
 
         {/* Input */}
         <div className="space-y-4">
-          <div className="bg-white rounded-xl border border-slate-200 p-4">
+          <div className="bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 p-4">
             <div className="flex items-center justify-between mb-3">
-              <h2 className="font-semibold text-slate-700 text-sm">Historical Track Input</h2>
+              <h2 className="font-semibold text-slate-700 dark:text-slate-300 text-sm">Historical Track Input</h2>
               <span className="text-xs text-slate-400">{history.length} rows · min 2</span>
+            </div>
+
+            {/* Load from Historical dropdown */}
+            <div className="flex items-center gap-2 mb-3 pb-3 border-b border-slate-100 dark:border-slate-700">
+              <Database className="w-4 h-4 text-slate-400 flex-shrink-0" />
+              <select
+                onChange={(e) => loadFromHistorical(e.target.value)}
+                defaultValue=""
+                disabled={loadingCyclone}
+                className="flex-1 text-xs border border-slate-200 dark:border-slate-600 rounded-lg px-2 py-1.5 bg-white dark:bg-slate-700 text-slate-700 dark:text-slate-300"
+              >
+                <option value="">Load from Historical Cyclone...</option>
+                {cyclones.map((c) => (
+                  <option key={c.id} value={c.id}>
+                    {c.name} ({c.season}) — {c.peak_intensity}
+                  </option>
+                ))}
+              </select>
+              {loadingCyclone && <Loader2 className="w-4 h-4 animate-spin text-blue-500 flex-shrink-0" />}
             </div>
 
             <div className="overflow-x-auto">

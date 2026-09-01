@@ -5,6 +5,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { clsx } from "clsx";
 import { Wind, Menu, X } from "lucide-react";
+import { ThemeToggle } from "@/components/ui/ThemeToggle";
 
 interface NavLink {
   href: string;
@@ -65,8 +66,9 @@ export function Navbar() {
 
 
 
-          {/* Disclaimer badge */}
-          <div className="hidden lg:flex items-center">
+          {/* Disclaimer badge + Theme toggle */}
+          <div className="hidden lg:flex items-center gap-2">
+            <ThemeToggle />
             <span className="text-xs bg-yellow-900/50 text-yellow-300 border border-yellow-700 px-2 py-1 rounded-full">
               ⚠️ Research Prototype
             </span>

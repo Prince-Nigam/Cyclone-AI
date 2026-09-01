@@ -10,6 +10,11 @@
   --foreground: #0f172a;
 }
 
+.dark {
+  --background: #020617;
+  --foreground: #f1f5f9;
+}
+
 body {
   background: var(--background);
   color: var(--foreground);
@@ -22,8 +27,16 @@ body {
   z-index: 1;
 }
 
+/* Dark mode leaflet */
+.dark .leaflet-container {
+  filter: brightness(0.85) invert(0);
+}
+
 /* Custom scrollbar */
 ::-webkit-scrollbar { width: 6px; }
 ::-webkit-scrollbar-track { background: #f1f5f9; }
 ::-webkit-scrollbar-thumb { background: #94a3b8; border-radius: 3px; }
 ::-webkit-scrollbar-thumb:hover { background: #64748b; }
+
+.dark ::-webkit-scrollbar-track { background: #1e293b; }
+.dark ::-webkit-scrollbar-thumb { background: #475569; }
