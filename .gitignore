@@ -1,0 +1,138 @@
+# ============================================================
+# TROPICAL CYCLONE AI PLATFORM - .gitignore
+# ============================================================
+
+# Environment variables - NEVER commit
+.env
+.env.local
+.env.*.local
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+*.egg
+*.egg-info/
+dist/
+build/
+eggs/
+parts/
+var/
+sdist/
+develop-eggs/
+.installed.cfg
+lib/
+lib64/
+*.pyc
+*.pyo
+*.pyd
+.Python
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Virtual environments
+venv/
+.venv/
+env/
+ENV/
+.env/
+cyclone_env/
+
+# Jupyter Notebooks
+.ipynb_checkpoints
+*.ipynb_checkpoints/
+
+# ML / Model artifacts (large files)
+*.pth
+*.pt
+*.ckpt
+*.h5
+*.pkl
+*.joblib
+*.onnx
+models/*/weights/
+models/*/checkpoints/
+
+# Data (large raw datasets - never commit)
+data/raw/**
+data/interim/**
+data/processed/**
+!data/raw/.gitkeep
+!data/interim/.gitkeep
+!data/processed/.gitkeep
+!data/labels/.gitkeep
+!data/metadata/.gitkeep
+!data/samples/.gitkeep
+
+# AI data directory
+ai/data/**
+!ai/data/.gitkeep
+
+# Satellite image files
+*.nc
+*.nc4
+*.hdf
+*.hdf5
+*.h5
+*.grb
+*.grib
+*.grib2
+
+# Logs
+*.log
+logs/
+*.log.*
+
+# Node.js / Frontend
+node_modules/
+.next/
+out/
+build/
+dist/
+.npm
+.yarn-integrity
+frontend/.next/
+frontend/node_modules/
+frontend/out/
+
+# TypeScript
+*.tsbuildinfo
+
+# Testing
+.coverage
+htmlcov/
+.pytest_cache/
+.tox/
+nosetests.xml
+coverage.xml
+*.cover
+.hypothesis/
+test-results/
+
+# IDEs
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+
+# Docker
+.docker/
+
+# Temporary files
+tmp/
+temp/
+*.tmp
+*.temp
+
+# OS
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db

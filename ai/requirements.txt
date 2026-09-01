@@ -1,0 +1,59 @@
+# ============================================================
+# Tropical Cyclone AI Platform — AI/ML Requirements
+# ============================================================
+
+# Core ML
+torch==2.1.0
+torchvision==0.16.0
+torchaudio==2.1.0
+
+# Scientific computing
+numpy==1.26.2
+pandas==2.1.4
+scipy==1.11.4
+scikit-learn==1.3.2
+
+# Satellite data handling
+netCDF4==1.6.5
+h5py==3.10.0
+xarray==2023.12.0
+rasterio==1.3.9
+pyproj==3.6.1
+
+# Image processing
+opencv-python-headless==4.8.1.78
+Pillow==10.1.0
+imageio==2.33.1
+scikit-image==0.22.0
+
+# Visualization
+matplotlib==3.8.2
+seaborn==0.13.0
+plotly==5.18.0
+
+# Progress bars and utilities
+tqdm==4.66.1
+rich==13.7.0
+click==8.1.7
+
+# Experiment tracking
+# mlflow==2.9.2  # optional, uncomment if using
+
+# Jupyter
+jupyter==1.0.0
+ipykernel==6.27.1
+ipywidgets==8.1.1
+
+# Testing
+pytest==7.4.3
+pytest-cov==4.1.0
+
+# Utilities
+python-dotenv==1.0.0
+pyyaml==6.0.1
+requests==2.31.0
+boto3==1.34.0
+
+# Geospatial
+geopy==2.4.1
+shapely==2.0.2

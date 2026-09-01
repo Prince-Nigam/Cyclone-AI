@@ -1,0 +1,89 @@
+version: '3.9'
+
+# ============================================================
+# TROPICAL CYCLONE AI PLATFORM - Docker Compose
+# ============================================================
+
+services:
+
+  # ---- PostgreSQL Database ----
+  db:
+    image: postgres:15-alpine
+    container_name: cyclone_db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${DATABASE_USER:-cyclone_user}
+      POSTGRES_PASSWORD: ${DATABASE_PASSWORD:-cyclone_pass}
+      POSTGRES_DB: ${DATABASE_NAME:-cyclone_db}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DATABASE_USER:-cyclone_user}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # ---- Redis (for caching model results) ----
+  redis:
+    image: redis:7-alpine
+    container_name: cyclone_redis
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 3s
+      retries: 3
+
+  # ---- FastAPI Backend ----
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: cyclone_backend
+    restart: unless-stopped
+    env_file:
+      - .env
+    environment:
+      - DATABASE_URL=postgresql://${DATABASE_USER:-cyclone_user}:${DATABASE_PASSWORD:-cyclone_pass}@db:5432/${DATABASE_NAME:-cyclone_db}
+      - REDIS_URL=redis://redis:6379/0
+    volumes:
+      - ./data:/app/data
+      - ./models:/app/models
+      - ./logs:/app/logs
+    ports:
+      - "8000:8000"
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # ---- Next.js Frontend ----
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: cyclone_frontend
+    restart: unless-stopped
+    environment:
+      - NEXT_PUBLIC_API_URL=http://backend:8000
+    ports:
+      - "3000:3000"
+    depends_on:
+      - backend
+
+volumes:
+  postgres_data:
+
+networks:
+  default:
+    name: cyclone_network
