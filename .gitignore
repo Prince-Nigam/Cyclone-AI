@@ -39,6 +39,11 @@ ENV/
 .env/
 cyclone_env/
 
+# Frontend lib should NOT be ignored (override Python lib rule)
+!frontend/lib/
+!frontend/hooks/
+!frontend/public/
+
 # Jupyter Notebooks
 .ipynb_checkpoints
 *.ipynb_checkpoints/
