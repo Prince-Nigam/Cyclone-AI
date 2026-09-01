@@ -13,10 +13,23 @@ import sys
 from pathlib import Path
 from typing import Dict, Optional
 
-# Add AI module to path
-_ai_path = Path(__file__).parents[4] / "ai"
-if str(_ai_path) not in sys.path:
-    sys.path.insert(0, str(Path(__file__).parents[4]))
+# Add AI module to path — works both locally and on Render
+_this_file = Path(__file__).resolve()
+# Try different parent levels to find project root
+_project_root = None
+for _levels in range(2, 6):
+    try:
+        _candidate = _this_file.parents[_levels]
+        if (_candidate / "ai").exists():
+            _project_root = _candidate
+            break
+    except IndexError:
+        break
+
+if _project_root is not None:
+    _ai_path = _project_root / "ai"
+    if str(_project_root) not in sys.path:
+        sys.path.insert(0, str(_project_root))
 
 from app.core.config import settings
 
