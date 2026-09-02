@@ -33,6 +33,7 @@ from app.api.v1.analyze import router as analyze_router
 from app.api.v1.cyclones import router as cyclones_router
 from app.api.v1.satellite import router as satellite_router
 from app.api.v1.predictions import router as predictions_router
+from app.api.v1.realtime import router as realtime_router
 
 # Setup logging first
 setup_logging()
@@ -161,6 +162,7 @@ app.include_router(analyze_router,        prefix=API_PREFIX)
 app.include_router(cyclones_router,       prefix=API_PREFIX)
 app.include_router(satellite_router,      prefix=API_PREFIX)
 app.include_router(predictions_router,    prefix=API_PREFIX)
+app.include_router(realtime_router,       prefix=API_PREFIX)
 
 
 # ── Root Endpoint ─────────────────────────────────────────────────────────────

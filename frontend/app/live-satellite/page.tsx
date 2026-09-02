@@ -1,12 +1,26 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import dynamic from "next/dynamic";
-import { Satellite, Layers, Wind, Eye } from "lucide-react";
+import {
+  Satellite,
+  Layers,
+  Wind,
+  Eye,
+  Activity,
+  Waves,
+  ShieldAlert,
+  Clock,
+  Sparkles,
+} from "lucide-react";
+import { ActiveCyclonesPanel } from "./components/ActiveCyclonesPanel";
+import { OceanWeatherGrid } from "./components/OceanWeatherGrid";
+import { getRealtimeCyclones, getOceanGrid } from "@/services/realtimeService";
+import type { RealtimeCyclone, OceanWeatherPoint } from "@/types";
 
 const CycloneMap = dynamic(
   () => import("@/components/map/CycloneMap").then((m) => m.CycloneMap),
-  { ssr: false, loading: () => <div className="h-full bg-slate-100 dark:bg-slate-800 rounded-xl animate-pulse" /> }
+  { ssr: false, loading: () => <div className="h-full bg-slate-100 dark:bg-slate-800 rounded-xl animate-pulse min-h-[480px]" /> }
 );
 
 const WINDY_OVERLAYS = [
@@ -21,51 +35,183 @@ const WINDY_OVERLAYS = [
 export default function LiveSatellitePage() {
   const [activeOverlay, setActiveOverlay] = useState("satellite");
   const [windyLoaded, setWindyLoaded] = useState(false);
+  const [mapCenter, setMapCenter] = useState<{ lat: number; lon: number }>({ lat: 15, lon: 75 });
+  const [mapZoom, setMapZoom] = useState<number>(4);
 
-  const windyUrl = `https://embed.windy.com/embed2.html?lat=15&lon=75&detailLat=15&detailLon=75&width=100%&height=100%&zoom=5&level=surface&overlay=${activeOverlay}&product=ecmwf&menu=&message=true&marker=&calendar=now&pressure=true&type=map&location=coordinates&detail=&metricWind=kt&metricTemp=%C2%B0C&radarRange=-1`;
+  // Real-time Cyclone State
+  const [cyclones, setCyclones] = useState<RealtimeCyclone[]>([]);
+  const [cyclonesLoading, setCyclonesLoading] = useState<boolean>(true);
+  const [cyclonesError, setCyclonesError] = useState<string | null>(null);
+  const [indianOceanOnly, setIndianOceanOnly] = useState<boolean>(false);
+  const [selectedCycloneId, setSelectedCycloneId] = useState<string | null>(null);
+
+  // Ocean Weather Grid State
+  const [oceanPoints, setOceanPoints] = useState<OceanWeatherPoint[]>([]);
+  const [gridLoading, setGridLoading] = useState<boolean>(true);
+  const [gridError, setGridError] = useState<string | null>(null);
+
+  // Last refreshed timestamp
+  const [lastRefreshed, setLastRefreshed] = useState<string>("");
+
+  // Fetch active cyclones
+  const loadCyclones = useCallback(async (ioOnly: boolean = indianOceanOnly) => {
+    setCyclonesLoading(true);
+    setCyclonesError(null);
+    try {
+      const res = await getRealtimeCyclones(ioOnly);
+      setCyclones(res.cyclones || []);
+    } catch (err: any) {
+      setCyclonesError(err?.message || "Could not connect to cyclone alert feed.");
+    } finally {
+      setCyclonesLoading(false);
+    }
+  }, [indianOceanOnly]);
+
+  // Fetch ocean weather grid
+  const loadOceanGrid = useCallback(async () => {
+    setGridLoading(true);
+    setGridError(null);
+    try {
+      const res = await getOceanGrid();
+      setOceanPoints(res.points || []);
+      setLastRefreshed(new Date().toLocaleTimeString());
+    } catch (err: any) {
+      setGridError(err?.message || "Could not fetch marine stations weather.");
+    } finally {
+      setGridLoading(false);
+    }
+  }, []);
+
+  // Initial load + periodic 15m refresh
+  useEffect(() => {
+    loadCyclones(indianOceanOnly);
+    loadOceanGrid();
+
+    const interval = setInterval(() => {
+      loadCyclones(indianOceanOnly);
+      loadOceanGrid();
+    }, 15 * 60 * 1000);
+
+    return () => clearInterval(interval);
+  }, [loadCyclones, loadOceanGrid, indianOceanOnly]);
+
+  const handleSelectCyclone = (c: RealtimeCyclone) => {
+    setSelectedCycloneId(c.id);
+    if (c.lat !== null && c.lon !== null) {
+      setMapCenter({ lat: c.lat, lon: c.lon });
+      setMapZoom(6);
+    }
+  };
+
+  const handleSelectWeatherPoint = (pt: OceanWeatherPoint) => {
+    setMapCenter({ lat: pt.lat, lon: pt.lon });
+    setMapZoom(7);
+  };
+
+  // Stats calculation
+  const maxWindDetected = oceanPoints.reduce((max, pt) => Math.max(max, pt.wind_kt || 0), 0);
+
+  const windyUrl = `https://embed.windy.com/embed2.html?lat=${mapCenter.lat}&lon=${mapCenter.lon}&detailLat=${mapCenter.lat}&detailLon=${mapCenter.lon}&width=100%&height=100%&zoom=${mapZoom}&level=surface&overlay=${activeOverlay}&product=ecmwf&menu=&message=true&marker=&calendar=now&pressure=true&type=map&location=coordinates&detail=&metricWind=kt&metricTemp=%C2%B0C&radarRange=-1`;
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-6">
 
-      {/* Header */}
-      <div className="flex items-start justify-between flex-wrap gap-3">
+      {/* ── Page Header ────────────────────────────────────────── */}
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-slate-900 dark:text-slate-100 flex items-center gap-2">
-            <Satellite className="w-6 h-6 text-blue-600" />
-            Live Satellite View
-          </h1>
-          <p className="text-slate-500 dark:text-slate-400 text-sm mt-1">
-            Real-time satellite imagery &amp; weather overlays powered by{" "}
-            <a href="https://windy.com" target="_blank" rel="noopener noreferrer"
-              className="text-blue-600 dark:text-blue-400 hover:underline font-medium">Windy.com</a>{" "}
-            and{" "}
-            <a href="https://nasa.gov/gibs" target="_blank" rel="noopener noreferrer"
-              className="text-blue-600 dark:text-blue-400 hover:underline font-medium">NASA GIBS</a>.
+          <div className="flex items-center gap-2 mb-1">
+            <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-slate-100 flex items-center gap-2.5">
+              <Satellite className="w-7 h-7 text-blue-500" />
+              Live Satellite &amp; Real-Time Tracking
+            </h1>
+          </div>
+          <p className="text-slate-500 dark:text-slate-400 text-sm max-w-2xl leading-relaxed">
+            Real-time multi-source monitoring combining GDACS disaster alerts, Open-Meteo marine station metrics, NASA GIBS satellite imagery, and Windy.com wind streamlines.
           </p>
         </div>
 
-        {/* Live indicator */}
-        <div className="flex items-center gap-2 bg-green-50 dark:bg-green-900/30 border border-green-200 dark:border-green-700 px-3 py-1.5 rounded-full">
-          <span className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
-          <span className="text-green-700 dark:text-green-400 text-sm font-medium">Live Data</span>
+        {/* Live Status Indicators */}
+        <div className="flex items-center gap-2.5 flex-wrap">
+          <div className="flex items-center gap-2 bg-emerald-500/10 border border-emerald-500/20 px-3.5 py-1.5 rounded-full">
+            <span className="w-2.5 h-2.5 bg-emerald-500 rounded-full animate-pulse" />
+            <span className="text-emerald-700 dark:text-emerald-400 text-xs font-semibold">
+              Live Stream Active
+            </span>
+          </div>
+
+          {lastRefreshed && (
+            <div className="flex items-center gap-1.5 text-xs text-slate-400 bg-slate-100 dark:bg-slate-800/80 px-3 py-1.5 rounded-full border border-slate-200 dark:border-slate-700">
+              <Clock className="w-3.5 h-3.5 text-blue-400" />
+              <span>Updated: {lastRefreshed}</span>
+            </div>
+          )}
         </div>
       </div>
 
-      {/* Overlay selector */}
-      <div className="bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 p-3">
-        <p className="text-xs font-semibold text-slate-500 dark:text-slate-400 mb-2 flex items-center gap-1">
-          <Layers className="w-3.5 h-3.5" /> SELECT WEATHER LAYER
-        </p>
+      {/* ── Metric Highlights Bar ─────────────────────────────── */}
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
+        <div className="stat-card bg-gradient-to-br from-red-500/10 to-transparent border-red-500/20">
+          <div className="flex items-center justify-between mb-1.5">
+            <span className="text-xs font-semibold text-slate-500 dark:text-slate-400">Active Alert Cyclones</span>
+            <ShieldAlert className="w-4 h-4 text-red-500" />
+          </div>
+          <p className="text-2xl font-black text-slate-800 dark:text-slate-100">
+            {cyclonesLoading ? "..." : cyclones.length}
+          </p>
+          <p className="text-[11px] text-slate-400 mt-0.5">GDACS Global Feed</p>
+        </div>
+
+        <div className="stat-card bg-gradient-to-br from-blue-500/10 to-transparent border-blue-500/20">
+          <div className="flex items-center justify-between mb-1.5">
+            <span className="text-xs font-semibold text-slate-500 dark:text-slate-400">Max Marine Wind</span>
+            <Wind className="w-4 h-4 text-blue-500" />
+          </div>
+          <p className="text-2xl font-black text-slate-800 dark:text-slate-100 font-mono">
+            {gridLoading ? "..." : `${maxWindDetected.toFixed(1)} kt`}
+          </p>
+          <p className="text-[11px] text-slate-400 mt-0.5">Surface Level 10m</p>
+        </div>
+
+        <div className="stat-card bg-gradient-to-br from-cyan-500/10 to-transparent border-cyan-500/20">
+          <div className="flex items-center justify-between mb-1.5">
+            <span className="text-xs font-semibold text-slate-500 dark:text-slate-400">Monitoring Stations</span>
+            <Waves className="w-4 h-4 text-cyan-500" />
+          </div>
+          <p className="text-2xl font-black text-slate-800 dark:text-slate-100">
+            {oceanPoints.length} Points
+          </p>
+          <p className="text-[11px] text-slate-400 mt-0.5">Arabian Sea &amp; Bay of Bengal</p>
+        </div>
+
+        <div className="stat-card bg-gradient-to-br from-purple-500/10 to-transparent border-purple-500/20">
+          <div className="flex items-center justify-between mb-1.5">
+            <span className="text-xs font-semibold text-slate-500 dark:text-slate-400">Satellite Tiles</span>
+            <Activity className="w-4 h-4 text-purple-500" />
+          </div>
+          <p className="text-2xl font-black text-slate-800 dark:text-slate-100">
+            MODIS/VIIRS
+          </p>
+          <p className="text-[11px] text-slate-400 mt-0.5">NASA GIBS Real-Time</p>
+        </div>
+      </div>
+
+      {/* ── Weather Layer Selector ────────────────────────────── */}
+      <div className="glass-card rounded-2xl p-3.5 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+        <div className="flex items-center gap-2 text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">
+          <Layers className="w-4 h-4 text-blue-500" />
+          Weather Overlays
+        </div>
+
         <div className="flex flex-wrap gap-2">
           {WINDY_OVERLAYS.map((o) => (
             <button
               key={o.key}
               onClick={() => { setActiveOverlay(o.key); setWindyLoaded(false); }}
               title={o.desc}
-              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-medium border transition-all ${
+              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold transition-all ${
                 activeOverlay === o.key
-                  ? "bg-blue-600 text-white border-blue-600 shadow"
-                  : "bg-slate-50 dark:bg-slate-700 text-slate-600 dark:text-slate-300 border-slate-200 dark:border-slate-600 hover:bg-slate-100 dark:hover:bg-slate-600"
+                  ? "bg-blue-600 text-white shadow-md shadow-blue-600/30 scale-[1.02]"
+                  : "bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-700 hover:bg-slate-200 dark:hover:bg-slate-700"
               }`}
             >
               <span>{o.icon}</span>
@@ -75,120 +221,149 @@ export default function LiveSatellitePage() {
         </div>
       </div>
 
-      {/* Main content: Windy embed + NASA GIBS map */}
-      <div className="grid grid-cols-1 xl:grid-cols-2 gap-4">
+      {/* ── Main Workspace: Active Cyclones Sidebar + Live Maps ── */}
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 items-start">
 
-        {/* ── Windy Live Map ── */}
-        <div className="bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 overflow-hidden">
-          <div className="flex items-center justify-between px-4 py-2.5 border-b border-slate-100 dark:border-slate-700 bg-slate-50 dark:bg-slate-900/50">
-            <div className="flex items-center gap-2">
-              <span className="text-lg">🌀</span>
-              <span className="font-semibold text-slate-800 dark:text-slate-200 text-sm">Windy Live Weather</span>
-              <span className="text-xs bg-green-100 dark:bg-green-900/40 text-green-700 dark:text-green-400 px-2 py-0.5 rounded-full font-medium">
-                {WINDY_OVERLAYS.find(o => o.key === activeOverlay)?.label}
-              </span>
-            </div>
-            <a
-              href={`https://www.windy.com/?${activeOverlay},15,75,5`}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-xs text-blue-600 dark:text-blue-400 hover:underline"
-            >
-              Open full screen ↗
-            </a>
-          </div>
-
-          <div className="relative" style={{ height: "500px" }}>
-            {!windyLoaded && (
-              <div className="absolute inset-0 flex flex-col items-center justify-center bg-slate-50 dark:bg-slate-900 z-10">
-                <div className="w-10 h-10 border-4 border-blue-500 border-t-transparent rounded-full animate-spin mb-3" />
-                <p className="text-sm text-slate-500 dark:text-slate-400">Loading live satellite data…</p>
-                <p className="text-xs text-slate-400 mt-1">Powered by Windy.com</p>
-              </div>
-            )}
-            <iframe
-              key={activeOverlay}
-              src={windyUrl}
-              className="w-full h-full border-0"
-              onLoad={() => setWindyLoaded(true)}
-              allow="fullscreen"
-              title="Windy Live Weather Map"
-            />
-          </div>
-        </div>
-
-        {/* ── NASA GIBS Map ── */}
-        <div className="bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 overflow-hidden">
-          <div className="flex items-center justify-between px-4 py-2.5 border-b border-slate-100 dark:border-slate-700 bg-slate-50 dark:bg-slate-900/50">
-            <div className="flex items-center gap-2">
-              <span className="text-lg">🛰️</span>
-              <span className="font-semibold text-slate-800 dark:text-slate-200 text-sm">NASA GIBS Satellite</span>
-              <span className="text-xs bg-blue-100 dark:bg-blue-900/40 text-blue-700 dark:text-blue-400 px-2 py-0.5 rounded-full font-medium">
-                MODIS / VIIRS
-              </span>
-            </div>
-            <a
-              href="https://worldview.earthdata.nasa.gov/"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-xs text-blue-600 dark:text-blue-400 hover:underline"
-            >
-              NASA Worldview ↗
-            </a>
-          </div>
-
-          <CycloneMap
-            height="500px"
-            centerLat={15}
-            centerLon={75}
-            zoom={4}
-            showSatelliteToggle={true}
+        {/* Left Column: Active Cyclones Alert Feed (4 cols) */}
+        <div className="lg:col-span-4 h-full">
+          <ActiveCyclonesPanel
+            cyclones={cyclones}
+            loading={cyclonesLoading}
+            error={cyclonesError}
+            indianOceanOnly={indianOceanOnly}
+            onToggleFilter={(io) => {
+              setIndianOceanOnly(io);
+              loadCyclones(io);
+            }}
+            onRefresh={() => loadCyclones(indianOceanOnly)}
+            onSelectCyclone={handleSelectCyclone}
+            selectedCycloneId={selectedCycloneId}
           />
         </div>
+
+        {/* Right Column: Maps Workspace (8 cols) */}
+        <div className="lg:col-span-8 space-y-5">
+
+          {/* Windy Map Component */}
+          <div className="glass-card rounded-2xl overflow-hidden shadow-xl border border-slate-200 dark:border-slate-800">
+            <div className="flex items-center justify-between px-4 py-3 border-b border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900/60">
+              <div className="flex items-center gap-2">
+                <span className="text-lg">🌀</span>
+                <span className="font-bold text-slate-800 dark:text-slate-200 text-sm">Windy Atmosphere Stream</span>
+                <span className="text-[11px] bg-blue-100 dark:bg-blue-900/40 text-blue-700 dark:text-blue-300 px-2 py-0.5 rounded-full font-medium">
+                  {WINDY_OVERLAYS.find(o => o.key === activeOverlay)?.label}
+                </span>
+              </div>
+              <a
+                href={`https://www.windy.com/?${activeOverlay},${mapCenter.lat},${mapCenter.lon},${mapZoom}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-xs text-blue-600 dark:text-blue-400 hover:underline font-medium"
+              >
+                Expand ↗
+              </a>
+            </div>
+
+            <div className="relative" style={{ height: "480px" }}>
+              {!windyLoaded && (
+                <div className="absolute inset-0 flex flex-col items-center justify-center bg-slate-50 dark:bg-slate-900 z-10">
+                  <div className="w-10 h-10 border-4 border-blue-500 border-t-transparent rounded-full animate-spin mb-3" />
+                  <p className="text-sm font-medium text-slate-600 dark:text-slate-400">Connecting to global meteorology satellites...</p>
+                  <p className="text-xs text-slate-400 mt-1">ECMWF / GFS Streamlines</p>
+                </div>
+              )}
+              <iframe
+                key={`${activeOverlay}-${mapCenter.lat}-${mapCenter.lon}`}
+                src={windyUrl}
+                className="w-full h-full border-0"
+                onLoad={() => setWindyLoaded(true)}
+                allow="fullscreen"
+                title="Windy Live Weather Map"
+              />
+            </div>
+          </div>
+
+          {/* NASA GIBS Leaflet Map */}
+          <div className="glass-card rounded-2xl overflow-hidden shadow-xl border border-slate-200 dark:border-slate-800">
+            <div className="flex items-center justify-between px-4 py-3 border-b border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900/60">
+              <div className="flex items-center gap-2">
+                <span className="text-lg">🛰️</span>
+                <span className="font-bold text-slate-800 dark:text-slate-200 text-sm">NASA GIBS Satellite Layer</span>
+                <span className="text-[11px] bg-purple-100 dark:bg-purple-900/40 text-purple-700 dark:text-purple-300 px-2 py-0.5 rounded-full font-medium">
+                  MODIS True Color / Thermal
+                </span>
+              </div>
+              <a
+                href="https://worldview.earthdata.nasa.gov/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-xs text-blue-600 dark:text-blue-400 hover:underline font-medium"
+              >
+                NASA Worldview ↗
+              </a>
+            </div>
+
+            <div className="p-3">
+              <CycloneMap
+                height="450px"
+                centerLat={mapCenter.lat}
+                centerLon={mapCenter.lon}
+                zoom={mapZoom}
+                showSatelliteToggle={true}
+              />
+            </div>
+          </div>
+
+        </div>
       </div>
 
-      {/* Info cards */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-        <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-100 dark:border-blue-700 rounded-xl p-4">
+      {/* ── Indian Ocean Real-Time Monitoring Grid ─────────────── */}
+      <OceanWeatherGrid
+        points={oceanPoints}
+        loading={gridLoading}
+        error={gridError}
+        onRefresh={loadOceanGrid}
+        onSelectPoint={handleSelectWeatherPoint}
+      />
+
+      {/* ── Data Source Info Cards ─────────────────────────────── */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div className="glass-card rounded-2xl p-4 bg-gradient-to-br from-blue-500/5 to-transparent">
           <div className="flex items-center gap-2 mb-2">
-            <Satellite className="w-5 h-5 text-blue-600 dark:text-blue-400" />
-            <span className="font-semibold text-blue-800 dark:text-blue-300 text-sm">NASA GIBS</span>
+            <Satellite className="w-5 h-5 text-blue-500" />
+            <span className="font-bold text-slate-800 dark:text-slate-200 text-sm">NASA GIBS Imagery</span>
           </div>
-          <p className="text-xs text-blue-700 dark:text-blue-400">
-            Global Imagery Browse Services — free MODIS &amp; VIIRS satellite tiles.
-            Updated daily. No API key needed.
+          <p className="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">
+            Direct Web Map Tile Service (WMTS) feed offering global true-color and infrared reflectance tiles from Terra, Aqua (MODIS), and Suomi NPP (VIIRS).
           </p>
         </div>
 
-        <div className="bg-green-50 dark:bg-green-900/20 border border-green-100 dark:border-green-700 rounded-xl p-4">
+        <div className="glass-card rounded-2xl p-4 bg-gradient-to-br from-emerald-500/5 to-transparent">
           <div className="flex items-center gap-2 mb-2">
-            <Wind className="w-5 h-5 text-green-600 dark:text-green-400" />
-            <span className="font-semibold text-green-800 dark:text-green-300 text-sm">Windy.com</span>
+            <ShieldAlert className="w-5 h-5 text-emerald-500" />
+            <span className="font-bold text-slate-800 dark:text-slate-200 text-sm">GDACS Disaster Alerts</span>
           </div>
-          <p className="text-xs text-green-700 dark:text-green-400">
-            Real-time ECMWF weather model data. Shows live wind, rain,
-            temperature, and satellite imagery with animation.
+          <p className="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">
+            UN/EC Global Disaster Alert and Coordination System provides real-time event identification, severity classifications, and population impact estimations.
           </p>
         </div>
 
-        <div className="bg-orange-50 dark:bg-orange-900/20 border border-orange-100 dark:border-orange-700 rounded-xl p-4">
+        <div className="glass-card rounded-2xl p-4 bg-gradient-to-br from-purple-500/5 to-transparent">
           <div className="flex items-center gap-2 mb-2">
-            <Eye className="w-5 h-5 text-orange-600 dark:text-orange-400" />
-            <span className="font-semibold text-orange-800 dark:text-orange-300 text-sm">Coverage</span>
+            <Sparkles className="w-5 h-5 text-purple-500" />
+            <span className="font-bold text-slate-800 dark:text-slate-200 text-sm">Open-Meteo Marine Grid</span>
           </div>
-          <p className="text-xs text-orange-700 dark:text-orange-400">
-            Indian Ocean basin coverage including Arabian Sea &amp; Bay of Bengal.
-            Optimal for monitoring NI basin cyclones.
+          <p className="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">
+            High-resolution numerical weather prediction models delivering 10m wind speeds, sea surface pressure, temperature, and humidity without rate limits.
           </p>
         </div>
       </div>
 
-      {/* Disclaimer */}
-      <div className="bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-700 rounded-xl px-4 py-3 text-xs text-yellow-800 dark:text-yellow-300">
-        <strong>⚠️ Data Sources:</strong> Satellite imagery is provided by NASA GIBS and Windy.com.
-        These are observational data sources, not model predictions. AI analysis requires uploading
-        an image on the <a href="/satellite" className="underline font-medium">Satellite Analysis</a> page.
+      {/* ── Research Disclaimer ────────────────────────────────── */}
+      <div className="rounded-2xl border border-amber-500/30 bg-amber-500/10 px-5 py-3.5 text-xs text-amber-900 dark:text-amber-200 leading-relaxed">
+        <strong>⚠️ Real-Time Observational Data:</strong> All weather points and alerts shown on this page are <span className="underline font-bold">OBSERVED</span> data streams directly fetched from open scientific APIs (GDACS &amp; Open-Meteo). For official cyclone landfall advisories and warnings, consult the India Meteorological Department (<a href="https://mausam.imd.gov.in" target="_blank" rel="noopener noreferrer" className="underline font-bold">IMD</a>).
       </div>
+
     </div>
   );
 }

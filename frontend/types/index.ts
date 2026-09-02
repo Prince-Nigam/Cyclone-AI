@@ -221,3 +221,56 @@ export const ALERT_COLORS: Record<AlertLevel, string> = {
   HIGH:     "#f97316",
   CRITICAL: "#ef4444",
 };
+
+// ── Real-Time Data ────────────────────────────────────────────────────────────
+
+export interface RealtimeCyclone {
+  id: string;
+  name: string;
+  lat: number | null;
+  lon: number | null;
+  wind_kt: number | null;
+  wind_kmh: number | null;
+  intensity_class: IntensityClass;
+  alert_level: "GREEN" | "ORANGE" | "RED" | string;
+  basin: string;
+  title: string;
+  description: string;
+  url: string;
+  published: string;
+  source: string;
+  data_type: DataType;
+  fetched_at: string;
+}
+
+export interface RealtimeCycloneListResponse {
+  cyclones: RealtimeCyclone[];
+  total: number;
+  source: string;
+  data_type: DataType;
+  indian_ocean: boolean;
+  disclaimer: string;
+}
+
+export interface OceanWeatherPoint {
+  name: string;
+  region: "AS" | "BOB" | "IO" | string;
+  lat: number;
+  lon: number;
+  wind_kt: number | null;
+  wind_dir_deg: number | null;
+  pressure_hpa: number | null;
+  temp_c: number | null;
+  humidity_pct: number | null;
+  timestamp: string | null;
+  source: string;
+  data_type: DataType;
+}
+
+export interface OceanGridResponse {
+  points: OceanWeatherPoint[];
+  total: number;
+  source: string;
+  data_type: DataType;
+}
+
