@@ -27,7 +27,7 @@ logger = logging.getLogger(__name__)
 
 GDACS_RSS_URL  = "https://www.gdacs.org/xml/rss.xml"
 OPEN_METEO_URL = "https://api.open-meteo.com/v1/forecast"
-CACHE_TTL      = 900  # 15 minutes
+CACHE_TTL      = 300  # 5 minutes (auto-refresh cycle)
 
 # ── XML Namespaces ─────────────────────────────────────────────────────────────
 

@@ -124,6 +124,13 @@ export default function DashboardPage() {
       .then((res) => setRecentCyclones(res.cyclones))
       .catch(() => setRecentCyclones([]))
       .finally(() => setHistoricalLoading(false));
+
+    // Auto-refresh every 5 minutes (300 seconds)
+    const interval = setInterval(() => {
+      fetchLiveCyclones();
+    }, 5 * 60 * 1000);
+
+    return () => clearInterval(interval);
   }, []);
 
   const getAlertBadgeClass = (alert: string) => {

@@ -88,10 +88,11 @@ export default function LiveSatellitePage() {
     loadCyclones(indianOceanOnly);
     loadOceanGrid();
 
+    // Auto-refresh fresh data every 5 minutes
     const interval = setInterval(() => {
       loadCyclones(indianOceanOnly);
       loadOceanGrid();
-    }, 15 * 60 * 1000);
+    }, 5 * 60 * 1000);
 
     return () => clearInterval(interval);
   }, [loadCyclones, loadOceanGrid, indianOceanOnly]);
