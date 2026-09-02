@@ -64,13 +64,13 @@ const FEATURE_CARDS = [
   },
 ];
 
-const COLOR_MAP: Record<string, { bg: string; icon: string; tag: string; border: string }> = {
-  blue:   { bg: "bg-blue-500/15",   icon: "text-blue-400",   tag: "bg-blue-500/20 text-blue-300",   border: "border-blue-500/25" },
-  purple: { bg: "bg-purple-500/15", icon: "text-purple-400", tag: "bg-purple-500/20 text-purple-300", border: "border-purple-500/25" },
-  orange: { bg: "bg-orange-500/15", icon: "text-orange-400", tag: "bg-orange-500/20 text-orange-300", border: "border-orange-500/25" },
-  red:    { bg: "bg-red-500/15",    icon: "text-red-400",    tag: "bg-red-500/20 text-red-300",    border: "border-red-500/25" },
-  cyan:   { bg: "bg-cyan-500/15",   icon: "text-cyan-400",   tag: "bg-cyan-500/20 text-cyan-300",   border: "border-cyan-500/25" },
-  slate:  { bg: "bg-slate-500/15",  icon: "text-slate-300",  tag: "bg-slate-500/20 text-slate-300", border: "border-slate-500/25" },
+const COLOR_MAP: Record<string, { bg: string; icon: string; tag: string }> = {
+  blue:   { bg: "bg-blue-100   dark:bg-blue-500/15",   icon: "text-blue-600   dark:text-blue-400",   tag: "bg-blue-100   dark:bg-blue-500/20   text-blue-700   dark:text-blue-300"   },
+  purple: { bg: "bg-purple-100 dark:bg-purple-500/15", icon: "text-purple-600 dark:text-purple-400", tag: "bg-purple-100 dark:bg-purple-500/20 text-purple-700 dark:text-purple-300" },
+  orange: { bg: "bg-orange-100 dark:bg-orange-500/15", icon: "text-orange-600 dark:text-orange-400", tag: "bg-orange-100 dark:bg-orange-500/20 text-orange-700 dark:text-orange-300" },
+  red:    { bg: "bg-red-100    dark:bg-red-500/15",    icon: "text-red-600    dark:text-red-400",    tag: "bg-red-100    dark:bg-red-500/20    text-red-700    dark:text-red-300"    },
+  cyan:   { bg: "bg-cyan-100   dark:bg-cyan-500/15",   icon: "text-cyan-600   dark:text-cyan-400",   tag: "bg-cyan-100   dark:bg-cyan-500/20   text-cyan-700   dark:text-cyan-300"   },
+  slate:  { bg: "bg-slate-100  dark:bg-slate-500/15",  icon: "text-slate-600  dark:text-slate-400",  tag: "bg-slate-100  dark:bg-slate-500/20  text-slate-700  dark:text-slate-300"  },
 };
 
 /* ── Stat cards ─────────────────────────────────────────────── */
@@ -82,10 +82,10 @@ const STATS = [
 ];
 
 const STAT_COLOR: Record<string, string> = {
-  blue:   "from-blue-500/15 to-blue-600/5   border-blue-500/30  text-blue-400",
-  green:  "from-green-500/15 to-green-600/5  border-green-500/30 text-green-400",
-  purple: "from-purple-500/15 to-purple-600/5 border-purple-500/30 text-purple-400",
-  orange: "from-orange-500/15 to-orange-600/5 border-orange-500/30 text-orange-400",
+  blue:   "from-blue-50   to-blue-50/50   dark:from-blue-500/15   dark:to-blue-600/5   border-blue-200   dark:border-blue-500/30   text-blue-600   dark:text-blue-400",
+  green:  "from-green-50  to-green-50/50  dark:from-green-500/15  dark:to-green-600/5  border-green-200  dark:border-green-500/30  text-green-600  dark:text-green-400",
+  purple: "from-purple-50 to-purple-50/50 dark:from-purple-500/15 dark:to-purple-600/5 border-purple-200 dark:border-purple-500/30 text-purple-600 dark:text-purple-400",
+  orange: "from-orange-50 to-orange-50/50 dark:from-orange-500/15 dark:to-orange-600/5 border-orange-200 dark:border-orange-500/30 text-orange-600 dark:text-orange-400",
 };
 
 /* ── Architecture items ─────────────────────────────────────── */
@@ -183,9 +183,9 @@ export default function DashboardPage() {
               <div className={`w-9 h-9 rounded-xl bg-gradient-to-br ${c[0]} flex items-center justify-center mb-3`}>
                 <Icon className={`w-4.5 h-4.5 ${c[3]}`} />
               </div>
-              <p className="text-2xl font-extrabold text-slate-100 tracking-tight">{value}</p>
-              <p className="text-xs font-semibold text-slate-400 mt-0.5">{label}</p>
-              <p className="text-xs text-slate-500 mt-0.5">{sub}</p>
+              <p className="text-2xl font-extrabold text-slate-800 dark:text-slate-100 tracking-tight">{value}</p>
+              <p className="text-xs font-semibold text-slate-600 dark:text-slate-400 mt-0.5">{label}</p>
+              <p className="text-xs text-slate-500 dark:text-slate-500 mt-0.5">{sub}</p>
             </div>
           );
         })}
@@ -216,8 +216,8 @@ export default function DashboardPage() {
                     {tag}
                   </span>
                 </div>
-                <h3 className="font-bold text-slate-100 text-sm mb-1.5">{title}</h3>
-                <p className="text-xs text-slate-400 leading-relaxed">{desc}</p>
+                <h3 className="font-bold text-slate-800 dark:text-slate-100 text-sm mb-1.5">{title}</h3>
+                <p className="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">{desc}</p>
                 <div className={`flex items-center gap-1 mt-4 text-xs font-medium ${c.icon} opacity-0 group-hover:opacity-100 transition-opacity`}>
                   Open module <ArrowRight className="w-3 h-3" />
                 </div>              </Link>
@@ -257,7 +257,7 @@ export default function DashboardPage() {
               <thead>
                 <tr className="border-b border-slate-200/50 dark:border-slate-700/50">
                   {["Name", "Year", "Basin", "Peak", "Wind", "Type", ""].map((h) => (
-                    <th key={h} className="text-left px-4 py-3 text-xs font-semibold text-slate-400 uppercase tracking-wide">
+                    <th key={h} className="text-left px-4 py-3 text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wide">
                       {h}
                     </th>
                   ))}                </tr>
@@ -265,13 +265,13 @@ export default function DashboardPage() {
               <tbody className="divide-y divide-slate-100/50 dark:divide-slate-700/30">
                 {recentCyclones.map((c) => (
                   <tr key={c.id} className="hover:bg-blue-50 dark:hover:bg-blue-500/10 transition-colors group">
-                    <td className="px-4 py-3 font-semibold text-slate-100">{c.name || "UNNAMED"}</td>
-                    <td className="px-4 py-3 text-slate-400">{c.season}</td>
-                    <td className="px-4 py-3 text-slate-400">{c.basin}</td>
+                    <td className="px-4 py-3 font-semibold text-slate-800 dark:text-slate-100">{c.name || "UNNAMED"}</td>
+                    <td className="px-4 py-3 text-slate-600 dark:text-slate-400">{c.season}</td>
+                    <td className="px-4 py-3 text-slate-600 dark:text-slate-400">{c.basin}</td>
                     <td className="px-4 py-3">
                       <IntensityBadge intensity={(c.peak_intensity || "UNKNOWN") as IntensityClass} />
                     </td>
-                    <td className="px-4 py-3 font-mono text-slate-300 text-xs">                      {c.peak_wind_kt ? `${c.peak_wind_kt} kt` : "—"}
+                    <td className="px-4 py-3 font-mono text-slate-700 dark:text-slate-300 text-xs">                      {c.peak_wind_kt ? `${c.peak_wind_kt} kt` : "—"}
                     </td>
                     <td className="px-4 py-3">
                       <DataTypeBadge type={c.data_type || "HISTORICAL"} />
