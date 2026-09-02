@@ -34,7 +34,6 @@ export default function SatellitePage() {
     setResult(null);
     setError(null);
 
-    // Preview for image files
     if (["png","jpg","jpeg","tif","tiff"].includes(ext)) {
       const reader = new FileReader();
       reader.onload = (e) => setPreview(e.target?.result as string);
@@ -73,8 +72,8 @@ export default function SatellitePage() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-bold text-slate-900">Satellite Image Analysis</h1>
-        <p className="text-slate-500 text-sm mt-1">
+        <h1 className="text-2xl font-bold text-slate-900 dark:text-slate-100">Satellite Image Analysis</h1>
+        <p className="text-slate-500 dark:text-slate-400 text-sm mt-1">
           Upload a satellite image to run AI cyclone detection, classification, and Grad-CAM explainability.
         </p>
       </div>
@@ -87,14 +86,16 @@ export default function SatellitePage() {
           {/* Drop zone */}
           <div
             className={`border-2 border-dashed rounded-xl p-8 text-center cursor-pointer transition-all
-              ${dragOver ? "border-blue-500 bg-blue-50" : "border-slate-300 hover:border-blue-400 hover:bg-slate-50"}`}
+              ${dragOver
+                ? "border-blue-500 bg-blue-50 dark:bg-blue-950/30"
+                : "border-slate-300 dark:border-slate-600 hover:border-blue-400 hover:bg-slate-50 dark:hover:bg-slate-800"}`}
             onDragOver={(e) => { e.preventDefault(); setDragOver(true); }}
             onDragLeave={() => setDragOver(false)}
             onDrop={handleDrop}
             onClick={() => fileInputRef.current?.click()}
           >
             <Satellite className="w-10 h-10 mx-auto text-slate-400 mb-3" />
-            <p className="text-sm font-medium text-slate-700">
+            <p className="text-sm font-medium text-slate-700 dark:text-slate-300">
               {selectedFile ? selectedFile.name : "Drop satellite image here"}
             </p>
             <p className="text-xs text-slate-400 mt-1">
@@ -111,7 +112,7 @@ export default function SatellitePage() {
 
           {/* Preview */}
           {preview && (
-            <div className="relative rounded-xl overflow-hidden border border-slate-200">
+            <div className="relative rounded-xl overflow-hidden border border-slate-200 dark:border-slate-700">
               <img src={preview} alt="Satellite preview" className="w-full object-contain max-h-64 bg-black" />
               <button
                 onClick={() => { setSelectedFile(null); setPreview(null); setResult(null); }}
@@ -127,7 +128,7 @@ export default function SatellitePage() {
 
           {/* No-preview format note */}
           {selectedFile && !preview && (
-            <div className="bg-slate-50 border border-slate-200 rounded-lg p-3 text-xs text-slate-600 flex items-center gap-2">
+            <div className="bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg p-3 text-xs text-slate-600 dark:text-slate-300 flex items-center gap-2">
               <AlertTriangle className="w-4 h-4 text-yellow-500 flex-shrink-0" />
               {selectedFile.name} — Preview unavailable for this format.
               Analysis will still run on the raw data.
@@ -138,7 +139,7 @@ export default function SatellitePage() {
           <button
             onClick={runAnalysis}
             disabled={!selectedFile || isAnalyzing}
-            className="w-full bg-blue-600 hover:bg-blue-700 disabled:bg-slate-300 disabled:cursor-not-allowed
+            className="w-full bg-blue-600 hover:bg-blue-700 disabled:bg-slate-300 dark:disabled:bg-slate-700 disabled:cursor-not-allowed
               text-white font-semibold py-3 rounded-xl transition-colors flex items-center justify-center gap-2"
           >
             {isAnalyzing ? (
@@ -158,7 +159,7 @@ export default function SatellitePage() {
           </button>
 
           {/* Info box */}
-          <div className="bg-blue-50 border border-blue-200 rounded-lg p-3 text-xs text-blue-700">
+          <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-700 rounded-lg p-3 text-xs text-blue-700 dark:text-blue-300">
             <strong>Pipeline:</strong> Image → Detection → Classification → Grad-CAM XAI
             <br />
             <strong>Models:</strong> EfficientNet-B0 (detection), ResNet50 (classification)
@@ -168,8 +169,8 @@ export default function SatellitePage() {
         </div>
 
         {/* Right: Results */}
-        <div className="bg-white rounded-xl border border-slate-200 p-5">
-          <h2 className="text-sm font-semibold text-slate-700 mb-4">Analysis Results</h2>
+        <div className="bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 p-5">
+          <h2 className="text-sm font-semibold text-slate-700 dark:text-slate-300 mb-4">Analysis Results</h2>
           <AnalysisPanel result={result} isLoading={isAnalyzing} error={error} />
         </div>
       </div>

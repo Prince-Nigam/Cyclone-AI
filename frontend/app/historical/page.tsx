@@ -11,7 +11,7 @@ import type { Cyclone, IntensityClass } from "@/types";
 
 const CycloneMap = dynamic(
   () => import("@/components/map/CycloneMap").then((m) => m.CycloneMap),
-  { ssr: false, loading: () => <div className="h-96 bg-slate-100 rounded-xl animate-pulse" /> }
+  { ssr: false, loading: () => <div className="h-96 bg-slate-100 dark:bg-slate-800 rounded-xl animate-pulse" /> }
 );
 
 const BASINS = [
@@ -76,8 +76,8 @@ function HistoricalContent() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-bold text-slate-900">Historical Cyclone Explorer</h1>
-        <p className="text-slate-500 text-sm mt-1">
+        <h1 className="text-2xl font-bold text-slate-900 dark:text-slate-100">Historical Cyclone Explorer</h1>
+        <p className="text-slate-500 dark:text-slate-400 text-sm mt-1">
           Browse archived cyclone records from IBTrACS dataset.
           All records are labeled as <DataTypeBadge type="HISTORICAL" className="inline-flex" />.
         </p>
@@ -87,13 +87,13 @@ function HistoricalContent() {
 
         {/* Filters + List */}
         <div className="lg:col-span-1 space-y-3">
-          <div className="bg-white rounded-xl border border-slate-200 p-4 space-y-3">
-            <h2 className="text-sm font-semibold text-slate-700">Filters</h2>
+          <div className="bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 p-4 space-y-3">
+            <h2 className="text-sm font-semibold text-slate-700 dark:text-slate-300">Filters</h2>
 
             <select
               value={filters.basin}
               onChange={(e) => { setFilters({ ...filters, basin: e.target.value }); setPage(1); }}
-              className="w-full text-sm border border-slate-200 rounded-lg px-3 py-2 bg-white"
+              className="w-full text-sm border border-slate-200 dark:border-slate-600 rounded-lg px-3 py-2 bg-white dark:bg-slate-700 text-slate-800 dark:text-slate-200"
             >
               {BASINS.map((b) => <option key={b.value} value={b.value}>{b.label}</option>)}
             </select>
@@ -104,44 +104,44 @@ function HistoricalContent() {
                 placeholder="Search name..."
                 value={filters.name}
                 onChange={(e) => { setFilters({ ...filters, name: e.target.value }); setPage(1); }}
-                className="flex-1 text-sm border border-slate-200 rounded-lg px-3 py-2"
+                className="flex-1 text-sm border border-slate-200 dark:border-slate-600 rounded-lg px-3 py-2 bg-white dark:bg-slate-700 text-slate-800 dark:text-slate-200 placeholder:text-slate-400"
               />
               <input
                 type="number"
                 placeholder="Year"
                 value={filters.year}
                 onChange={(e) => { setFilters({ ...filters, year: e.target.value }); setPage(1); }}
-                className="w-24 text-sm border border-slate-200 rounded-lg px-3 py-2"
+                className="w-24 text-sm border border-slate-200 dark:border-slate-600 rounded-lg px-3 py-2 bg-white dark:bg-slate-700 text-slate-800 dark:text-slate-200 placeholder:text-slate-400"
               />
             </div>
           </div>
 
           {/* Cyclone list */}
-          <div className="bg-white rounded-xl border border-slate-200 overflow-hidden">
+          <div className="bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 overflow-hidden">
             {loading ? (
               <div className="flex items-center gap-2 p-4 text-slate-400">
                 <Loader2 className="w-4 h-4 animate-spin" />
                 <span className="text-sm">Loading...</span>
               </div>
             ) : cyclones.length === 0 ? (
-              <div className="p-4 text-center text-sm text-slate-500">
-                <AlertTriangle className="w-6 h-6 mx-auto mb-2 text-slate-300" />
+              <div className="p-4 text-center text-sm text-slate-500 dark:text-slate-400">
+                <AlertTriangle className="w-6 h-6 mx-auto mb-2 text-slate-300 dark:text-slate-500" />
                 No cyclones found
               </div>
             ) : (
-              <div className="divide-y divide-slate-100 max-h-[500px] overflow-y-auto">
+              <div className="divide-y divide-slate-100 dark:divide-slate-700 max-h-[500px] overflow-y-auto">
                 {cyclones.map((c) => (
                   <button
                     key={c.id}
                     onClick={() => loadDetail(c.id)}
-                    className={`w-full text-left px-4 py-3 hover:bg-slate-50 transition-colors
-                      ${selected?.id === c.id ? "bg-blue-50 border-l-2 border-blue-500" : ""}`}
+                    className={`w-full text-left px-4 py-3 hover:bg-slate-50 dark:hover:bg-slate-700/50 transition-colors
+                      ${selected?.id === c.id ? "bg-blue-50 dark:bg-blue-900/30 border-l-2 border-blue-500" : ""}`}
                   >
                     <div className="flex items-center justify-between mb-1">
-                      <span className="font-semibold text-sm text-slate-800">{c.name || "UNNAMED"}</span>
+                      <span className="font-semibold text-sm text-slate-800 dark:text-slate-100">{c.name || "UNNAMED"}</span>
                       <IntensityBadge intensity={(c.peak_intensity || "UNKNOWN") as IntensityClass} />
                     </div>
-                    <div className="text-xs text-slate-500">
+                    <div className="text-xs text-slate-500 dark:text-slate-400">
                       {c.basin} · {c.season} ·{" "}
                       {c.peak_wind_kt ? `${c.peak_wind_kt} kt` : "N/A"}
                     </div>
@@ -152,14 +152,14 @@ function HistoricalContent() {
 
             {/* Pagination */}
             {total > 15 && (
-              <div className="flex items-center justify-between px-4 py-2 border-t border-slate-100 text-xs text-slate-500">
+              <div className="flex items-center justify-between px-4 py-2 border-t border-slate-100 dark:border-slate-700 text-xs text-slate-500 dark:text-slate-400">
                 <span>{total} total</span>
                 <div className="flex gap-2">
                   <button onClick={() => setPage(p => Math.max(1, p - 1))} disabled={page === 1}
-                    className="px-2 py-1 border rounded disabled:opacity-40">Prev</button>
+                    className="px-2 py-1 border border-slate-200 dark:border-slate-600 rounded disabled:opacity-40 hover:bg-slate-50 dark:hover:bg-slate-700">Prev</button>
                   <span>p.{page}</span>
                   <button onClick={() => setPage(p => p + 1)} disabled={page * 15 >= total}
-                    className="px-2 py-1 border rounded disabled:opacity-40">Next</button>
+                    className="px-2 py-1 border border-slate-200 dark:border-slate-600 rounded disabled:opacity-40 hover:bg-slate-50 dark:hover:bg-slate-700">Next</button>
                 </div>
               </div>
             )}
@@ -176,13 +176,13 @@ function HistoricalContent() {
           ) : selected ? (
             <>
               {/* Header */}
-              <div className="bg-white rounded-xl border border-slate-200 p-5">
+              <div className="bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 p-5">
                 <div className="flex items-start justify-between flex-wrap gap-3">
                   <div>
-                    <h2 className="text-xl font-bold text-slate-800">
+                    <h2 className="text-xl font-bold text-slate-800 dark:text-slate-100">
                       Cyclone {selected.name || "UNNAMED"}
                     </h2>
-                    <p className="text-sm text-slate-500 mt-0.5">
+                    <p className="text-sm text-slate-500 dark:text-slate-400 mt-0.5">
                       {selected.basin} · {selected.season} · {selected.num_observations} observations
                     </p>
                   </div>
@@ -199,9 +199,9 @@ function HistoricalContent() {
                     { label: "Start", value: selected.start_time ? new Date(selected.start_time).toLocaleDateString() : "—" },
                     { label: "End",   value: selected.end_time   ? new Date(selected.end_time).toLocaleDateString()   : "—" },
                   ].map(({ label, value }) => (
-                    <div key={label} className="bg-slate-50 rounded-lg p-3">
-                      <p className="text-xs text-slate-500">{label}</p>
-                      <p className="text-sm font-semibold text-slate-800 font-mono">{value}</p>
+                    <div key={label} className="bg-slate-50 dark:bg-slate-700/50 rounded-lg p-3">
+                      <p className="text-xs text-slate-500 dark:text-slate-400">{label}</p>
+                      <p className="text-sm font-semibold text-slate-800 dark:text-slate-100 font-mono">{value}</p>
                     </div>
                   ))}
                 </div>
@@ -209,8 +209,8 @@ function HistoricalContent() {
 
               {/* Map */}
               {selected.track && selected.track.length > 0 && (
-                <div className="bg-white rounded-xl border border-slate-200 p-4">
-                  <h3 className="text-sm font-semibold text-slate-700 mb-3">Historical Track</h3>
+                <div className="bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 p-4">
+                  <h3 className="text-sm font-semibold text-slate-700 dark:text-slate-300 mb-3">Historical Track</h3>
                   <CycloneMap
                     historicalTrack={selected.track}
                     height="380px"
@@ -219,8 +219,8 @@ function HistoricalContent() {
               )}
             </>
           ) : (
-            <div className="flex flex-col items-center justify-center p-16 text-slate-400 bg-white rounded-xl border border-slate-200">
-              <Search className="w-10 h-10 mb-3 text-slate-300" />
+            <div className="flex flex-col items-center justify-center p-16 text-slate-400 bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700">
+              <Search className="w-10 h-10 mb-3 text-slate-300 dark:text-slate-600" />
               <p className="text-sm">Select a cyclone from the list to view details and track</p>
             </div>
           )}

@@ -21,12 +21,12 @@ const FEATURE_CARDS = [
 ];
 
 const COLOR_MAP: Record<string, string> = {
-  blue:   "bg-blue-50 text-blue-700 border-blue-200",
-  purple: "bg-purple-50 text-purple-700 border-purple-200",
-  orange: "bg-orange-50 text-orange-700 border-orange-200",
-  red:    "bg-red-50 text-red-700 border-red-200",
-  green:  "bg-green-50 text-green-700 border-green-200",
-  slate:  "bg-slate-50 text-slate-700 border-slate-200",
+  blue:   "bg-blue-50 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 border-blue-200 dark:border-blue-700",
+  purple: "bg-purple-50 dark:bg-purple-900/30 text-purple-700 dark:text-purple-300 border-purple-200 dark:border-purple-700",
+  orange: "bg-orange-50 dark:bg-orange-900/30 text-orange-700 dark:text-orange-300 border-orange-200 dark:border-orange-700",
+  red:    "bg-red-50 dark:bg-red-900/30 text-red-700 dark:text-red-300 border-red-200 dark:border-red-700",
+  green:  "bg-green-50 dark:bg-green-900/30 text-green-700 dark:text-green-300 border-green-200 dark:border-green-700",
+  slate:  "bg-slate-50 dark:bg-slate-700/50 text-slate-700 dark:text-slate-300 border-slate-200 dark:border-slate-600",
 };
 
 export default function DashboardPage() {
@@ -76,20 +76,20 @@ export default function DashboardPage() {
 
       {/* Features Grid */}
       <div>
-        <h2 className="text-lg font-semibold text-slate-800 mb-4">Platform Modules</h2>
+        <h2 className="text-lg font-semibold text-slate-800 dark:text-slate-100 mb-4">Platform Modules</h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
           {FEATURE_CARDS.map(({ icon: Icon, title, desc, href, color }) => (
             <Link
               key={title}
               href={href}
-              className={`p-4 rounded-xl border bg-white hover:shadow-md transition-all group`}
+              className="p-4 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 hover:shadow-md dark:hover:shadow-slate-900 transition-all group"
             >
               <div className={`w-9 h-9 rounded-lg flex items-center justify-center mb-3 border ${COLOR_MAP[color]}`}>
                 <Icon className="w-5 h-5" />
               </div>
-              <h3 className="font-semibold text-slate-800 text-sm mb-1">{title}</h3>
-              <p className="text-xs text-slate-500 leading-relaxed">{desc}</p>
-              <div className="flex items-center gap-1 mt-3 text-xs text-blue-600 group-hover:text-blue-700">
+              <h3 className="font-semibold text-slate-800 dark:text-slate-100 text-sm mb-1">{title}</h3>
+              <p className="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">{desc}</p>
+              <div className="flex items-center gap-1 mt-3 text-xs text-blue-600 dark:text-blue-400 group-hover:text-blue-700 dark:group-hover:text-blue-300">
                 Open <ArrowRight className="w-3 h-3" />
               </div>
             </Link>
@@ -100,8 +100,8 @@ export default function DashboardPage() {
       {/* Recent Cyclones */}
       <div>
         <div className="flex items-center justify-between mb-4">
-          <h2 className="text-lg font-semibold text-slate-800">Recent Indian Ocean Cyclones</h2>
-          <Link href="/historical" className="text-sm text-blue-600 hover:text-blue-700 flex items-center gap-1">
+          <h2 className="text-lg font-semibold text-slate-800 dark:text-slate-100">Recent Indian Ocean Cyclones</h2>
+          <Link href="/historical" className="text-sm text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 flex items-center gap-1">
             View all <ArrowRight className="w-3 h-3" />
           </Link>
         </div>
@@ -112,41 +112,41 @@ export default function DashboardPage() {
             <span className="text-sm">Loading cyclone records...</span>
           </div>
         ) : recentCyclones.length === 0 ? (
-          <div className="p-6 bg-slate-50 rounded-xl border border-slate-200 text-center text-sm text-slate-500">
-            <AlertTriangle className="w-8 h-8 mx-auto mb-2 text-slate-300" />
+          <div className="p-6 bg-slate-50 dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 text-center text-sm text-slate-500 dark:text-slate-400">
+            <AlertTriangle className="w-8 h-8 mx-auto mb-2 text-slate-300 dark:text-slate-500" />
             No cyclone records found. Check database connection.
           </div>
         ) : (
-          <div className="overflow-x-auto rounded-xl border border-slate-200">
+          <div className="overflow-x-auto rounded-xl border border-slate-200 dark:border-slate-700">
             <table className="w-full text-sm">
-              <thead className="bg-slate-50 border-b border-slate-200">
+              <thead className="bg-slate-50 dark:bg-slate-800 border-b border-slate-200 dark:border-slate-700">
                 <tr>
-                  <th className="text-left px-4 py-3 text-xs font-semibold text-slate-600 uppercase">Name</th>
-                  <th className="text-left px-4 py-3 text-xs font-semibold text-slate-600 uppercase">Year</th>
-                  <th className="text-left px-4 py-3 text-xs font-semibold text-slate-600 uppercase">Basin</th>
-                  <th className="text-left px-4 py-3 text-xs font-semibold text-slate-600 uppercase">Peak</th>
-                  <th className="text-left px-4 py-3 text-xs font-semibold text-slate-600 uppercase">Wind</th>
-                  <th className="text-left px-4 py-3 text-xs font-semibold text-slate-600 uppercase">Type</th>
+                  <th className="text-left px-4 py-3 text-xs font-semibold text-slate-600 dark:text-slate-300 uppercase">Name</th>
+                  <th className="text-left px-4 py-3 text-xs font-semibold text-slate-600 dark:text-slate-300 uppercase">Year</th>
+                  <th className="text-left px-4 py-3 text-xs font-semibold text-slate-600 dark:text-slate-300 uppercase">Basin</th>
+                  <th className="text-left px-4 py-3 text-xs font-semibold text-slate-600 dark:text-slate-300 uppercase">Peak</th>
+                  <th className="text-left px-4 py-3 text-xs font-semibold text-slate-600 dark:text-slate-300 uppercase">Wind</th>
+                  <th className="text-left px-4 py-3 text-xs font-semibold text-slate-600 dark:text-slate-300 uppercase">Type</th>
                   <th className="px-4 py-3" />
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-100">
+              <tbody className="divide-y divide-slate-100 dark:divide-slate-700">
                 {recentCyclones.map((c) => (
-                  <tr key={c.id} className="hover:bg-slate-50 transition-colors">
-                    <td className="px-4 py-3 font-medium text-slate-800">{c.name || "UNNAMED"}</td>
-                    <td className="px-4 py-3 text-slate-600">{c.season}</td>
-                    <td className="px-4 py-3 text-slate-600">{c.basin}</td>
+                  <tr key={c.id} className="hover:bg-slate-50 dark:hover:bg-slate-800/60 transition-colors bg-white dark:bg-slate-900">
+                    <td className="px-4 py-3 font-medium text-slate-800 dark:text-slate-100">{c.name || "UNNAMED"}</td>
+                    <td className="px-4 py-3 text-slate-600 dark:text-slate-300">{c.season}</td>
+                    <td className="px-4 py-3 text-slate-600 dark:text-slate-300">{c.basin}</td>
                     <td className="px-4 py-3">
                       <IntensityBadge intensity={(c.peak_intensity || "UNKNOWN") as IntensityClass} />
                     </td>
-                    <td className="px-4 py-3 font-mono text-slate-700">
+                    <td className="px-4 py-3 font-mono text-slate-700 dark:text-slate-200">
                       {c.peak_wind_kt ? `${c.peak_wind_kt} kt` : "—"}
                     </td>
                     <td className="px-4 py-3">
                       <DataTypeBadge type={c.data_type || "HISTORICAL"} />
                     </td>
                     <td className="px-4 py-3">
-                      <Link href={`/historical?id=${c.id}`} className="text-xs text-blue-600 hover:text-blue-700">
+                      <Link href={`/historical?id=${c.id}`} className="text-xs text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300">
                         View →
                       </Link>
                     </td>

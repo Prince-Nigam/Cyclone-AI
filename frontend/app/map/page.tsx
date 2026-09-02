@@ -10,7 +10,7 @@ import type { Cyclone, IntensityClass, PredictedTrackPoint } from "@/types";
 
 const CycloneMap = dynamic(
   () => import("@/components/map/CycloneMap").then((m) => m.CycloneMap),
-  { ssr: false, loading: () => <div className="h-full bg-slate-100 rounded-xl animate-pulse" /> }
+  { ssr: false, loading: () => <div className="h-full bg-slate-100 dark:bg-slate-800 rounded-xl animate-pulse" /> }
 );
 
 export default function MapPage() {
@@ -34,9 +34,8 @@ export default function MapPage() {
     setSelected(detail);
     setPredictedTrack([]);
 
-    // Run track prediction only if enough track points exist
     if (detail.track && detail.track.length >= 2) {
-      setPredicting(true); // only set true when we actually predict
+      setPredicting(true);
       try {
         const history = detail.track.slice(-8).map((pt) => ({
           lat: pt.latitude, lon: pt.longitude,
@@ -47,18 +46,17 @@ export default function MapPage() {
       } catch {
         setPredictedTrack([]);
       } finally {
-        setPredicting(false); // always reset
+        setPredicting(false);
       }
     }
-    // If track < 2 points, predicting stays false — bug fixed
   };
 
   return (
     <div className="space-y-4">
       <div className="flex items-start justify-between flex-wrap gap-3">
         <div>
-          <h1 className="text-2xl font-bold text-slate-900">Interactive Cyclone Map</h1>
-          <p className="text-slate-500 text-sm mt-1">
+          <h1 className="text-2xl font-bold text-slate-900 dark:text-slate-100">Interactive Cyclone Map</h1>
+          <p className="text-slate-500 dark:text-slate-400 text-sm mt-1">
             Historical tracks (<DataTypeBadge type="HISTORICAL" className="inline-flex" />) and
             model predictions (<DataTypeBadge type="PREDICTED" className="inline-flex" />).
           </p>
@@ -67,7 +65,7 @@ export default function MapPage() {
         {/* Cyclone selector */}
         <select
           onChange={(e) => loadCyclone(e.target.value)}
-          className="text-sm border border-slate-200 rounded-lg px-3 py-2 bg-white min-w-48"
+          className="text-sm border border-slate-200 dark:border-slate-600 rounded-lg px-3 py-2 bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-200 min-w-48"
         >
           {cyclones.map((c) => (
             <option key={c.id} value={c.id}>
@@ -78,11 +76,11 @@ export default function MapPage() {
       </div>
 
       {/* NASA GIBS info banner */}
-      <div className="bg-blue-50 border border-blue-200 rounded-xl px-4 py-2.5 flex items-center gap-3 text-sm">
+      <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-700 rounded-xl px-4 py-2.5 flex items-center gap-3 text-sm">
         <span className="text-2xl">🛰️</span>
         <div>
-          <span className="font-semibold text-blue-800">Live NASA Satellite Imagery available</span>
-          <span className="text-blue-600 ml-2">— Click the <b>Satellite OFF</b> button on the map (top-right) to enable real satellite view.</span>
+          <span className="font-semibold text-blue-800 dark:text-blue-300">Live NASA Satellite Imagery available</span>
+          <span className="text-blue-600 dark:text-blue-400 ml-2">— Click the <b>Satellite OFF</b> button on the map (top-right) to enable real satellite view.</span>
         </div>
         <a
           href="/live-satellite"
@@ -97,10 +95,10 @@ export default function MapPage() {
         {/* Info panel */}
         <div className="lg:col-span-1 space-y-3">
           {selected ? (
-            <div className="bg-white rounded-xl border border-slate-200 p-4 space-y-3">
+            <div className="bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 p-4 space-y-3">
               <div>
-                <h2 className="font-bold text-slate-800">{selected.name}</h2>
-                <p className="text-xs text-slate-500">{selected.id}</p>
+                <h2 className="font-bold text-slate-800 dark:text-slate-100">{selected.name}</h2>
+                <p className="text-xs text-slate-500 dark:text-slate-400">{selected.id}</p>
               </div>
 
               <IntensityBadge intensity={(selected.peak_intensity || "UNKNOWN") as IntensityClass} />
@@ -108,25 +106,25 @@ export default function MapPage() {
 
               <div className="space-y-2 text-sm">
                 <div className="flex justify-between">
-                  <span className="text-slate-500">Basin</span>
-                  <span className="font-medium">{selected.basin}</span>
+                  <span className="text-slate-500 dark:text-slate-400">Basin</span>
+                  <span className="font-medium text-slate-800 dark:text-slate-200">{selected.basin}</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-slate-500">Season</span>
-                  <span className="font-medium">{selected.season}</span>
+                  <span className="text-slate-500 dark:text-slate-400">Season</span>
+                  <span className="font-medium text-slate-800 dark:text-slate-200">{selected.season}</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-slate-500">Peak Wind</span>
-                  <span className="font-medium font-mono">{selected.peak_wind_kt} kt</span>
+                  <span className="text-slate-500 dark:text-slate-400">Peak Wind</span>
+                  <span className="font-medium font-mono text-slate-800 dark:text-slate-200">{selected.peak_wind_kt} kt</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-slate-500">Track Points</span>
-                  <span className="font-medium">{selected.track?.length || 0}</span>
+                  <span className="text-slate-500 dark:text-slate-400">Track Points</span>
+                  <span className="font-medium text-slate-800 dark:text-slate-200">{selected.track?.length || 0}</span>
                 </div>
               </div>
 
-              <div className="pt-2 border-t border-slate-100">
-                <p className="text-xs font-semibold text-slate-600 mb-1">Track Prediction</p>
+              <div className="pt-2 border-t border-slate-100 dark:border-slate-700">
+                <p className="text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">Track Prediction</p>
                 {predicting ? (
                   <div className="flex items-center gap-1 text-xs text-slate-400">
                     <Loader2 className="w-3 h-3 animate-spin" />
@@ -135,7 +133,7 @@ export default function MapPage() {
                 ) : predictedTrack.length > 0 ? (
                   <div>
                     <DataTypeBadge type="PREDICTED" size="sm" />
-                    <p className="text-xs text-slate-500 mt-1">
+                    <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
                       {predictedTrack.length} steps · {predictedTrack.at(-1)?.hours_ahead}h ahead
                     </p>
                   </div>
@@ -149,11 +147,11 @@ export default function MapPage() {
               </p>
             </div>
           ) : (
-            <div className="bg-white rounded-xl border border-slate-200 p-4">
+            <div className="bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 p-4">
               {loading ? (
                 <Loader2 className="w-5 h-5 animate-spin text-slate-400" />
               ) : (
-                <p className="text-sm text-slate-500">Select a cyclone</p>
+                <p className="text-sm text-slate-500 dark:text-slate-400">Select a cyclone</p>
               )}
             </div>
           )}

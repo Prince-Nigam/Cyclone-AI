@@ -2,15 +2,13 @@
 
 import React, { useState } from "react";
 import dynamic from "next/dynamic";
-import { Satellite, Layers, Wind, Thermometer, CloudRain, Eye } from "lucide-react";
+import { Satellite, Layers, Wind, Eye } from "lucide-react";
 
-// CycloneMap loaded dynamically (Leaflet SSR fix)
 const CycloneMap = dynamic(
   () => import("@/components/map/CycloneMap").then((m) => m.CycloneMap),
-  { ssr: false, loading: () => <div className="h-full bg-slate-100 rounded-xl animate-pulse" /> }
+  { ssr: false, loading: () => <div className="h-full bg-slate-100 dark:bg-slate-800 rounded-xl animate-pulse" /> }
 );
 
-// ── Windy overlay options ─────────────────────────────────────────────────────
 const WINDY_OVERLAYS = [
   { key: "satellite",  label: "Satellite",     icon: "🛰️",  desc: "Live satellite imagery" },
   { key: "wind",       label: "Wind",          icon: "💨",  desc: "Real-time wind speed & direction" },
@@ -32,30 +30,30 @@ export default function LiveSatellitePage() {
       {/* Header */}
       <div className="flex items-start justify-between flex-wrap gap-3">
         <div>
-          <h1 className="text-2xl font-bold text-slate-900 flex items-center gap-2">
+          <h1 className="text-2xl font-bold text-slate-900 dark:text-slate-100 flex items-center gap-2">
             <Satellite className="w-6 h-6 text-blue-600" />
             Live Satellite View
           </h1>
-          <p className="text-slate-500 text-sm mt-1">
+          <p className="text-slate-500 dark:text-slate-400 text-sm mt-1">
             Real-time satellite imagery &amp; weather overlays powered by{" "}
             <a href="https://windy.com" target="_blank" rel="noopener noreferrer"
-              className="text-blue-600 hover:underline font-medium">Windy.com</a>{" "}
+              className="text-blue-600 dark:text-blue-400 hover:underline font-medium">Windy.com</a>{" "}
             and{" "}
             <a href="https://nasa.gov/gibs" target="_blank" rel="noopener noreferrer"
-              className="text-blue-600 hover:underline font-medium">NASA GIBS</a>.
+              className="text-blue-600 dark:text-blue-400 hover:underline font-medium">NASA GIBS</a>.
           </p>
         </div>
 
         {/* Live indicator */}
-        <div className="flex items-center gap-2 bg-green-50 border border-green-200 px-3 py-1.5 rounded-full">
+        <div className="flex items-center gap-2 bg-green-50 dark:bg-green-900/30 border border-green-200 dark:border-green-700 px-3 py-1.5 rounded-full">
           <span className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
-          <span className="text-green-700 text-sm font-medium">Live Data</span>
+          <span className="text-green-700 dark:text-green-400 text-sm font-medium">Live Data</span>
         </div>
       </div>
 
       {/* Overlay selector */}
-      <div className="bg-white rounded-xl border border-slate-200 p-3">
-        <p className="text-xs font-semibold text-slate-500 mb-2 flex items-center gap-1">
+      <div className="bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 p-3">
+        <p className="text-xs font-semibold text-slate-500 dark:text-slate-400 mb-2 flex items-center gap-1">
           <Layers className="w-3.5 h-3.5" /> SELECT WEATHER LAYER
         </p>
         <div className="flex flex-wrap gap-2">
@@ -67,7 +65,7 @@ export default function LiveSatellitePage() {
               className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-medium border transition-all ${
                 activeOverlay === o.key
                   ? "bg-blue-600 text-white border-blue-600 shadow"
-                  : "bg-slate-50 text-slate-600 border-slate-200 hover:bg-slate-100"
+                  : "bg-slate-50 dark:bg-slate-700 text-slate-600 dark:text-slate-300 border-slate-200 dark:border-slate-600 hover:bg-slate-100 dark:hover:bg-slate-600"
               }`}
             >
               <span>{o.icon}</span>
@@ -81,12 +79,12 @@ export default function LiveSatellitePage() {
       <div className="grid grid-cols-1 xl:grid-cols-2 gap-4">
 
         {/* ── Windy Live Map ── */}
-        <div className="bg-white rounded-xl border border-slate-200 overflow-hidden">
-          <div className="flex items-center justify-between px-4 py-2.5 border-b border-slate-100 bg-slate-50">
+        <div className="bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 overflow-hidden">
+          <div className="flex items-center justify-between px-4 py-2.5 border-b border-slate-100 dark:border-slate-700 bg-slate-50 dark:bg-slate-900/50">
             <div className="flex items-center gap-2">
               <span className="text-lg">🌀</span>
-              <span className="font-semibold text-slate-800 text-sm">Windy Live Weather</span>
-              <span className="text-xs bg-green-100 text-green-700 px-2 py-0.5 rounded-full font-medium">
+              <span className="font-semibold text-slate-800 dark:text-slate-200 text-sm">Windy Live Weather</span>
+              <span className="text-xs bg-green-100 dark:bg-green-900/40 text-green-700 dark:text-green-400 px-2 py-0.5 rounded-full font-medium">
                 {WINDY_OVERLAYS.find(o => o.key === activeOverlay)?.label}
               </span>
             </div>
@@ -94,7 +92,7 @@ export default function LiveSatellitePage() {
               href={`https://www.windy.com/?${activeOverlay},15,75,5`}
               target="_blank"
               rel="noopener noreferrer"
-              className="text-xs text-blue-600 hover:underline"
+              className="text-xs text-blue-600 dark:text-blue-400 hover:underline"
             >
               Open full screen ↗
             </a>
@@ -102,9 +100,9 @@ export default function LiveSatellitePage() {
 
           <div className="relative" style={{ height: "500px" }}>
             {!windyLoaded && (
-              <div className="absolute inset-0 flex flex-col items-center justify-center bg-slate-50 z-10">
+              <div className="absolute inset-0 flex flex-col items-center justify-center bg-slate-50 dark:bg-slate-900 z-10">
                 <div className="w-10 h-10 border-4 border-blue-500 border-t-transparent rounded-full animate-spin mb-3" />
-                <p className="text-sm text-slate-500">Loading live satellite data…</p>
+                <p className="text-sm text-slate-500 dark:text-slate-400">Loading live satellite data…</p>
                 <p className="text-xs text-slate-400 mt-1">Powered by Windy.com</p>
               </div>
             )}
@@ -120,12 +118,12 @@ export default function LiveSatellitePage() {
         </div>
 
         {/* ── NASA GIBS Map ── */}
-        <div className="bg-white rounded-xl border border-slate-200 overflow-hidden">
-          <div className="flex items-center justify-between px-4 py-2.5 border-b border-slate-100 bg-slate-50">
+        <div className="bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 overflow-hidden">
+          <div className="flex items-center justify-between px-4 py-2.5 border-b border-slate-100 dark:border-slate-700 bg-slate-50 dark:bg-slate-900/50">
             <div className="flex items-center gap-2">
               <span className="text-lg">🛰️</span>
-              <span className="font-semibold text-slate-800 text-sm">NASA GIBS Satellite</span>
-              <span className="text-xs bg-blue-100 text-blue-700 px-2 py-0.5 rounded-full font-medium">
+              <span className="font-semibold text-slate-800 dark:text-slate-200 text-sm">NASA GIBS Satellite</span>
+              <span className="text-xs bg-blue-100 dark:bg-blue-900/40 text-blue-700 dark:text-blue-400 px-2 py-0.5 rounded-full font-medium">
                 MODIS / VIIRS
               </span>
             </div>
@@ -133,7 +131,7 @@ export default function LiveSatellitePage() {
               href="https://worldview.earthdata.nasa.gov/"
               target="_blank"
               rel="noopener noreferrer"
-              className="text-xs text-blue-600 hover:underline"
+              className="text-xs text-blue-600 dark:text-blue-400 hover:underline"
             >
               NASA Worldview ↗
             </a>
@@ -151,34 +149,34 @@ export default function LiveSatellitePage() {
 
       {/* Info cards */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-        <div className="bg-blue-50 border border-blue-100 rounded-xl p-4">
+        <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-100 dark:border-blue-700 rounded-xl p-4">
           <div className="flex items-center gap-2 mb-2">
-            <Satellite className="w-5 h-5 text-blue-600" />
-            <span className="font-semibold text-blue-800 text-sm">NASA GIBS</span>
+            <Satellite className="w-5 h-5 text-blue-600 dark:text-blue-400" />
+            <span className="font-semibold text-blue-800 dark:text-blue-300 text-sm">NASA GIBS</span>
           </div>
-          <p className="text-xs text-blue-700">
+          <p className="text-xs text-blue-700 dark:text-blue-400">
             Global Imagery Browse Services — free MODIS &amp; VIIRS satellite tiles.
             Updated daily. No API key needed.
           </p>
         </div>
 
-        <div className="bg-green-50 border border-green-100 rounded-xl p-4">
+        <div className="bg-green-50 dark:bg-green-900/20 border border-green-100 dark:border-green-700 rounded-xl p-4">
           <div className="flex items-center gap-2 mb-2">
-            <Wind className="w-5 h-5 text-green-600" />
-            <span className="font-semibold text-green-800 text-sm">Windy.com</span>
+            <Wind className="w-5 h-5 text-green-600 dark:text-green-400" />
+            <span className="font-semibold text-green-800 dark:text-green-300 text-sm">Windy.com</span>
           </div>
-          <p className="text-xs text-green-700">
+          <p className="text-xs text-green-700 dark:text-green-400">
             Real-time ECMWF weather model data. Shows live wind, rain,
             temperature, and satellite imagery with animation.
           </p>
         </div>
 
-        <div className="bg-orange-50 border border-orange-100 rounded-xl p-4">
+        <div className="bg-orange-50 dark:bg-orange-900/20 border border-orange-100 dark:border-orange-700 rounded-xl p-4">
           <div className="flex items-center gap-2 mb-2">
-            <Eye className="w-5 h-5 text-orange-600" />
-            <span className="font-semibold text-orange-800 text-sm">Coverage</span>
+            <Eye className="w-5 h-5 text-orange-600 dark:text-orange-400" />
+            <span className="font-semibold text-orange-800 dark:text-orange-300 text-sm">Coverage</span>
           </div>
-          <p className="text-xs text-orange-700">
+          <p className="text-xs text-orange-700 dark:text-orange-400">
             Indian Ocean basin coverage including Arabian Sea &amp; Bay of Bengal.
             Optimal for monitoring NI basin cyclones.
           </p>
@@ -186,7 +184,7 @@ export default function LiveSatellitePage() {
       </div>
 
       {/* Disclaimer */}
-      <div className="bg-yellow-50 border border-yellow-200 rounded-xl px-4 py-3 text-xs text-yellow-800">
+      <div className="bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-700 rounded-xl px-4 py-3 text-xs text-yellow-800 dark:text-yellow-300">
         <strong>⚠️ Data Sources:</strong> Satellite imagery is provided by NASA GIBS and Windy.com.
         These are observational data sources, not model predictions. AI analysis requires uploading
         an image on the <a href="/satellite" className="underline font-medium">Satellite Analysis</a> page.

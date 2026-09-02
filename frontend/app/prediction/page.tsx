@@ -124,8 +124,8 @@ export default function PredictionPage() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-bold text-slate-900">Intensity & Track Prediction</h1>
-        <p className="text-slate-500 text-sm mt-1">
+        <h1 className="text-2xl font-bold text-slate-900 dark:text-slate-100">Intensity & Track Prediction</h1>
+        <p className="text-slate-500 dark:text-slate-400 text-sm mt-1">
           Enter historical track data to predict future intensity and track.
           All outputs are labeled as <DataTypeBadge type="PREDICTED" className="inline-flex" />.
         </p>
@@ -163,7 +163,7 @@ export default function PredictionPage() {
             <div className="overflow-x-auto">
               <table className="w-full text-xs">
                 <thead>
-                  <tr className="text-slate-500 border-b border-slate-100">
+                  <tr className="text-slate-500 dark:text-slate-400 border-b border-slate-100 dark:border-slate-700">
                     <th className="text-left pb-2 pr-2">Lat°N</th>
                     <th className="text-left pb-2 pr-2">Lon°E</th>
                     <th className="text-left pb-2 pr-2">Wind (kt)</th>
@@ -180,7 +180,7 @@ export default function PredictionPage() {
                             type="number"
                             value={row[field]}
                             onChange={(e) => updateRow(i, field, e.target.value)}
-                            className="w-20 border border-slate-200 rounded px-2 py-1 text-xs font-mono"
+                            className="w-20 border border-slate-200 dark:border-slate-600 rounded px-2 py-1 text-xs font-mono bg-white dark:bg-slate-700 text-slate-800 dark:text-slate-200"
                             placeholder="0"
                           />
                         </td>
@@ -211,22 +211,22 @@ export default function PredictionPage() {
 
           {/* Intensity Result */}
           {intensityResult && (
-            <div className="bg-orange-50 border border-orange-200 rounded-xl p-4">
+            <div className="bg-orange-50 dark:bg-orange-900/20 border border-orange-200 dark:border-orange-700 rounded-xl p-4">
               <div className="flex items-center justify-between mb-3">
-                <h3 className="font-semibold text-orange-800 text-sm">Intensity Prediction</h3>
+                <h3 className="font-semibold text-orange-800 dark:text-orange-300 text-sm">Intensity Prediction</h3>
                 <DataTypeBadge type={(intensityResult.data_type as any) || "PREDICTED"} />
               </div>
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <p className="text-xs text-slate-500">Predicted Wind</p>
-                  <p className="text-2xl font-bold text-orange-700 font-mono">
+                  <p className="text-xs text-slate-500 dark:text-slate-400">Predicted Wind</p>
+                  <p className="text-2xl font-bold text-orange-700 dark:text-orange-400 font-mono">
                     {intensityResult.predicted_wind_kt?.toFixed(0)}
                     <span className="text-sm font-normal ml-1">kt</span>
                   </p>
                 </div>
                 <div>
-                  <p className="text-xs text-slate-500">Predicted Pressure</p>
-                  <p className="text-2xl font-bold text-orange-700 font-mono">
+                  <p className="text-xs text-slate-500 dark:text-slate-400">Predicted Pressure</p>
+                  <p className="text-2xl font-bold text-orange-700 dark:text-orange-400 font-mono">
                     {intensityResult.predicted_pressure_hpa?.toFixed(0)}
                     <span className="text-sm font-normal ml-1">hPa</span>
                   </p>
@@ -238,7 +238,7 @@ export default function PredictionPage() {
                 </div>
               )}
               {intensityResult.disclaimer && (
-                <p className="text-xs text-orange-600 mt-2 italic">{intensityResult.disclaimer}</p>
+                <p className="text-xs text-orange-600 dark:text-orange-400 mt-2 italic">{intensityResult.disclaimer}</p>
               )}
             </div>
           )}
@@ -246,11 +246,11 @@ export default function PredictionPage() {
 
         {/* Map */}
         <div className="space-y-3">
-          <div className="bg-white rounded-xl border border-slate-200 p-4">
-            <h2 className="font-semibold text-slate-700 text-sm mb-3">
+          <div className="bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 p-4">
+            <h2 className="font-semibold text-slate-700 dark:text-slate-300 text-sm mb-3">
               Track Visualization
               {predictedTrack.length > 0 && (
-                <span className="ml-2 text-xs text-orange-600 font-normal">
+                <span className="ml-2 text-xs text-orange-600 dark:text-orange-400 font-normal">
                   + {predictedTrack.length} predicted steps
                 </span>
               )}
@@ -263,16 +263,16 @@ export default function PredictionPage() {
           </div>
 
           {predictedTrack.length > 0 && (
-            <div className="bg-white rounded-xl border border-slate-200 p-4">
+            <div className="bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 p-4">
               <div className="flex items-center justify-between mb-3">
-                <h3 className="font-semibold text-slate-700 text-sm">Predicted Positions</h3>
+                <h3 className="font-semibold text-slate-700 dark:text-slate-300 text-sm">Predicted Positions</h3>
                 <DataTypeBadge type="PREDICTED" />
               </div>
               <div className="space-y-1 max-h-48 overflow-y-auto">
                 {predictedTrack.map((pt) => (
-                  <div key={pt.step} className="flex items-center justify-between text-xs py-1 border-b border-slate-50">
-                    <span className="text-orange-600 font-medium">t+{pt.hours_ahead}h</span>
-                    <span className="font-mono text-slate-700">{pt.lat.toFixed(2)}°N, {pt.lon.toFixed(2)}°E</span>
+                  <div key={pt.step} className="flex items-center justify-between text-xs py-1 border-b border-slate-50 dark:border-slate-700">
+                    <span className="text-orange-600 dark:text-orange-400 font-medium">t+{pt.hours_ahead}h</span>
+                    <span className="font-mono text-slate-700 dark:text-slate-300">{pt.lat.toFixed(2)}°N, {pt.lon.toFixed(2)}°E</span>
                   </div>
                 ))}
               </div>
