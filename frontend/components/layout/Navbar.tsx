@@ -135,12 +135,12 @@ export function Navbar() {
       className={clsx(
         "sticky top-0 z-50 transition-all duration-300",
         scrolled
-          ? "bg-slate-950/90 backdrop-blur-xl border-b border-slate-800/80 shadow-lg shadow-black/20"
-          : "bg-slate-950/80 backdrop-blur-md border-b border-slate-800/60"
+          ? "bg-[#050c1a] border-b border-slate-700/70 shadow-xl shadow-black/40"
+          : "bg-[#070e1c] border-b border-slate-700/50"
       )}
     >
       {/* Top accent line */}
-      <div className="h-px bg-gradient-to-r from-transparent via-blue-500/60 to-transparent" />
+      <div className="h-px bg-gradient-to-r from-transparent via-blue-500 to-transparent opacity-60" />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-14">
