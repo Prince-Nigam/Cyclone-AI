@@ -78,6 +78,26 @@ export default function SatellitePage() {
         </p>
       </div>
 
+      {/* Info stat cards */}
+      <div className="grid grid-cols-2 gap-3">
+        <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-700 rounded-xl p-4 flex items-center gap-3">
+          <span className="text-2xl">🤖</span>
+          <div>
+            <p className="text-xs text-blue-600 dark:text-blue-400 font-semibold uppercase tracking-wide">AI Pipeline</p>
+            <p className="text-sm font-bold text-blue-900 dark:text-blue-200">EfficientNet-B0 + ResNet50</p>
+            <p className="text-xs text-blue-700 dark:text-blue-300 mt-0.5">Detection → Classification → Grad-CAM XAI</p>
+          </div>
+        </div>
+        <div className="bg-slate-50 dark:bg-slate-700/50 border border-slate-200 dark:border-slate-600 rounded-xl p-4 flex items-center gap-3">
+          <span className="text-2xl">📁</span>
+          <div>
+            <p className="text-xs text-slate-600 dark:text-slate-400 font-semibold uppercase tracking-wide">Supported Formats</p>
+            <p className="text-sm font-bold text-slate-800 dark:text-slate-200">PNG · JPG · TIFF · NetCDF · HDF5</p>
+            <p className="text-xs text-slate-600 dark:text-slate-400 mt-0.5">Max 50 MB · 224×224 IR input preferred</p>
+          </div>
+        </div>
+      </div>
+
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
 
         {/* Left: Upload + image */}

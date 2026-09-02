@@ -10,6 +10,26 @@ export default function MethodologyPage() {
         </p>
       </div>
 
+      {/* Info stat cards */}
+      <div className="grid grid-cols-2 gap-3">
+        <div className="bg-purple-50 dark:bg-purple-900/20 border border-purple-200 dark:border-purple-700 rounded-xl p-4 flex items-center gap-3">
+          <span className="text-2xl">🔬</span>
+          <div>
+            <p className="text-xs text-purple-600 dark:text-purple-400 font-semibold uppercase tracking-wide">AI Models Used</p>
+            <p className="text-sm font-bold text-purple-900 dark:text-purple-200">EfficientNet · ResNet50 · LSTM</p>
+            <p className="text-xs text-purple-700 dark:text-purple-300 mt-0.5">Detection · Classification · Intensity · Track</p>
+          </div>
+        </div>
+        <div className="bg-slate-50 dark:bg-slate-700/50 border border-slate-200 dark:border-slate-600 rounded-xl p-4 flex items-center gap-3">
+          <span className="text-2xl">📦</span>
+          <div>
+            <p className="text-xs text-slate-600 dark:text-slate-400 font-semibold uppercase tracking-wide">Training Data</p>
+            <p className="text-sm font-bold text-slate-800 dark:text-slate-200">HURSAT-B1 + IBTrACS</p>
+            <p className="text-xs text-slate-600 dark:text-slate-400 mt-0.5">Train ≤ 2010 · Val 2011–13 · Test 2014–15</p>
+          </div>
+        </div>
+      </div>
+
       {[
         {
           title: "1. Cyclone Detection",

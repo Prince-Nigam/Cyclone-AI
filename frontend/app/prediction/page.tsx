@@ -131,6 +131,26 @@ export default function PredictionPage() {
         </p>
       </div>
 
+      {/* Info stat cards */}
+      <div className="grid grid-cols-2 gap-3">
+        <div className="bg-orange-50 dark:bg-orange-900/20 border border-orange-200 dark:border-orange-700 rounded-xl p-4 flex items-center gap-3">
+          <span className="text-2xl">🧠</span>
+          <div>
+            <p className="text-xs text-orange-600 dark:text-orange-400 font-semibold uppercase tracking-wide">Intensity Model</p>
+            <p className="text-sm font-bold text-orange-900 dark:text-orange-200">CNN + LSTM (256 units)</p>
+            <p className="text-xs text-orange-700 dark:text-orange-300 mt-0.5">Trained on IBTrACS 1978–2015 · MAE ≈ 8 kt</p>
+          </div>
+        </div>
+        <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-700 rounded-xl p-4 flex items-center gap-3">
+          <span className="text-2xl">🛤️</span>
+          <div>
+            <p className="text-xs text-blue-600 dark:text-blue-400 font-semibold uppercase tracking-wide">Track Model</p>
+            <p className="text-sm font-bold text-blue-900 dark:text-blue-200">Seq2Seq Encoder-Decoder LSTM</p>
+            <p className="text-xs text-blue-700 dark:text-blue-300 mt-0.5">24h horizon · 8 input steps · NI basin focus</p>
+          </div>
+        </div>
+      </div>
+
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
 
         {/* Input */}

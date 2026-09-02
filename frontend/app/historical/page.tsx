@@ -83,6 +83,26 @@ function HistoricalContent() {
         </p>
       </div>
 
+      {/* Info stat cards */}
+      <div className="grid grid-cols-2 gap-3">
+        <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-700 rounded-xl p-4 flex items-center gap-3">
+          <span className="text-2xl">🗃️</span>
+          <div>
+            <p className="text-xs text-blue-600 dark:text-blue-400 font-semibold uppercase tracking-wide">IBTrACS Dataset</p>
+            <p className="text-sm font-bold text-blue-900 dark:text-blue-200">~3,000+ global cyclones</p>
+            <p className="text-xs text-blue-700 dark:text-blue-300 mt-0.5">1978–2015 · 6-hourly observations</p>
+          </div>
+        </div>
+        <div className="bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-700 rounded-xl p-4 flex items-center gap-3">
+          <span className="text-2xl">🌏</span>
+          <div>
+            <p className="text-xs text-green-600 dark:text-green-400 font-semibold uppercase tracking-wide">NI Basin Focus</p>
+            <p className="text-sm font-bold text-green-900 dark:text-green-200">Arabian Sea + Bay of Bengal</p>
+            <p className="text-xs text-green-700 dark:text-green-300 mt-0.5">Filter by basin · name · year</p>
+          </div>
+        </div>
+      </div>
+
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
 
         {/* Filters + List */}

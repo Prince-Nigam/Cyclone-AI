@@ -11,7 +11,7 @@ export function ThemeToggle() {
     <button
       onClick={toggleTheme}
       aria-label="Toggle theme"
-      className="p-2 rounded-lg text-slate-500 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors"
+      className="p-2 rounded-lg text-slate-400 hover:text-white hover:bg-white/8 transition-all duration-150"
     >
       {theme === "dark" ? (
         <Sun className="w-4 h-4" />

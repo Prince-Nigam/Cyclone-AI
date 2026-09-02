@@ -75,7 +75,25 @@ export default function MapPage() {
         </select>
       </div>
 
-      {/* NASA GIBS info banner */}
+      {/* Info stat cards */}
+      <div className="grid grid-cols-2 gap-3">
+        <div className="bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-700 rounded-xl p-4 flex items-center gap-3">
+          <span className="text-2xl">🌊</span>
+          <div>
+            <p className="text-xs text-green-600 dark:text-green-400 font-semibold uppercase tracking-wide">Basin Coverage</p>
+            <p className="text-sm font-bold text-green-900 dark:text-green-200">North Indian Ocean (NI)</p>
+            <p className="text-xs text-green-700 dark:text-green-300 mt-0.5">Arabian Sea · Bay of Bengal · 0°–30°N</p>
+          </div>
+        </div>
+        <div className="bg-purple-50 dark:bg-purple-900/20 border border-purple-200 dark:border-purple-700 rounded-xl p-4 flex items-center gap-3">
+          <span className="text-2xl">📍</span>
+          <div>
+            <p className="text-xs text-purple-600 dark:text-purple-400 font-semibold uppercase tracking-wide">Track Data</p>
+            <p className="text-sm font-bold text-purple-900 dark:text-purple-200">IBTrACS · 6-hourly obs.</p>
+            <p className="text-xs text-purple-700 dark:text-purple-300 mt-0.5">Lat/Lon + wind + pressure per point</p>
+          </div>
+        </div>
+      </div>
       <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-700 rounded-xl px-4 py-2.5 flex items-center gap-3 text-sm">
         <span className="text-2xl">🛰️</span>
         <div>

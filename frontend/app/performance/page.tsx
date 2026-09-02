@@ -39,6 +39,26 @@ export default function PerformancePage() {
         </p>
       </div>
 
+      {/* Info stat cards */}
+      <div className="grid grid-cols-2 gap-3">
+        <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-700 rounded-xl p-4 flex items-center gap-3">
+          <span className="text-2xl">🎯</span>
+          <div>
+            <p className="text-xs text-blue-600 dark:text-blue-400 font-semibold uppercase tracking-wide">Detection Accuracy</p>
+            <p className="text-sm font-bold text-blue-900 dark:text-blue-200">EfficientNet-B0 · ~85% acc.</p>
+            <p className="text-xs text-blue-700 dark:text-blue-300 mt-0.5">Test set: 2014–2015 · Binary classification</p>
+          </div>
+        </div>
+        <div className="bg-orange-50 dark:bg-orange-900/20 border border-orange-200 dark:border-orange-700 rounded-xl p-4 flex items-center gap-3">
+          <span className="text-2xl">📊</span>
+          <div>
+            <p className="text-xs text-orange-600 dark:text-orange-400 font-semibold uppercase tracking-wide">Classification F1</p>
+            <p className="text-sm font-bold text-orange-900 dark:text-orange-200">ResNet50 · avg F1 ≈ 0.74</p>
+            <p className="text-xs text-orange-700 dark:text-orange-300 mt-0.5">5 classes: TD / TS / CAT1 / CAT2 / CAT3+</p>
+          </div>
+        </div>
+      </div>
+
       {/* Disclaimer */}
       <div className="bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-700 rounded-xl p-4 flex items-start gap-3">
         <AlertTriangle className="w-5 h-5 text-yellow-600 dark:text-yellow-400 flex-shrink-0 mt-0.5" />
