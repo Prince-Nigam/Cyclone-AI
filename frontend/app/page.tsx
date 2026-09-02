@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import {
-  Wind, Search, Map, BarChart3, Satellite, Clock,
+  Wind, Search, Map, Satellite, Clock,
   AlertTriangle, Loader2, ArrowRight, TrendingUp, Database,
   Activity, Globe2, Cpu, Layers,
 } from "lucide-react";
@@ -120,8 +120,23 @@ export default function DashboardPage() {
         <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_80%_50%_at_50%_-20%,rgba(59,130,246,0.12),transparent)]" />
 
         <div className="relative flex flex-col sm:flex-row items-start sm:items-center gap-5 mb-6">
-          <div className="w-14 h-14 bg-gradient-to-br from-blue-500 to-blue-700 rounded-2xl flex items-center justify-center shadow-xl shadow-blue-600/40 flex-shrink-0">
-            <Wind className="w-7 h-7 text-white" />
+          <div className="w-16 h-16 flex-shrink-0 drop-shadow-2xl">
+            <svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-16 h-16">
+              <circle cx="32" cy="32" r="30" fill="url(#heroGrad)" opacity="0.2"/>
+              <circle cx="32" cy="32" r="28" fill="url(#heroGrad)"/>
+              <circle cx="32" cy="32" r="20" stroke="rgba(255,255,255,0.2)" strokeWidth="1.5"/>
+              <circle cx="32" cy="32" r="12" stroke="rgba(255,255,255,0.3)" strokeWidth="1.5"/>
+              <path d="M32 10 C40 10 50 17 50 26 C50 33 44 38 36 40 C28 42 20 38 18 30" stroke="white" strokeWidth="3" strokeLinecap="round" fill="none" opacity="0.95"/>
+              <path d="M32 54 C24 54 14 47 14 38 C14 31 20 26 28 24 C36 22 44 26 46 34" stroke="rgba(255,255,255,0.55)" strokeWidth="2.2" strokeLinecap="round" fill="none"/>
+              <circle cx="32" cy="32" r="5" fill="white" opacity="0.95"/>
+              <circle cx="32" cy="32" r="2.5" fill="url(#heroGrad)"/>
+              <defs>
+                <linearGradient id="heroGrad" x1="4" y1="4" x2="60" y2="60" gradientUnits="userSpaceOnUse">
+                  <stop offset="0%" stopColor="#60a5fa"/>
+                  <stop offset="100%" stopColor="#1d4ed8"/>
+                </linearGradient>
+              </defs>
+            </svg>
           </div>
           <div>
             <h1 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">

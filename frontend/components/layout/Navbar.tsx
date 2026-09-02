@@ -4,7 +4,7 @@ import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { clsx } from "clsx";
-import { Wind, Menu, X, Zap } from "lucide-react";
+import { Menu, X, Zap } from "lucide-react";
 import { ThemeToggle } from "@/components/ui/ThemeToggle";
 
 interface NavLink {
@@ -147,12 +147,34 @@ export function Navbar() {
 
           {/* Logo */}
           <Link href="/" className="flex items-center gap-2.5 flex-shrink-0 group">
-            <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-blue-700 rounded-xl flex items-center justify-center shadow-md shadow-blue-600/30 group-hover:shadow-blue-500/50 transition-shadow">
-              <Wind className="w-4.5 h-4.5 text-white" />
+            {/* Custom cyclone radar logo */}
+            <div className="relative w-9 h-9 flex-shrink-0">
+              <svg viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-9 h-9 drop-shadow-lg">
+                {/* Outer glow ring */}
+                <circle cx="18" cy="18" r="17" fill="url(#logoGrad)" opacity="0.15"/>
+                {/* Main circle bg */}
+                <circle cx="18" cy="18" r="16" fill="url(#logoGrad)"/>
+                {/* Radar rings */}
+                <circle cx="18" cy="18" r="11" stroke="rgba(255,255,255,0.25)" strokeWidth="1"/>
+                <circle cx="18" cy="18" r="6.5" stroke="rgba(255,255,255,0.35)" strokeWidth="1"/>
+                {/* Spiral arms */}
+                <path d="M18 7 C22 7 27 10 27 15 C27 19 24 22 20 23 C16 24 12 22 11 18" stroke="white" strokeWidth="1.8" strokeLinecap="round" fill="none" opacity="0.9"/>
+                <path d="M18 29 C14 29 9 26 9 21 C9 17 12 14 16 13 C20 12 24 14 25 18" stroke="rgba(255,255,255,0.6)" strokeWidth="1.4" strokeLinecap="round" fill="none"/>
+                {/* Center eye dot */}
+                <circle cx="18" cy="18" r="2.5" fill="white" opacity="0.95"/>
+                <circle cx="18" cy="18" r="1.2" fill="url(#logoGrad)"/>
+                {/* Gradients */}
+                <defs>
+                  <linearGradient id="logoGrad" x1="2" y1="2" x2="34" y2="34" gradientUnits="userSpaceOnUse">
+                    <stop offset="0%" stopColor="#3b82f6"/>
+                    <stop offset="100%" stopColor="#1d4ed8"/>
+                  </linearGradient>
+                </defs>
+              </svg>
             </div>
-            <div className="hidden sm:block">
-              <span className="text-white font-bold text-base tracking-tight">Cyclone</span>
-              <span className="text-blue-400 font-bold text-base tracking-tight ml-1">AI</span>
+            <div className="hidden sm:flex flex-col leading-none">
+              <span className="text-white font-extrabold text-sm tracking-tight">CYCLONE</span>
+              <span className="text-blue-400 font-bold text-xs tracking-widest">AI PLATFORM</span>
             </div>
           </Link>
 
