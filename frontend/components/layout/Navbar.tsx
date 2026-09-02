@@ -190,12 +190,12 @@ export function Navbar() {
                 <Link
                   href={link.href}
                   className={clsx(
-                    "relative px-3 py-1.5 rounded-lg text-sm font-medium transition-all duration-150 block",
+                    "relative px-3 py-1.5 rounded-lg text-sm font-semibold transition-all duration-150 block",
                     pathname === link.href
-                      ? "text-white bg-blue-500/20 ring-1 ring-blue-500/40"
+                      ? "text-white bg-blue-500/25 ring-1 ring-blue-400/50"
                       : link.highlight
-                      ? "text-emerald-400 hover:text-white hover:bg-emerald-500/15 ring-1 ring-emerald-500/30 animate-pulse-ring"
-                      : "text-slate-400 hover:text-slate-100 hover:bg-white/10"
+                      ? "text-emerald-300 hover:text-white hover:bg-emerald-500/15 ring-1 ring-emerald-400/40"
+                      : "text-slate-200 hover:text-white hover:bg-white/10"
                   )}
                 >
                   {pathname === link.href && (
@@ -256,12 +256,12 @@ export function Navbar() {
               href={link.href}
               onClick={() => setMobileOpen(false)}
               className={clsx(
-                "block px-3 py-2.5 rounded-xl text-sm font-medium transition-colors",
+                "block px-3 py-2.5 rounded-xl text-sm font-semibold transition-colors",
                 pathname === link.href
-                  ? "bg-blue-500/20 text-white ring-1 ring-blue-500/30"
+                  ? "bg-blue-500/25 text-white ring-1 ring-blue-400/50"
                   : link.highlight
-                  ? "text-emerald-400 hover:text-white hover:bg-emerald-500/10"
-                  : "text-slate-400 hover:text-white hover:bg-white/10"
+                  ? "text-emerald-300 hover:text-white hover:bg-emerald-500/10"
+                  : "text-slate-200 hover:text-white hover:bg-white/10"
               )}
             >
               <span className="mr-2">{link.icon}</span>
