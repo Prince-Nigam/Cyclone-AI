@@ -7,15 +7,15 @@
 
 /* ── CSS Variables ─────────────────────────────── */
 :root {
-  --bg-primary:    #f0f4ff;
-  --bg-secondary:  #ffffff;
-  --fg-primary:    #0f172a;
-  --fg-secondary:  #475569;
-  --border:        #e2e8f0;
+  --bg-primary:    #080f1e;
+  --bg-secondary:  #0d1526;
+  --fg-primary:    #f1f5f9;
+  --fg-secondary:  #94a3b8;
+  --border:        #1e293b;
   --accent:        #3b82f6;
   --accent-glow:   rgba(59,130,246,0.15);
-  --card-shadow:   0 1px 3px rgba(0,0,0,0.06), 0 4px 16px rgba(0,0,0,0.06);
-  --card-shadow-hover: 0 4px 12px rgba(0,0,0,0.10), 0 12px 32px rgba(59,130,246,0.10);
+  --card-shadow:   0 1px 3px rgba(0,0,0,0.4), 0 4px 16px rgba(0,0,0,0.3);
+  --card-shadow-hover: 0 4px 12px rgba(0,0,0,0.5), 0 12px 32px rgba(59,130,246,0.15);
 }
 
 .dark {
