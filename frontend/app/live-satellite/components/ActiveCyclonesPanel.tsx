@@ -1,10 +1,10 @@
 "use client";
 
 import React, { useState } from "react";
-import { AlertCircle, ExternalLink, Globe, Navigation, RefreshCw, ShieldAlert, Wind } from "lucide-react";
+import { AlertCircle, ExternalLink, Globe, Navigation, RefreshCw, ShieldAlert, Wind, Gauge, Thermometer, Droplets, Waves, MapPin } from "lucide-react";
 import { DataTypeBadge } from "@/components/ui/DataTypeBadge";
 import { IntensityBadge } from "@/components/ui/IntensityBadge";
-import type { RealtimeCyclone } from "@/types";
+import type { RealtimeCyclone, OceanWeatherPoint } from "@/types";
 
 interface ActiveCyclonesPanelProps {
   cyclones: RealtimeCyclone[];
@@ -15,6 +15,9 @@ interface ActiveCyclonesPanelProps {
   onRefresh: () => void;
   onSelectCyclone?: (cyclone: RealtimeCyclone) => void;
   selectedCycloneId?: string | null;
+  // Indian Ocean weather fallback
+  oceanPoints?: OceanWeatherPoint[];
+  oceanLoading?: boolean;
 }
 
 export function ActiveCyclonesPanel({
@@ -26,6 +29,8 @@ export function ActiveCyclonesPanel({
   onRefresh,
   onSelectCyclone,
   selectedCycloneId,
+  oceanPoints = [],
+  oceanLoading = false,
 }: ActiveCyclonesPanelProps) {
   const [filterQuery, setFilterQuery] = useState("");
 
@@ -46,6 +51,16 @@ export function ActiveCyclonesPanel({
         return "bg-emerald-500/20 text-emerald-700 dark:text-emerald-400 border-emerald-500/30";
     }
   };
+
+  const getWindClass = (kt: number | null) => {
+    if (!kt) return "text-slate-700 dark:text-slate-300";
+    if (kt >= 34) return "text-red-500 font-bold";
+    if (kt >= 22) return "text-amber-500 font-semibold";
+    return "text-emerald-600 dark:text-emerald-400";
+  };
+
+  // Indian Ocean stations to show in empty state
+  const indianOceanStations = oceanPoints.filter((pt) => ["AS", "BOB", "IO"].includes(pt.region));
 
   return (
     <div className="glass-card rounded-2xl p-4 flex flex-col h-full">
@@ -97,7 +112,7 @@ export function ActiveCyclonesPanel({
                 : "text-slate-500 hover:text-slate-700 dark:hover:text-slate-300"
             }`}
           >
-            Indian Ocean (NI/SI)
+            🇮🇳 Indian Ocean
           </button>
         </div>
 
@@ -126,14 +141,111 @@ export function ActiveCyclonesPanel({
             <p className="text-[11px] text-red-600 dark:text-red-400">{error}</p>
           </div>
         ) : filtered.length === 0 ? (
-          <div className="py-12 text-center text-slate-400 space-y-2 border border-dashed border-slate-200 dark:border-slate-800 rounded-xl">
-            <Globe className="w-8 h-8 mx-auto text-slate-400/60" />
-            <p className="text-xs font-medium text-slate-600 dark:text-slate-300">
-              {indianOceanOnly ? "No active cyclones in Indian Ocean" : "No active tropical cyclones reported"}
-            </p>
-            <p className="text-[11px] text-slate-500 max-w-[200px] mx-auto">
-              GDACS updates every ~5 minutes when new tropical depressions or storms develop.
-            </p>
+          <div className="space-y-3">
+            {/* Status Banner */}
+            <div className="flex items-center gap-2 p-2.5 rounded-xl bg-emerald-500/10 border border-emerald-500/20">
+              <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse flex-shrink-0" />
+              <p className="text-[11px] font-semibold text-emerald-700 dark:text-emerald-300">
+                {indianOceanOnly
+                  ? "✅ Indian Ocean — No active cyclones currently"
+                  : "✅ All ocean basins tranquil — No active cyclones"}
+              </p>
+            </div>
+
+            {/* IMD Link */}
+            {indianOceanOnly && (
+              <a
+                href="https://mausam.imd.gov.in/imd_latest/contents/cyclone.php"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-2 p-2.5 rounded-xl bg-blue-500/10 border border-blue-500/20 hover:bg-blue-500/20 transition-all group"
+              >
+                <div className="p-1.5 rounded-lg bg-blue-500/20 text-blue-600 dark:text-blue-400 flex-shrink-0">
+                  <Globe className="w-3.5 h-3.5" />
+                </div>
+                <div className="flex-1 min-w-0">
+                  <p className="text-xs font-bold text-blue-700 dark:text-blue-300 group-hover:underline">IMD Cyclone Bulletin</p>
+                  <p className="text-[10px] text-slate-500 dark:text-slate-400">India Meteorological Department — Official alerts</p>
+                </div>
+                <ExternalLink className="w-3 h-3 text-blue-500 flex-shrink-0" />
+              </a>
+            )}
+
+            {/* Indian Ocean Live Weather Stations */}
+            {indianOceanOnly && (
+              <div className="space-y-1.5">
+                <p className="text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider px-0.5 flex items-center gap-1.5">
+                  <Waves className="w-3 h-3 text-blue-400" />
+                  Indian Ocean Live Monitoring ({indianOceanStations.length} Stations)
+                </p>
+                {oceanLoading ? (
+                  <div className="py-6 text-center text-slate-400 text-xs">
+                    <RefreshCw className="w-4 h-4 animate-spin mx-auto mb-1 text-blue-500" />
+                    Fetching live station data...
+                  </div>
+                ) : (
+                  indianOceanStations.map((pt) => {
+                    const regionLabel = pt.region === "AS" ? "Arabian Sea" : pt.region === "BOB" ? "Bay of Bengal" : "Indian Ocean";
+                    const regionColor = pt.region === "AS" ? "bg-blue-500/10 border-blue-500/20 text-blue-600 dark:text-blue-400"
+                      : pt.region === "BOB" ? "bg-purple-500/10 border-purple-500/20 text-purple-600 dark:text-purple-400"
+                      : "bg-cyan-500/10 border-cyan-500/20 text-cyan-600 dark:text-cyan-400";
+
+                    return (
+                      <div
+                        key={pt.name}
+                        className="p-2.5 rounded-xl border border-slate-200/80 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-900/30 hover:bg-slate-100/70 dark:hover:bg-slate-800/40 transition-all"
+                      >
+                        <div className="flex items-center justify-between mb-2">
+                          <div className="flex items-center gap-1.5">
+                            <MapPin className="w-3 h-3 text-slate-400 flex-shrink-0" />
+                            <span className="font-bold text-xs text-slate-800 dark:text-slate-200">{pt.name}</span>
+                          </div>
+                          <span className={`text-[9px] font-bold px-1.5 py-0.5 rounded border ${regionColor}`}>
+                            {regionLabel}
+                          </span>
+                        </div>
+                        <div className="grid grid-cols-4 gap-1">
+                          <div className="text-center p-1 rounded-lg bg-slate-100 dark:bg-slate-800/60">
+                            <Wind className="w-2.5 h-2.5 mx-auto mb-0.5 text-blue-500" />
+                            <p className={`text-[10px] font-mono font-bold ${getWindClass(pt.wind_kt)}`}>
+                              {pt.wind_kt ? `${pt.wind_kt}kt` : "—"}
+                            </p>
+                            <p className="text-[9px] text-slate-400">Wind</p>
+                          </div>
+                          <div className="text-center p-1 rounded-lg bg-slate-100 dark:bg-slate-800/60">
+                            <Gauge className="w-2.5 h-2.5 mx-auto mb-0.5 text-purple-500" />
+                            <p className="text-[10px] font-mono font-bold text-slate-700 dark:text-slate-300">
+                              {pt.pressure_hpa ? `${Math.round(pt.pressure_hpa)}` : "—"}
+                            </p>
+                            <p className="text-[9px] text-slate-400">hPa</p>
+                          </div>
+                          <div className="text-center p-1 rounded-lg bg-slate-100 dark:bg-slate-800/60">
+                            <Thermometer className="w-2.5 h-2.5 mx-auto mb-0.5 text-orange-500" />
+                            <p className="text-[10px] font-mono font-bold text-slate-700 dark:text-slate-300">
+                              {pt.temp_c !== null ? `${pt.temp_c}°` : "—"}
+                            </p>
+                            <p className="text-[9px] text-slate-400">°C</p>
+                          </div>
+                          <div className="text-center p-1 rounded-lg bg-slate-100 dark:bg-slate-800/60">
+                            <Droplets className="w-2.5 h-2.5 mx-auto mb-0.5 text-cyan-500" />
+                            <p className="text-[10px] font-mono font-bold text-slate-700 dark:text-slate-300">
+                              {pt.humidity_pct !== null ? `${pt.humidity_pct}%` : "—"}
+                            </p>
+                            <p className="text-[9px] text-slate-400">RH</p>
+                          </div>
+                        </div>
+                      </div>
+                    );
+                  })
+                )}
+              </div>
+            )}
+
+            {!indianOceanOnly && (
+              <p className="text-[11px] text-slate-500 text-center py-4">
+                GDACS updates every ~5 minutes when new tropical depressions or storms develop.
+              </p>
+            )}
           </div>
         ) : (
           filtered.map((cyclone) => {
@@ -208,7 +320,7 @@ export function ActiveCyclonesPanel({
 
       {/* Footer info */}
       <div className="mt-3 pt-2.5 border-t border-slate-200 dark:border-slate-800 text-[11px] text-slate-400 flex items-center justify-between">
-        <span>Updates every ~15m</span>
+        <span>Updates every ~5m</span>
         <span className="text-emerald-500 font-medium flex items-center gap-1">
           <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
           Live Source
@@ -217,3 +329,4 @@ export function ActiveCyclonesPanel({
     </div>
   );
 }
+

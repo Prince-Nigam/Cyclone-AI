@@ -240,6 +240,8 @@ export default function LiveSatellitePage() {
             onRefresh={() => loadCyclones(indianOceanOnly)}
             onSelectCyclone={handleSelectCyclone}
             selectedCycloneId={selectedCycloneId}
+            oceanPoints={oceanPoints}
+            oceanLoading={gridLoading}
           />
         </div>
 
