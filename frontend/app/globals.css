@@ -48,7 +48,7 @@ body::before {
   content: '';
   position: fixed;
   inset: 0;
-  background-image: radial-gradient(circle, rgba(148,163,184,0.12) 1px, transparent 1px);
+  background-image: radial-gradient(circle, rgba(51,65,85,0.4) 1px, transparent 1px);
   background-size: 28px 28px;
   pointer-events: none;
   z-index: 0;
@@ -56,13 +56,13 @@ body::before {
 
 .dark body::before,
 .dark::before {
-  background-image: radial-gradient(circle, rgba(51,65,85,0.35) 1px, transparent 1px);
+  background-image: radial-gradient(circle, rgba(51,65,85,0.4) 1px, transparent 1px);
 }
 
 /* ── Glassmorphism card ─────────────────────────── */
 @layer components {
   .glass-card {
-    @apply bg-white dark:bg-slate-800/60 backdrop-blur-md border border-slate-200 dark:border-slate-700/60;
+    @apply bg-slate-800/60 backdrop-blur-md border border-slate-700/60;
     box-shadow: var(--card-shadow);
     transition: box-shadow 0.25s ease, transform 0.25s ease;
   }
@@ -92,7 +92,7 @@ body::before {
   }
 
   .section-title {
-    @apply text-lg font-bold text-slate-800 dark:text-slate-100 tracking-tight;
+    @apply text-lg font-bold text-slate-100 tracking-tight;
   }
   .badge-pill {
     @apply inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-semibold border;
