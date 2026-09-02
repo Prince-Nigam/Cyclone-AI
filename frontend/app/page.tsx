@@ -204,10 +204,7 @@ export default function DashboardPage() {
   ];
 
   return (
-    <div className="space-y-8">
-
-      {/* ── Real-Time 1s Telemetry Stream Bar ────────────── */}
-      <LiveTickerBar />
+    <div className="space-y-10">
 
       {/* ── Hero ──────────────────────────────────────────── */}
       <section className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-slate-900 via-[#0f1e3d] to-slate-900 border border-slate-700/60 p-8 shadow-2xl animate-fade-in-up">
@@ -587,6 +584,11 @@ export default function DashboardPage() {
             </div>
           ))}
         </div>
+      </section>
+
+      {/* ── Real-Time 1s Telemetry Stream Bar (Bottom Status Bar) ── */}
+      <section className="pt-2">
+        <LiveTickerBar />
       </section>
 
     </div>

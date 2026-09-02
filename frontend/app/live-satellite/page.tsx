@@ -118,9 +118,6 @@ export default function LiveSatellitePage() {
   return (
     <div className="space-y-6">
 
-      {/* ── Real-Time 1s Telemetry Stream Bar ────────────── */}
-      <LiveTickerBar />
-
       {/* ── Page Header ────────────────────────────────────────── */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
@@ -368,6 +365,11 @@ export default function LiveSatellitePage() {
       <div className="rounded-2xl border border-amber-500/30 bg-amber-500/10 px-5 py-3.5 text-xs text-amber-900 dark:text-amber-200 leading-relaxed">
         <strong>⚠️ Real-Time Observational Data:</strong> All weather points and alerts shown on this page are <span className="underline font-bold">OBSERVED</span> data streams directly fetched from open scientific APIs (GDACS &amp; Open-Meteo). For official cyclone landfall advisories and warnings, consult the India Meteorological Department (<a href="https://mausam.imd.gov.in" target="_blank" rel="noopener noreferrer" className="underline font-bold">IMD</a>).
       </div>
+
+      {/* ── Real-Time 1s Telemetry Stream Bar (Bottom Status Bar) ── */}
+      <section className="pt-2">
+        <LiveTickerBar />
+      </section>
 
     </div>
   );
