@@ -102,49 +102,49 @@ export default function PerformancePage() {
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         <div className="stat-card bg-gradient-to-br from-blue-500/10 via-blue-500/5 to-transparent border-blue-500/20">
           <div className="flex items-center justify-between mb-2">
-            <span className="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Detection Accuracy</span>
+            <span className="text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider">Detection Accuracy</span>
             <span className="p-1.5 rounded-lg bg-blue-500/20 text-blue-500">🎯</span>
           </div>
-          <p className="text-2xl font-black text-slate-800 dark:text-slate-100 font-mono">85.4%</p>
-          <div className="flex items-center justify-between text-xs text-slate-400 mt-1">
+          <p className="text-2xl font-black text-slate-900 dark:text-white font-mono">85.4%</p>
+          <div className="flex items-center justify-between text-xs text-slate-500 dark:text-slate-400 mt-1">
             <span>EfficientNet-B0</span>
-            <span className="text-emerald-500 font-medium">F1: 0.851</span>
+            <span className="text-emerald-600 dark:text-emerald-400 font-semibold">F1: 0.851</span>
           </div>
         </div>
 
         <div className="stat-card bg-gradient-to-br from-purple-500/10 via-purple-500/5 to-transparent border-purple-500/20">
           <div className="flex items-center justify-between mb-2">
-            <span className="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Pattern Classifier</span>
+            <span className="text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider">Pattern Classifier</span>
             <span className="p-1.5 rounded-lg bg-purple-500/20 text-purple-500">📊</span>
           </div>
-          <p className="text-2xl font-black text-slate-800 dark:text-slate-100 font-mono">76.8%</p>
-          <div className="flex items-center justify-between text-xs text-slate-400 mt-1">
+          <p className="text-2xl font-black text-slate-900 dark:text-white font-mono">76.8%</p>
+          <div className="flex items-center justify-between text-xs text-slate-500 dark:text-slate-400 mt-1">
             <span>ResNet50 (5 classes)</span>
-            <span className="text-purple-400 font-medium">Avg F1: 0.748</span>
+            <span className="text-purple-600 dark:text-purple-400 font-semibold">Avg F1: 0.748</span>
           </div>
         </div>
 
         <div className="stat-card bg-gradient-to-br from-amber-500/10 via-amber-500/5 to-transparent border-amber-500/20">
           <div className="flex items-center justify-between mb-2">
-            <span className="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Intensity MAE</span>
+            <span className="text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider">Intensity MAE</span>
             <span className="p-1.5 rounded-lg bg-amber-500/20 text-amber-500">📈</span>
           </div>
-          <p className="text-2xl font-black text-slate-800 dark:text-slate-100 font-mono">8.32 kt</p>
-          <div className="flex items-center justify-between text-xs text-slate-400 mt-1">
+          <p className="text-2xl font-black text-slate-900 dark:text-white font-mono">8.32 kt</p>
+          <div className="flex items-center justify-between text-xs text-slate-500 dark:text-slate-400 mt-1">
             <span>CNN + LSTM(128)</span>
-            <span className="text-amber-500 font-medium">R² = 0.835</span>
+            <span className="text-amber-600 dark:text-amber-400 font-semibold">R² = 0.835</span>
           </div>
         </div>
 
         <div className="stat-card bg-gradient-to-br from-emerald-500/10 via-emerald-500/5 to-transparent border-emerald-500/20">
           <div className="flex items-center justify-between mb-2">
-            <span className="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Track Position Error</span>
+            <span className="text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider">Track Position Error</span>
             <span className="p-1.5 rounded-lg bg-emerald-500/20 text-emerald-500">🗺️</span>
           </div>
-          <p className="text-2xl font-black text-slate-800 dark:text-slate-100 font-mono">48.6 km</p>
-          <div className="flex items-center justify-between text-xs text-slate-400 mt-1">
+          <p className="text-2xl font-black text-slate-900 dark:text-white font-mono">48.6 km</p>
+          <div className="flex items-center justify-between text-xs text-slate-500 dark:text-slate-400 mt-1">
             <span>Seq2Seq LSTM 24h</span>
-            <span className="text-emerald-500 font-medium">R² = 0.892</span>
+            <span className="text-emerald-600 dark:text-emerald-400 font-semibold">R² = 0.892</span>
           </div>
         </div>
       </div>

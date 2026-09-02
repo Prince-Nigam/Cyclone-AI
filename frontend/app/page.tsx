@@ -75,11 +75,36 @@ const COLOR_MAP: Record<string, { bg: string; icon: string; tag: string }> = {
   slate:  { bg: "bg-slate-100  dark:bg-slate-500/15",  icon: "text-slate-600  dark:text-slate-400",  tag: "bg-slate-100  dark:bg-slate-500/20  text-slate-700  dark:text-slate-300"  },
 };
 
-const STAT_COLOR: Record<string, string> = {
-  red:    "from-red-50    to-red-50/50    dark:from-red-500/15    dark:to-red-600/5    border-red-200    dark:border-red-500/30    text-red-600    dark:text-red-400",
-  blue:   "from-blue-50   to-blue-50/50   dark:from-blue-500/15   dark:to-blue-600/5   border-blue-200   dark:border-blue-500/30   text-blue-600   dark:text-blue-400",
-  green:  "from-green-50  to-green-50/50  dark:from-green-500/15  dark:to-green-600/5  border-green-200  dark:border-green-500/30  text-green-600  dark:text-green-400",
-  purple: "from-purple-50 to-purple-50/50 dark:from-purple-500/15 dark:to-purple-600/5 border-purple-200 dark:border-purple-500/30 text-purple-600 dark:text-purple-400",
+const STAT_THEMES: Record<string, {
+  border: string;
+  iconBg: string;
+  iconColor: string;
+  gradient: string;
+}> = {
+  red: {
+    border: "border-red-200 dark:border-red-500/30",
+    iconBg: "bg-red-100 dark:bg-red-500/20",
+    iconColor: "text-red-600 dark:text-red-400",
+    gradient: "from-red-500/10 dark:from-red-500/15 to-transparent",
+  },
+  blue: {
+    border: "border-blue-200 dark:border-blue-500/30",
+    iconBg: "bg-blue-100 dark:bg-blue-500/20",
+    iconColor: "text-blue-600 dark:text-blue-400",
+    gradient: "from-blue-500/10 dark:from-blue-500/15 to-transparent",
+  },
+  green: {
+    border: "border-emerald-200 dark:border-emerald-500/30",
+    iconBg: "bg-emerald-100 dark:bg-emerald-500/20",
+    iconColor: "text-emerald-600 dark:text-emerald-400",
+    gradient: "from-emerald-500/10 dark:from-emerald-500/15 to-transparent",
+  },
+  purple: {
+    border: "border-purple-200 dark:border-purple-500/30",
+    iconBg: "bg-purple-100 dark:bg-purple-500/20",
+    iconColor: "text-purple-600 dark:text-purple-400",
+    gradient: "from-purple-500/10 dark:from-purple-500/15 to-transparent",
+  },
 };
 
 /* ── Architecture items ─────────────────────────────────────── */
@@ -252,18 +277,18 @@ export default function DashboardPage() {
       {/* ── Stat cards ────────────────────────────────────── */}
       <section className="grid grid-cols-2 lg:grid-cols-4 gap-4 animate-fade-in-up animate-delay-100">
         {STATS.map(({ icon: Icon, label, value, sub, color }) => {
-          const c = STAT_COLOR[color].split("  ");
+          const theme = STAT_THEMES[color] || STAT_THEMES.blue;
           return (
             <div
               key={label}
-              className={`stat-card bg-gradient-to-br border ${c[0]} ${c[1]} ${c[2]}`}
+              className={`stat-card bg-gradient-to-br border ${theme.border} ${theme.gradient}`}
             >
-              <div className={`w-9 h-9 rounded-xl bg-gradient-to-br ${c[0]} flex items-center justify-center mb-3`}>
-                <Icon className={`w-4.5 h-4.5 ${c[3]}`} />
+              <div className={`w-10 h-10 rounded-xl ${theme.iconBg} flex items-center justify-center mb-3`}>
+                <Icon className={`w-5 h-5 ${theme.iconColor}`} />
               </div>
-              <p className="text-2xl font-extrabold text-slate-800 dark:text-slate-100 tracking-tight">{value}</p>
-              <p className="text-xs font-semibold text-slate-600 dark:text-slate-400 mt-0.5">{label}</p>
-              <p className="text-xs text-slate-500 dark:text-slate-500 mt-0.5">{sub}</p>
+              <p className="text-2xl font-black text-slate-900 dark:text-white tracking-tight font-mono">{value}</p>
+              <p className="text-xs font-bold text-slate-700 dark:text-slate-200 mt-1">{label}</p>
+              <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">{sub}</p>
             </div>
           );
         })}

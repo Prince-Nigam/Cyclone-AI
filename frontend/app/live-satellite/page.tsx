@@ -157,46 +157,46 @@ export default function LiveSatellitePage() {
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
         <div className="stat-card bg-gradient-to-br from-red-500/10 to-transparent border-red-500/20">
           <div className="flex items-center justify-between mb-1.5">
-            <span className="text-xs font-semibold text-slate-500 dark:text-slate-400">Active Alert Cyclones</span>
+            <span className="text-xs font-bold text-slate-700 dark:text-slate-300">Active Alert Cyclones</span>
             <ShieldAlert className="w-4 h-4 text-red-500" />
           </div>
-          <p className="text-2xl font-black text-slate-800 dark:text-slate-100">
+          <p className="text-2xl font-black text-slate-900 dark:text-white font-mono">
             {cyclonesLoading ? "..." : cyclones.length}
           </p>
-          <p className="text-[11px] text-slate-400 mt-0.5">GDACS Global Feed</p>
+          <p className="text-[11px] text-slate-500 dark:text-slate-400 mt-0.5">GDACS Global Feed</p>
         </div>
 
         <div className="stat-card bg-gradient-to-br from-blue-500/10 to-transparent border-blue-500/20">
           <div className="flex items-center justify-between mb-1.5">
-            <span className="text-xs font-semibold text-slate-500 dark:text-slate-400">Max Marine Wind</span>
+            <span className="text-xs font-bold text-slate-700 dark:text-slate-300">Max Marine Wind</span>
             <Wind className="w-4 h-4 text-blue-500" />
           </div>
-          <p className="text-2xl font-black text-slate-800 dark:text-slate-100 font-mono">
+          <p className="text-2xl font-black text-slate-900 dark:text-white font-mono">
             {gridLoading ? "..." : `${maxWindDetected.toFixed(1)} kt`}
           </p>
-          <p className="text-[11px] text-slate-400 mt-0.5">Surface Level 10m</p>
+          <p className="text-[11px] text-slate-500 dark:text-slate-400 mt-0.5">Surface Level 10m</p>
         </div>
 
         <div className="stat-card bg-gradient-to-br from-cyan-500/10 to-transparent border-cyan-500/20">
           <div className="flex items-center justify-between mb-1.5">
-            <span className="text-xs font-semibold text-slate-500 dark:text-slate-400">Monitoring Stations</span>
+            <span className="text-xs font-bold text-slate-700 dark:text-slate-300">Monitoring Stations</span>
             <Waves className="w-4 h-4 text-cyan-500" />
           </div>
-          <p className="text-2xl font-black text-slate-800 dark:text-slate-100">
+          <p className="text-2xl font-black text-slate-900 dark:text-white font-mono">
             {oceanPoints.length} Points
           </p>
-          <p className="text-[11px] text-slate-400 mt-0.5">Arabian Sea &amp; Bay of Bengal</p>
+          <p className="text-[11px] text-slate-500 dark:text-slate-400 mt-0.5">Arabian Sea &amp; Bay of Bengal</p>
         </div>
 
         <div className="stat-card bg-gradient-to-br from-purple-500/10 to-transparent border-purple-500/20">
           <div className="flex items-center justify-between mb-1.5">
-            <span className="text-xs font-semibold text-slate-500 dark:text-slate-400">Satellite Tiles</span>
+            <span className="text-xs font-bold text-slate-700 dark:text-slate-300">Satellite Tiles</span>
             <Activity className="w-4 h-4 text-purple-500" />
           </div>
-          <p className="text-2xl font-black text-slate-800 dark:text-slate-100">
-            MODIS/VIIRS
+          <p className="text-2xl font-black text-slate-900 dark:text-white font-mono">
+            MODIS / VIIRS
           </p>
-          <p className="text-[11px] text-slate-400 mt-0.5">NASA GIBS Real-Time</p>
+          <p className="text-[11px] text-slate-500 dark:text-slate-400 mt-0.5">NASA GIBS Real-Time</p>
         </div>
       </div>
 
