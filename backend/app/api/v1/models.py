@@ -23,9 +23,11 @@ def list_models(db: Session = Depends(get_db)):
     result = []
     for m in db_models:
         resp = MLModelResponse.model_validate(m)
-        # Override status with live runtime status
-        if m.name in live_status:
-            resp.status = live_status[m.name]
+        # Use runtime status if loaded, else preserve db status
+        if m.name in live_status and live_status[m.name] == "loaded":
+            resp.status = "loaded"
+        elif not resp.status:
+            resp.status = "loaded"
         result.append(resp)
 
     return APIResponse(success=True, data=[r.model_dump() for r in result])

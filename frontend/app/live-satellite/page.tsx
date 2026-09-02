@@ -15,6 +15,7 @@ import {
 } from "lucide-react";
 import { ActiveCyclonesPanel } from "./components/ActiveCyclonesPanel";
 import { OceanWeatherGrid } from "./components/OceanWeatherGrid";
+import { LiveTickerBar } from "@/components/ui/LiveTickerBar";
 import { getRealtimeCyclones, getOceanGrid } from "@/services/realtimeService";
 import type { RealtimeCyclone, OceanWeatherPoint } from "@/types";
 
@@ -115,6 +116,9 @@ export default function LiveSatellitePage() {
 
   return (
     <div className="space-y-6">
+
+      {/* ── Real-Time 1s Telemetry Stream Bar ────────────── */}
+      <LiveTickerBar />
 
       {/* ── Page Header ────────────────────────────────────────── */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">

@@ -20,6 +20,7 @@ from app.services.realtime_service import (
     fetch_weather_point,
     fetch_ocean_grid,
     get_cache_info,
+    get_live_telemetry_stream,
 )
 
 router = APIRouter(prefix="/realtime", tags=["Real-Time Data"])
@@ -112,3 +113,18 @@ def get_realtime_status():
             },
         },
     )
+
+
+@router.get("/live-feed", response_model=APIResponse)
+def get_realtime_live_feed():
+    """
+    Second-by-second live telemetry stream endpoint.
+    Emits current UTC second timestamp, instant wind speed with micro-fluctuations,
+    and live cyclone counts.
+    """
+    stream_data = get_live_telemetry_stream()
+    return APIResponse(
+        success=True,
+        data=stream_data,
+    )
+
