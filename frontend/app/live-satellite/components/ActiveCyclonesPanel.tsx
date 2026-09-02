@@ -113,7 +113,7 @@ export function ActiveCyclonesPanel({
       </div>
 
       {/* Content */}
-      <div className="flex-1 overflow-y-auto space-y-2.5 pr-1 max-h-[520px] custom-scrollbar">
+      <div className="flex-1 overflow-y-auto space-y-2 pr-1 max-h-[450px] custom-scrollbar">
         {loading ? (
           <div className="py-12 text-center text-slate-400 space-y-2">
             <RefreshCw className="w-6 h-6 animate-spin mx-auto text-blue-500" />
