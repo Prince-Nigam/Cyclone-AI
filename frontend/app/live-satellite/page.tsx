@@ -50,6 +50,7 @@ export default function LiveSatellitePage() {
   const [oceanPoints, setOceanPoints] = useState<OceanWeatherPoint[]>([]);
   const [gridLoading, setGridLoading] = useState<boolean>(true);
   const [gridError, setGridError] = useState<string | null>(null);
+  const [selectedPointName, setSelectedPointName] = useState<string | null>(null);
 
   // Last refreshed timestamp
   const [lastRefreshed, setLastRefreshed] = useState<string>("");
@@ -99,6 +100,7 @@ export default function LiveSatellitePage() {
 
   const handleSelectCyclone = (c: RealtimeCyclone) => {
     setSelectedCycloneId(c.id);
+    setSelectedPointName(null);
     if (c.lat !== null && c.lon !== null) {
       setMapCenter({ lat: c.lat, lon: c.lon });
       setMapZoom(6);
@@ -106,8 +108,10 @@ export default function LiveSatellitePage() {
   };
 
   const handleSelectWeatherPoint = (pt: OceanWeatherPoint) => {
+    setSelectedPointName(pt.name);
+    setSelectedCycloneId(null);
     setMapCenter({ lat: pt.lat, lon: pt.lon });
-    setMapZoom(7);
+    setMapZoom(6);
   };
 
   // Stats calculation
@@ -242,6 +246,8 @@ export default function LiveSatellitePage() {
             selectedCycloneId={selectedCycloneId}
             oceanPoints={oceanPoints}
             oceanLoading={gridLoading}
+            onSelectPoint={handleSelectWeatherPoint}
+            selectedPointName={selectedPointName}
           />
         </div>
 

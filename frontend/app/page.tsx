@@ -207,116 +207,73 @@ export default function DashboardPage() {
     <div className="space-y-10">
 
       {/* ── Hero ──────────────────────────────────────────── */}
-      <section className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-[#070d1a] via-[#0c1a38] to-[#0a1628] border border-blue-900/40 shadow-2xl animate-fade-in-up">
+      <section className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-slate-900 via-[#0f1e3d] to-slate-900 border border-slate-700/60 p-6 sm:p-8 shadow-2xl animate-fade-in-up">
         {/* Glow blobs */}
-        <div className="pointer-events-none absolute -top-32 -right-32 w-[500px] h-[500px] rounded-full bg-blue-600/10 blur-[80px]" />
-        <div className="pointer-events-none absolute -bottom-20 -left-20 w-96 h-96 rounded-full bg-purple-600/10 blur-[60px]" />
-        <div className="pointer-events-none absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-32 bg-blue-500/5 blur-3xl" />
-        {/* Grid lines */}
-        <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(rgba(59,130,246,0.04)_1px,transparent_1px),linear-gradient(90deg,rgba(59,130,246,0.04)_1px,transparent_1px)] bg-[size:48px_48px]" />
-        {/* Top gradient fade */}
-        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_70%_40%_at_50%_0%,rgba(59,130,246,0.15),transparent)]" />
+        <div className="pointer-events-none absolute -top-24 -right-24 w-80 h-80 rounded-full bg-blue-600/15 blur-3xl" />
+        <div className="pointer-events-none absolute -bottom-16 -left-16 w-64 h-64 rounded-full bg-purple-600/10 blur-3xl" />
+        {/* Subtle grid overlay */}
+        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_80%_50%_at_50%_-20%,rgba(59,130,246,0.12),transparent)]" />
 
-        <div className="relative grid grid-cols-1 lg:grid-cols-5 gap-0">
-          {/* Left: Main Content */}
-          <div className="lg:col-span-3 p-8 md:p-10 flex flex-col justify-between gap-8">
-            {/* Top row: live badge */}
-            <div className="flex items-center gap-3">
-              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-500/15 text-emerald-300 text-xs font-bold border border-emerald-500/25 tracking-wide uppercase">
-                <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-                Live Telemetry Active
-              </span>
-              <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-blue-500/15 text-blue-300 text-xs font-semibold border border-blue-500/20">
-                <span className="w-1.5 h-1.5 rounded-full bg-blue-400" />
-                GDACS · Open-Meteo · NASA GIBS
-              </span>
+        <div className="relative">
+          {/* Top header row: Logo + Title + Live badge */}
+          <div className="flex flex-col sm:flex-row sm:items-center gap-4 mb-4">
+            <div className="w-14 h-14 flex-shrink-0 drop-shadow-xl">
+              <svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-14 h-14">
+                <circle cx="32" cy="32" r="30" fill="url(#heroGrad)" opacity="0.2"/>
+                <circle cx="32" cy="32" r="28" fill="url(#heroGrad)"/>
+                <circle cx="32" cy="32" r="20" stroke="rgba(255,255,255,0.2)" strokeWidth="1.5"/>
+                <circle cx="32" cy="32" r="12" stroke="rgba(255,255,255,0.3)" strokeWidth="1.5"/>
+                <path d="M32 10 C40 10 50 17 50 26 C50 33 44 38 36 40 C28 42 20 38 18 30" stroke="white" strokeWidth="3" strokeLinecap="round" fill="none" opacity="0.95"/>
+                <path d="M32 54 C24 54 14 47 14 38 C14 31 20 26 28 24 C36 22 44 26 46 34" stroke="rgba(255,255,255,0.55)" strokeWidth="2.2" strokeLinecap="round" fill="none"/>
+                <circle cx="32" cy="32" r="5" fill="white" opacity="0.95"/>
+                <circle cx="32" cy="32" r="2.5" fill="url(#heroGrad)"/>
+                <defs>
+                  <linearGradient id="heroGrad" x1="4" y1="4" x2="60" y2="60" gradientUnits="userSpaceOnUse">
+                    <stop offset="0%" stopColor="#60a5fa"/>
+                    <stop offset="100%" stopColor="#1d4ed8"/>
+                  </linearGradient>
+                </defs>
+              </svg>
             </div>
 
-            {/* Logo + Title */}
-            <div className="flex items-center gap-5">
-              <div className="relative flex-shrink-0">
-                <div className="absolute inset-0 rounded-2xl bg-blue-500/20 blur-xl" />
-                <div className="relative w-20 h-20 rounded-2xl bg-gradient-to-br from-blue-500/20 to-blue-900/40 border border-blue-500/30 flex items-center justify-center shadow-xl shadow-blue-900/40">
-                  <svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-12 h-12">
-                    <circle cx="32" cy="32" r="28" fill="url(#heroGrad2)" opacity="0.15"/>
-                    <circle cx="32" cy="32" r="20" stroke="rgba(255,255,255,0.15)" strokeWidth="1.5"/>
-                    <circle cx="32" cy="32" r="12" stroke="rgba(255,255,255,0.25)" strokeWidth="1.5"/>
-                    <path d="M32 10 C40 10 50 17 50 26 C50 33 44 38 36 40 C28 42 20 38 18 30" stroke="white" strokeWidth="2.5" strokeLinecap="round" fill="none" opacity="0.95"/>
-                    <path d="M32 54 C24 54 14 47 14 38 C14 31 20 26 28 24 C36 22 44 26 46 34" stroke="rgba(96,165,250,0.7)" strokeWidth="2" strokeLinecap="round" fill="none"/>
-                    <circle cx="32" cy="32" r="4.5" fill="white" opacity="0.9"/>
-                    <circle cx="32" cy="32" r="2" fill="url(#heroGrad2)"/>
-                    <defs>
-                      <linearGradient id="heroGrad2" x1="4" y1="4" x2="60" y2="60" gradientUnits="userSpaceOnUse">
-                        <stop offset="0%" stopColor="#60a5fa"/>
-                        <stop offset="100%" stopColor="#1d4ed8"/>
-                      </linearGradient>
-                    </defs>
-                  </svg>
-                </div>
+            <div>
+              <div className="flex items-center gap-2 mb-1">
+                <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 text-xs font-semibold border border-emerald-500/30">
+                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                  Live Telemetry Active
+                </span>
               </div>
-              <div>
-                <h1 className="text-3xl sm:text-4xl font-black text-white tracking-tight leading-tight">
-                  Tropical Cyclone{" "}
-                  <span className="bg-clip-text text-transparent bg-gradient-to-r from-blue-400 via-cyan-300 to-blue-500">
-                    AI Platform
-                  </span>
-                </h1>
-                <p className="text-slate-400 text-sm mt-1.5 font-medium">Real-Time Tracking · AI Forecasting · Satellite Hub</p>
-              </div>
-            </div>
-
-            {/* Description */}
-            <p className="text-slate-300/80 text-sm leading-relaxed max-w-xl border-l-2 border-blue-500/40 pl-4">
-              Multi-source satellite data fusion connecting real-time <span className="text-blue-300 font-semibold">GDACS alerts</span>, <span className="text-cyan-300 font-semibold">Open-Meteo marine telemetry</span>, and <span className="text-purple-300 font-semibold">NASA GIBS satellite feeds</span> with EfficientNet, ResNet50, and LSTM neural forecasting.
-            </p>
-
-            {/* Data Type Badges */}
-            <div className="flex flex-wrap gap-2">
-              <DataTypeBadge type="OBSERVED" />
-              <DataTypeBadge type="HISTORICAL" />
-              <DataTypeBadge type="PREDICTED" />
-              <DataTypeBadge type="SIMULATED" />
-            </div>
-
-            {/* CTA Buttons */}
-            <div className="flex flex-wrap gap-3">
-              <Link href="/live-satellite" className="btn-primary">
-                <Radio className="w-4 h-4 animate-pulse" /> Live Satellite &amp; Storms
-              </Link>
-              <Link href="/satellite" className="btn-secondary">
-                AI Image Analysis <ArrowRight className="w-4 h-4" />
-              </Link>
-              <Link href="/prediction" className="inline-flex items-center gap-1.5 text-xs font-semibold px-4 py-2.5 rounded-xl border border-slate-600/60 text-slate-300 hover:border-slate-500 hover:text-white hover:bg-slate-800/60 transition-all">
-                Track Forecast <ArrowRight className="w-3.5 h-3.5" />
-              </Link>
+              <h1 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">
+                Tropical Cyclone{" "}
+                <span className="bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-cyan-400">
+                  AI Platform
+                </span>
+              </h1>
+              <p className="text-slate-400 text-xs sm:text-sm mt-0.5">Real-Time Cyclone Tracking &amp; AI-Powered Forecast Hub</p>
             </div>
           </div>
 
-          {/* Right: Stats Panel */}
-          <div className="lg:col-span-2 border-t lg:border-t-0 lg:border-l border-blue-900/30 bg-gradient-to-br from-slate-900/60 to-blue-950/30 p-6 md:p-8 flex flex-col justify-center gap-5">
-            <p className="text-[10px] font-bold text-slate-500 uppercase tracking-[0.15em] mb-1">Platform Status</p>
+          {/* Description */}
+          <p className="text-slate-300 text-xs sm:text-sm max-w-2xl leading-relaxed mb-4">
+            Multi-source satellite data fusion connecting real-time GDACS alerts, Open-Meteo marine telemetry, and NASA GIBS satellite feeds with EfficientNet, ResNet50, and LSTM neural forecasting.
+          </p>
 
-            {[
-              { label: "Data Sources", value: "3 Live APIs", icon: "🛰️", color: "text-blue-300", sub: "GDACS · Open-Meteo · NASA" },
-              { label: "Ocean Stations", value: "12 Points", icon: "🌊", color: "text-cyan-300", sub: "Arabian Sea · Bay of Bengal" },
-              { label: "AI Models", value: "4 Models", icon: "🧠", color: "text-purple-300", sub: "Detection · Track · Intensity" },
-              { label: "Update Cycle", value: "5 min", icon: "🔄", color: "text-emerald-300", sub: "Real-time auto-refresh" },
-            ].map(({ label, value, icon, color, sub }) => (
-              <div key={label} className="flex items-center gap-3.5 p-3 rounded-xl bg-white/5 border border-white/5 hover:bg-white/8 hover:border-white/10 transition-all">
-                <span className="text-2xl flex-shrink-0 w-10 h-10 flex items-center justify-center rounded-xl bg-slate-800/60">{icon}</span>
-                <div className="flex-1 min-w-0">
-                  <p className="text-[11px] text-slate-500 font-medium">{label}</p>
-                  <p className={`font-black text-base leading-tight ${color}`}>{value}</p>
-                  <p className="text-[10px] text-slate-600 truncate">{sub}</p>
-                </div>
-              </div>
-            ))}
+          {/* Provenance Badges */}
+          <div className="flex flex-wrap gap-2 mb-5">
+            <DataTypeBadge type="OBSERVED" />
+            <DataTypeBadge type="HISTORICAL" />
+            <DataTypeBadge type="PREDICTED" />
+            <DataTypeBadge type="SIMULATED" />
+          </div>
 
-            <div className="mt-2 flex items-center gap-2 pt-4 border-t border-slate-800/60">
-              <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse flex-shrink-0" />
-              <span className="text-xs text-slate-400 font-medium">All systems operational</span>
-              <span className="ml-auto text-[10px] text-slate-600 font-mono">SIH 2024</span>
-            </div>
+          {/* Buttons */}
+          <div className="flex flex-wrap gap-3">
+            <Link href="/live-satellite" className="btn-primary">
+              <Radio className="w-4 h-4 animate-pulse" /> Live Satellite &amp; Storms
+            </Link>
+            <Link href="/satellite" className="btn-secondary">
+              AI Image Analysis <ArrowRight className="w-4 h-4" />
+            </Link>
           </div>
         </div>
       </section>

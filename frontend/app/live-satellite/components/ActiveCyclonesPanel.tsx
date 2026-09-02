@@ -18,6 +18,8 @@ interface ActiveCyclonesPanelProps {
   // Indian Ocean weather fallback
   oceanPoints?: OceanWeatherPoint[];
   oceanLoading?: boolean;
+  onSelectPoint?: (pt: OceanWeatherPoint) => void;
+  selectedPointName?: string | null;
 }
 
 export function ActiveCyclonesPanel({
@@ -31,6 +33,8 @@ export function ActiveCyclonesPanel({
   selectedCycloneId,
   oceanPoints = [],
   oceanLoading = false,
+  onSelectPoint,
+  selectedPointName,
 }: ActiveCyclonesPanelProps) {
   const [filterQuery, setFilterQuery] = useState("");
 
@@ -173,11 +177,16 @@ export function ActiveCyclonesPanel({
 
             {/* Indian Ocean Live Weather Stations */}
             {indianOceanOnly && (
-              <div className="space-y-1.5">
-                <p className="text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider px-0.5 flex items-center gap-1.5">
-                  <Waves className="w-3 h-3 text-blue-400" />
-                  Indian Ocean Live Monitoring ({indianOceanStations.length} Stations)
-                </p>
+              <div className="space-y-2">
+                <div className="flex items-center justify-between px-0.5">
+                  <p className="text-[10px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider flex items-center gap-1.5">
+                    <Waves className="w-3 h-3 text-blue-400" />
+                    Indian Ocean Live Monitoring ({indianOceanStations.length})
+                  </p>
+                  <span className="text-[10px] text-blue-500 dark:text-blue-400 font-medium">
+                    Click to view on Map ↗
+                  </span>
+                </div>
                 {oceanLoading ? (
                   <div className="py-6 text-center text-slate-400 text-xs">
                     <RefreshCw className="w-4 h-4 animate-spin mx-auto mb-1 text-blue-500" />
@@ -185,6 +194,7 @@ export function ActiveCyclonesPanel({
                   </div>
                 ) : (
                   indianOceanStations.map((pt) => {
+                    const isPointSelected = selectedPointName === pt.name;
                     const regionLabel = pt.region === "AS" ? "Arabian Sea" : pt.region === "BOB" ? "Bay of Bengal" : "Indian Ocean";
                     const regionColor = pt.region === "AS" ? "bg-blue-500/10 border-blue-500/20 text-blue-600 dark:text-blue-400"
                       : pt.region === "BOB" ? "bg-purple-500/10 border-purple-500/20 text-purple-600 dark:text-purple-400"
@@ -193,16 +203,32 @@ export function ActiveCyclonesPanel({
                     return (
                       <div
                         key={pt.name}
-                        className="p-2.5 rounded-xl border border-slate-200/80 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-900/30 hover:bg-slate-100/70 dark:hover:bg-slate-800/40 transition-all"
+                        onClick={() => onSelectPoint?.(pt)}
+                        className={`p-2.5 rounded-xl border transition-all cursor-pointer group ${
+                          isPointSelected
+                            ? "bg-blue-50/90 dark:bg-blue-950/60 border-blue-500 ring-2 ring-blue-500/50 shadow-md scale-[1.01]"
+                            : "border-slate-200/80 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-900/30 hover:bg-blue-50/50 dark:hover:bg-blue-900/20 hover:border-blue-400/60"
+                        }`}
+                        title={`Click to focus map on ${pt.name} (${pt.lat}°N, ${pt.lon}°E)`}
                       >
                         <div className="flex items-center justify-between mb-2">
                           <div className="flex items-center gap-1.5">
-                            <MapPin className="w-3 h-3 text-slate-400 flex-shrink-0" />
-                            <span className="font-bold text-xs text-slate-800 dark:text-slate-200">{pt.name}</span>
+                            <MapPin className={`w-3.5 h-3.5 flex-shrink-0 transition-transform ${isPointSelected ? "text-blue-500 scale-125 animate-pulse" : "text-slate-400 group-hover:text-blue-500 group-hover:scale-110"}`} />
+                            <span className="font-bold text-xs text-slate-800 dark:text-slate-200 group-hover:text-blue-600 dark:group-hover:text-blue-400">
+                              {pt.name}
+                            </span>
                           </div>
-                          <span className={`text-[9px] font-bold px-1.5 py-0.5 rounded border ${regionColor}`}>
-                            {regionLabel}
-                          </span>
+                          <div className="flex items-center gap-1">
+                            {isPointSelected ? (
+                              <span className="text-[9px] font-bold px-1.5 py-0.5 rounded bg-blue-600 text-white animate-pulse">
+                                📍 Focused
+                              </span>
+                            ) : (
+                              <span className={`text-[9px] font-bold px-1.5 py-0.5 rounded border ${regionColor}`}>
+                                {regionLabel}
+                              </span>
+                            )}
+                          </div>
                         </div>
                         <div className="grid grid-cols-4 gap-1">
                           <div className="text-center p-1 rounded-lg bg-slate-100 dark:bg-slate-800/60">
