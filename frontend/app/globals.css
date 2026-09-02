@@ -62,7 +62,7 @@ body::before {
 /* ── Glassmorphism card ─────────────────────────── */
 @layer components {
   .glass-card {
-    @apply bg-white dark:bg-slate-800/60 backdrop-blur-md border border-slate-200/80 dark:border-white/8;
+    @apply bg-white dark:bg-slate-800/60 backdrop-blur-md border border-slate-200 dark:border-slate-700/60;
     box-shadow: var(--card-shadow);
     transition: box-shadow 0.25s ease, transform 0.25s ease;
   }
@@ -88,7 +88,7 @@ body::before {
     @apply bg-blue-500/20 text-blue-400 ring-1 ring-blue-500/30;
   }
   .nav-link-idle {
-    @apply text-slate-400 hover:text-white hover:bg-white/8;
+    @apply text-slate-400 hover:text-white hover:bg-white/10;
   }
 
   .section-title {

@@ -249,7 +249,7 @@ export default function DashboardPage() {
               </thead>
               <tbody className="divide-y divide-slate-100/50 dark:divide-slate-700/30">
                 {recentCyclones.map((c) => (
-                  <tr key={c.id} className="hover:bg-blue-500/4 dark:hover:bg-blue-500/8 transition-colors group">
+                  <tr key={c.id} className="hover:bg-blue-50 dark:hover:bg-blue-500/10 transition-colors group">
                     <td className="px-4 py-3 font-semibold text-slate-800 dark:text-slate-100">{c.name || "UNNAMED"}</td>
                     <td className="px-4 py-3 text-slate-600 dark:text-slate-400">{c.season}</td>
                     <td className="px-4 py-3 text-slate-600 dark:text-slate-400">{c.basin}</td>

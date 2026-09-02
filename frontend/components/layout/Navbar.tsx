@@ -173,7 +173,7 @@ export function Navbar() {
                       ? "text-white bg-blue-500/20 ring-1 ring-blue-500/40"
                       : link.highlight
                       ? "text-emerald-400 hover:text-white hover:bg-emerald-500/15 ring-1 ring-emerald-500/30 animate-pulse-ring"
-                      : "text-slate-400 hover:text-slate-100 hover:bg-white/6"
+                      : "text-slate-400 hover:text-slate-100 hover:bg-white/10"
                   )}
                 >
                   {pathname === link.href && (
@@ -216,7 +216,7 @@ export function Navbar() {
 
           {/* Mobile menu button */}
           <button
-            className="md:hidden text-slate-400 hover:text-white p-2 rounded-lg hover:bg-white/8 transition-colors"
+            className="md:hidden text-slate-400 hover:text-white p-2 rounded-lg hover:bg-white/10 transition-colors"
             onClick={() => setMobileOpen(!mobileOpen)}
             aria-label="Toggle menu"
           >
@@ -239,7 +239,7 @@ export function Navbar() {
                   ? "bg-blue-500/20 text-white ring-1 ring-blue-500/30"
                   : link.highlight
                   ? "text-emerald-400 hover:text-white hover:bg-emerald-500/10"
-                  : "text-slate-400 hover:text-white hover:bg-white/6"
+                  : "text-slate-400 hover:text-white hover:bg-white/10"
               )}
             >
               <span className="mr-2">{link.icon}</span>
