@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Toaster } from "react-hot-toast";
 import { Navbar } from "@/components/layout/Navbar";
 import { ThemeProvider } from "@/components/ui/ThemeProvider";
+import { ResearchBanner } from "@/components/ui/ResearchBanner";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -18,14 +19,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           <Navbar />
 
           {/* Research Disclaimer Banner */}
-          <div className="relative z-10 bg-amber-500/10 border-b border-amber-500/20 px-4 py-1.5 text-center text-xs font-medium text-amber-300 backdrop-blur-sm">
-            <span className="inline-flex items-center gap-1.5">
-              <span>⚠️</span>
-              <strong>Research Prototype</strong>
-              <span className="text-amber-500">—</span>
-              Smart India Hackathon Project. Not an official weather forecasting system. All predictions are model outputs only.
-            </span>
-          </div>
+          <ResearchBanner />
 
           <main className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
             {children}
