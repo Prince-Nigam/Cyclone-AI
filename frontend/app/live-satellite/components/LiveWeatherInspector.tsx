@@ -317,27 +317,29 @@ export function LiveWeatherInspector({ selectedLocation, onLocationChange }: Pro
         <div className="space-y-4">
           {/* Top Status & Rain Alert Card */}
           <div
-            className={`p-4 sm:p-5 rounded-2xl border transition-all ${
+            className={`p-3.5 sm:p-4 rounded-2xl border transition-all ${
               weather.isRaining
                 ? "bg-gradient-to-br from-blue-950/80 via-blue-900/40 to-slate-900 border-blue-500/50 shadow-[0_0_20px_rgba(59,130,246,0.2)]"
                 : "bg-gradient-to-br from-slate-800/80 via-slate-900/60 to-slate-950 border-slate-700/60"
             }`}
           >
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-              {/* Left: Location & Condition */}
+            <div className="flex flex-col gap-3.5">
+              {/* Location & Temperature */}
               <div className="space-y-1">
-                <div className="flex items-center gap-2 text-slate-400 text-xs">
-                  <MapPin className="w-3.5 h-3.5 text-blue-400" />
-                  <span className="font-bold text-slate-200">{weather.city}</span>
-                  <span className="text-[10px] font-mono bg-slate-800 px-1.5 py-0.5 rounded border border-slate-700">
-                    {weather.lat.toFixed(2)}°N, {weather.lon.toFixed(2)}°E
+                <div className="flex items-center justify-between gap-2 text-slate-400 text-xs">
+                  <div className="flex items-center gap-1.5 truncate">
+                    <MapPin className="w-3.5 h-3.5 text-blue-400 flex-shrink-0" />
+                    <span className="font-bold text-slate-200 truncate">{weather.city}</span>
+                  </div>
+                  <span className="text-[10px] font-mono bg-slate-800 px-1.5 py-0.5 rounded border border-slate-700 flex-shrink-0">
+                    {weather.lat.toFixed(1)}°N, {weather.lon.toFixed(1)}°E
                   </span>
                 </div>
 
                 <div className="flex items-center gap-3 pt-1">
-                  <span className="text-4xl">{weather.icon}</span>
+                  <span className="text-3xl sm:text-4xl">{weather.icon}</span>
                   <div>
-                    <div className="text-3xl sm:text-4xl font-black text-white font-mono tracking-tight">
+                    <div className="text-3xl font-black text-white font-mono tracking-tight">
                       {weather.temp}°C
                     </div>
                     <p className="text-xs text-slate-400 font-medium">
@@ -347,15 +349,15 @@ export function LiveWeatherInspector({ selectedLocation, onLocationChange }: Pro
                 </div>
               </div>
 
-              {/* Right: Big Rain / Barish Indicator */}
-              <div className="bg-slate-950/80 p-3.5 sm:p-4 rounded-xl border border-slate-800 flex flex-col justify-center min-w-[200px]">
-                <div className="flex items-center justify-between mb-1.5">
-                  <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wide flex items-center gap-1">
+              {/* Rain / Barish Indicator */}
+              <div className="bg-slate-950/80 p-3 rounded-xl border border-slate-800 flex flex-col justify-center w-full">
+                <div className="flex items-center justify-between mb-1">
+                  <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wide flex items-center gap-1">
                     <CloudRain className="w-3.5 h-3.5 text-blue-400" />
                     Barish / Precipitation
                   </span>
                   <span
-                    className={`text-[10px] font-bold px-2 py-0.5 rounded-full border ${
+                    className={`text-[9px] font-bold px-2 py-0.5 rounded-full border ${
                       weather.isRaining
                         ? "bg-blue-500/20 text-blue-300 border-blue-500/40 animate-pulse"
                         : "bg-slate-800 text-slate-400 border-slate-700"
@@ -365,23 +367,25 @@ export function LiveWeatherInspector({ selectedLocation, onLocationChange }: Pro
                   </span>
                 </div>
 
-                <div className="flex items-baseline gap-1.5">
-                  <span className="text-2xl font-black text-blue-400 font-mono">
-                    {weather.precip.toFixed(1)}
-                  </span>
-                  <span className="text-xs text-slate-400 font-medium">mm / hour</span>
-                </div>
+                <div className="flex items-baseline justify-between">
+                  <div className="flex items-baseline gap-1.5">
+                    <span className="text-2xl font-black text-blue-400 font-mono">
+                      {weather.precip.toFixed(1)}
+                    </span>
+                    <span className="text-xs text-slate-400 font-medium">mm / hour</span>
+                  </div>
 
-                <div className="flex items-center justify-between text-[11px] text-slate-400 mt-2 pt-2 border-t border-slate-800/80">
-                  <span>Rain Probability:</span>
-                  <span className="font-bold text-blue-300 font-mono">{weather.precipProb}%</span>
+                  <div className="text-right">
+                    <span className="text-[10px] text-slate-500 mr-1">Chance:</span>
+                    <span className="font-bold text-blue-300 font-mono text-xs">{weather.precipProb}%</span>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
 
-          {/* 4 Metric Badges */}
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
+          {/* 4 Metric Badges in 2x2 Grid */}
+          <div className="grid grid-cols-2 gap-2">
             <div className="p-3 rounded-xl bg-slate-900/90 border border-slate-800/90 flex items-center gap-3">
               <div className="p-2 rounded-lg bg-blue-500/10 text-blue-400">
                 <Wind className="w-4 h-4" />
