@@ -94,17 +94,23 @@ export default function MapPage() {
           </div>
         </div>
       </div>
-      <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-700 rounded-xl px-4 py-2.5 flex items-center gap-3 text-sm">
-        <span className="text-2xl">🛰️</span>
-        <div>
-          <span className="font-semibold text-blue-800 dark:text-blue-300">Live NASA Satellite Imagery available</span>
-          <span className="text-blue-600 dark:text-blue-400 ml-2">— Click the <b>Satellite OFF</b> button on the map (top-right) to enable real satellite view.</span>
+      <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-700 rounded-xl px-4 py-3 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-sm">
+        <div className="flex items-center gap-3">
+          <span className="text-2xl">🌦️</span>
+          <div>
+            <p className="font-semibold text-blue-900 dark:text-blue-200">
+              Live Rain, Weather & Satellite Imagery Active
+            </p>
+            <p className="text-xs text-blue-700 dark:text-blue-300 mt-0.5">
+              💡 <b>Tip:</b> Map par kisi bhi location par click karein to waha ki live <b>Barish (Precipitation mm/h)</b>, Temperature, aur Wind speed turant dikhegi!
+            </p>
+          </div>
         </div>
         <a
           href="/live-satellite"
-          className="ml-auto text-xs bg-blue-600 text-white px-3 py-1.5 rounded-lg font-medium hover:bg-blue-700 transition-colors whitespace-nowrap"
+          className="text-xs bg-blue-600 hover:bg-blue-700 text-white px-3.5 py-2 rounded-xl font-semibold transition-colors whitespace-nowrap self-start sm:self-auto shadow-sm"
         >
-          Full Live View →
+          Open Live Radar Hub →
         </a>
       </div>
 
