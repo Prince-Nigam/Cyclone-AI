@@ -147,29 +147,128 @@ export function Navbar() {
 
           {/* Logo */}
           <Link href="/" className="flex items-center gap-2.5 flex-shrink-0 group">
-            {/* Custom cyclone radar logo */}
+            {/* Earth Projection + Cyclone Vortex Logo */}
             <div className="relative w-9 h-9 flex-shrink-0">
-              <svg viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-9 h-9 drop-shadow-lg">
-                {/* Outer glow ring */}
-                <circle cx="18" cy="18" r="17" fill="url(#logoGrad)" opacity="0.15"/>
-                {/* Main circle bg */}
-                <circle cx="18" cy="18" r="16" fill="url(#logoGrad)"/>
-                {/* Radar rings */}
-                <circle cx="18" cy="18" r="11" stroke="rgba(255,255,255,0.25)" strokeWidth="1"/>
-                <circle cx="18" cy="18" r="6.5" stroke="rgba(255,255,255,0.35)" strokeWidth="1"/>
-                {/* Spiral arms */}
-                <path d="M18 7 C22 7 27 10 27 15 C27 19 24 22 20 23 C16 24 12 22 11 18" stroke="white" strokeWidth="1.8" strokeLinecap="round" fill="none" opacity="0.9"/>
-                <path d="M18 29 C14 29 9 26 9 21 C9 17 12 14 16 13 C20 12 24 14 25 18" stroke="rgba(255,255,255,0.6)" strokeWidth="1.4" strokeLinecap="round" fill="none"/>
-                {/* Center eye dot */}
-                <circle cx="18" cy="18" r="2.5" fill="white" opacity="0.95"/>
-                <circle cx="18" cy="18" r="1.2" fill="url(#logoGrad)"/>
-                {/* Gradients */}
+              <svg
+                viewBox="0 0 40 40"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+                className="w-9 h-9 drop-shadow-[0_0_10px_rgba(56,189,248,0.45)] group-hover:scale-105 group-hover:drop-shadow-[0_0_14px_rgba(56,189,248,0.7)] transition-all duration-300"
+              >
                 <defs>
-                  <linearGradient id="logoGrad" x1="2" y1="2" x2="34" y2="34" gradientUnits="userSpaceOnUse">
-                    <stop offset="0%" stopColor="#3b82f6"/>
-                    <stop offset="100%" stopColor="#1d4ed8"/>
+                  {/* Globe radial gradient with oceanic illumination */}
+                  <radialGradient id="earthSphere" cx="35%" cy="30%" r="70%">
+                    <stop offset="0%" stopColor="#1e3a8a" />
+                    <stop offset="45%" stopColor="#0f2452" />
+                    <stop offset="85%" stopColor="#08142c" />
+                    <stop offset="100%" stopColor="#030712" />
+                  </radialGradient>
+
+                  {/* Atmosphere rim glow */}
+                  <linearGradient id="atmosGlow" x1="0" y1="0" x2="40" y2="40" gradientUnits="userSpaceOnUse">
+                    <stop offset="0%" stopColor="#38bdf8" stopOpacity="0.9" />
+                    <stop offset="50%" stopColor="#60a5fa" stopOpacity="0.4" />
+                    <stop offset="100%" stopColor="#1d4ed8" stopOpacity="0.8" />
                   </linearGradient>
+
+                  {/* Cyclone outer spiral gradient */}
+                  <linearGradient id="cycloneArm1" x1="8" y1="8" x2="32" y2="32" gradientUnits="userSpaceOnUse">
+                    <stop offset="0%" stopColor="#ffffff" stopOpacity="0.95" />
+                    <stop offset="40%" stopColor="#7dd3fc" stopOpacity="0.9" />
+                    <stop offset="80%" stopColor="#0284c7" stopOpacity="0.85" />
+                    <stop offset="100%" stopColor="#0369a1" stopOpacity="0.4" />
+                  </linearGradient>
+
+                  {/* Cyclone inner feeder band gradient */}
+                  <linearGradient id="cycloneArm2" x1="32" y1="32" x2="10" y2="10" gradientUnits="userSpaceOnUse">
+                    <stop offset="0%" stopColor="#38bdf8" stopOpacity="0.95" />
+                    <stop offset="50%" stopColor="#a5f3fc" stopOpacity="0.9" />
+                    <stop offset="100%" stopColor="#ffffff" stopOpacity="0.9" />
+                  </linearGradient>
+
+                  {/* Eye thermal core */}
+                  <radialGradient id="eyeCore" cx="50%" cy="50%" r="50%">
+                    <stop offset="0%" stopColor="#f59e0b" />
+                    <stop offset="60%" stopColor="#ef4444" />
+                    <stop offset="100%" stopColor="#7f1d1d" stopOpacity="0.2" />
+                  </radialGradient>
+
+                  <clipPath id="globeClip">
+                    <circle cx="20" cy="20" r="16.5" />
+                  </clipPath>
                 </defs>
+
+                {/* Outer atmospheric aura */}
+                <circle cx="20" cy="20" r="18.5" stroke="url(#atmosGlow)" strokeWidth="1" opacity="0.4" strokeDasharray="3 2" />
+                <circle cx="20" cy="20" r="17.2" stroke="url(#atmosGlow)" strokeWidth="0.75" opacity="0.8" />
+
+                {/* Earth Sphere Base */}
+                <circle cx="20" cy="20" r="16.5" fill="url(#earthSphere)" />
+
+                {/* Clipped Earth Projection grid & landmass */}
+                <g clipPath="url(#globeClip)">
+                  {/* Subtle stylized continent / landmass contours */}
+                  <path
+                    d="M13 11 C15 13 19 12 21 14 C23 16 22 19 19 22 C17 24 18 27 16 29 C14 26 12 22 11 18 Z"
+                    fill="rgba(52, 211, 153, 0.18)"
+                    stroke="rgba(52, 211, 153, 0.35)"
+                    strokeWidth="0.6"
+                  />
+                  <path
+                    d="M24 10 C27 11 31 15 30 19 C28 21 26 20 25 18 C24 15 25 12 24 10 Z"
+                    fill="rgba(52, 211, 153, 0.14)"
+                    stroke="rgba(52, 211, 153, 0.25)"
+                    strokeWidth="0.5"
+                  />
+
+                  {/* Latitude / Parallels */}
+                  <ellipse cx="20" cy="20" rx="16.5" ry="5.5" stroke="#38bdf8" strokeWidth="0.7" strokeOpacity="0.3" fill="none" />
+                  <ellipse cx="20" cy="13" rx="14.5" ry="4" stroke="#38bdf8" strokeWidth="0.6" strokeOpacity="0.22" fill="none" />
+                  <ellipse cx="20" cy="27" rx="14.5" ry="4" stroke="#38bdf8" strokeWidth="0.6" strokeOpacity="0.22" fill="none" />
+
+                  {/* Longitude / Meridians */}
+                  <ellipse cx="20" cy="20" rx="7.5" ry="16.5" stroke="#38bdf8" strokeWidth="0.7" strokeOpacity="0.3" fill="none" />
+                  <ellipse cx="20" cy="20" rx="13" ry="16.5" stroke="#38bdf8" strokeWidth="0.6" strokeOpacity="0.2" fill="none" />
+                  <line x1="20" y1="3.5" x2="20" y2="36.5" stroke="#38bdf8" strokeWidth="0.75" strokeOpacity="0.35" strokeDasharray="2 2" />
+
+                  {/* Globe specular illumination arc (top-left) */}
+                  <path
+                    d="M6 14 A16.5 16.5 0 0 1 20 3.5"
+                    stroke="white"
+                    strokeWidth="1.2"
+                    strokeOpacity="0.35"
+                    strokeLinecap="round"
+                    fill="none"
+                  />
+                </g>
+
+                {/* Cyclone System overlaid across Projection */}
+                {/* Main Outer Inflow Spiral Arm */}
+                <path
+                  d="M23 7 C31 8 36 14 34 22 C32 28 26 33 19 32 C12 31 7 25 8 18 C9 13 14 10 18 11 C22 12 25 15 24 19 C23 22 20 24 18 23"
+                  stroke="url(#cycloneArm1)"
+                  strokeWidth="2.2"
+                  strokeLinecap="round"
+                  fill="none"
+                />
+
+                {/* Secondary Inflow Rainband */}
+                <path
+                  d="M12 27 C7 23 6 15 11 10 C16 5 25 6 30 11 C34 16 32 23 27 26 C23 28 18 26 17 22 C16 19 18 16.5 21 17"
+                  stroke="url(#cycloneArm2)"
+                  strokeWidth="1.5"
+                  strokeLinecap="round"
+                  fill="none"
+                />
+
+                {/* Cyclone Core Eye (Thermal + Central Eye) */}
+                <circle cx="20" cy="19.5" r="3.2" fill="url(#eyeCore)" />
+                <circle cx="20" cy="19.5" r="1.5" fill="#020617" stroke="#38bdf8" strokeWidth="0.6" />
+                <circle cx="20" cy="19.5" r="0.6" fill="#ffffff" />
+
+                {/* Orbit Satellite indicator dot */}
+                <circle cx="33.5" cy="11.5" r="1.3" fill="#38bdf8" className="animate-pulse" />
+                <circle cx="33.5" cy="11.5" r="2.8" stroke="#38bdf8" strokeWidth="0.5" opacity="0.6" />
               </svg>
             </div>
             <div className="hidden sm:flex flex-col leading-none">
