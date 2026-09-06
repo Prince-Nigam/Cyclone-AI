@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useCallback, useRef, useState } from "react";
+import React, { useCallback, useRef, useState, useEffect } from "react";
 import { Upload, X, Satellite, AlertTriangle } from "lucide-react";
 import toast from "react-hot-toast";
 import { AnalysisPanel } from "@/components/analysis/AnalysisPanel";
@@ -42,6 +42,25 @@ export default function SatellitePage() {
       setPreview(null);
     }
   }, []);
+
+  useEffect(() => {
+    const handlePaste = (e: ClipboardEvent) => {
+      const items = e.clipboardData?.items;
+      if (!items) return;
+      for (let i = 0; i < items.length; i++) {
+        if (items[i].type.indexOf("image") !== -1) {
+          const file = items[i].getAsFile();
+          if (file) {
+            handleFileSelect(file);
+            toast.success("Image pasted from clipboard");
+            break;
+          }
+        }
+      }
+    };
+    window.addEventListener("paste", handlePaste);
+    return () => window.removeEventListener("paste", handlePaste);
+  }, [handleFileSelect]);
 
   const handleDrop = useCallback((e: React.DragEvent) => {
     e.preventDefault();
@@ -102,56 +121,148 @@ export default function SatellitePage() {
 
         {/* Left: Upload + image */}
         <div className="space-y-4">
+          <input
+            ref={fileInputRef}
+            type="file"
+            accept={SUPPORTED_FORMATS}
+            className="hidden"
+            onChange={(e) => {
+              const f = e.target.files?.[0];
+              if (f) handleFileSelect(f);
+              e.target.value = "";
+            }}
+          />
 
-          {/* Drop zone */}
-          <div
-            className={`border-2 border-dashed rounded-xl p-8 text-center cursor-pointer transition-all
-              ${dragOver
-                ? "border-blue-500 bg-blue-50 dark:bg-blue-950/30"
-                : "border-slate-300 dark:border-slate-600 hover:border-blue-400 hover:bg-slate-50 dark:hover:bg-slate-800"}`}
-            onDragOver={(e) => { e.preventDefault(); setDragOver(true); }}
-            onDragLeave={() => setDragOver(false)}
-            onDrop={handleDrop}
-            onClick={() => fileInputRef.current?.click()}
-          >
-            <Satellite className="w-10 h-10 mx-auto text-slate-400 mb-3" />
-            <p className="text-sm font-medium text-slate-700 dark:text-slate-300">
-              {selectedFile ? selectedFile.name : "Drop satellite image here"}
-            </p>
-            <p className="text-xs text-slate-400 mt-1">
-              Supported: PNG, JPG, TIFF, NetCDF (.nc), HDF5 (.h5) · Max {MAX_SIZE_MB}MB
-            </p>
-            <input
-              ref={fileInputRef}
-              type="file"
-              accept={SUPPORTED_FORMATS}
-              className="hidden"
-              onChange={(e) => { const f = e.target.files?.[0]; if (f) handleFileSelect(f); }}
-            />
-          </div>
+          {!selectedFile ? (
+            /* Drop zone */
+            <div
+              className={`border-2 border-dashed rounded-xl p-8 text-center cursor-pointer transition-all min-h-[240px] flex flex-col items-center justify-center
+                ${dragOver
+                  ? "border-blue-500 bg-blue-50/50 dark:bg-blue-950/30 ring-4 ring-blue-500/10"
+                  : "border-slate-300 dark:border-slate-700 hover:border-blue-400 dark:hover:border-blue-500 hover:bg-slate-50 dark:hover:bg-slate-800/60"}`}
+              onDragOver={(e) => { e.preventDefault(); setDragOver(true); }}
+              onDragLeave={() => setDragOver(false)}
+              onDrop={handleDrop}
+              onClick={() => fileInputRef.current?.click()}
+            >
+              <div className="w-14 h-14 rounded-2xl bg-blue-50 dark:bg-blue-950/60 border border-blue-100 dark:border-blue-800/50 flex items-center justify-center mb-3 text-blue-600 dark:text-blue-400 shadow-sm">
+                <Satellite className="w-7 h-7" />
+              </div>
+              <p className="text-sm font-semibold text-slate-800 dark:text-slate-200">
+                Click to choose or drag & drop satellite image
+              </p>
+              <p className="text-xs text-slate-500 dark:text-slate-400 mt-1 max-w-sm">
+                Supported: PNG, JPG, TIFF, NetCDF (.nc), HDF5 (.h5) · Max {MAX_SIZE_MB}MB
+              </p>
+              <span className="mt-3 text-[11px] text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-950/50 border border-blue-200 dark:border-blue-800/60 px-2.5 py-0.5 rounded-full font-medium">
+                Ctrl+V / Paste supported
+              </span>
+            </div>
+          ) : preview ? (
+            /* Image Preview inside the box */
+            <div
+              className={`relative rounded-xl overflow-hidden border-2 border-slate-300 dark:border-slate-700 bg-slate-950 shadow-inner group transition-all
+                ${dragOver ? "border-blue-500 ring-4 ring-blue-500/10" : ""}`}
+              onDragOver={(e) => { e.preventDefault(); setDragOver(true); }}
+              onDragLeave={() => setDragOver(false)}
+              onDrop={handleDrop}
+            >
+              <div className="flex items-center justify-center min-h-[240px] max-h-[320px] p-2 bg-slate-950/80">
+                <img
+                  src={preview}
+                  alt={selectedFile.name}
+                  className="max-h-[290px] w-full object-contain rounded-lg"
+                />
+              </div>
 
-          {/* Preview */}
-          {preview && (
-            <div className="relative rounded-xl overflow-hidden border border-slate-200 dark:border-slate-700">
-              <img src={preview} alt="Satellite preview" className="w-full object-contain max-h-64 bg-black" />
-              <button
-                onClick={() => { setSelectedFile(null); setPreview(null); setResult(null); }}
-                className="absolute top-2 right-2 bg-black/60 text-white rounded-full p-1 hover:bg-black/80"
-              >
-                <X className="w-4 h-4" />
-              </button>
-              <div className="absolute bottom-2 left-2 bg-black/60 text-white text-xs px-2 py-1 rounded">
-                Preview
+              {/* Overlay with file info & buttons */}
+              <div className="absolute top-0 inset-x-0 p-2.5 bg-gradient-to-b from-black/80 via-black/40 to-transparent flex items-center justify-between gap-2">
+                <div className="flex items-center gap-2 min-w-0 bg-black/60 backdrop-blur-md px-2.5 py-1 rounded-lg border border-white/10 text-white">
+                  <Satellite className="w-3.5 h-3.5 text-blue-400 flex-shrink-0" />
+                  <span className="text-xs font-medium truncate max-w-[160px] sm:max-w-[220px]" title={selectedFile.name}>
+                    {selectedFile.name}
+                  </span>
+                  <span className="text-[10px] text-slate-300 font-mono flex-shrink-0">
+                    ({(selectedFile.size / (1024 * 1024)).toFixed(2)} MB)
+                  </span>
+                </div>
+
+                <div className="flex items-center gap-1.5 flex-shrink-0">
+                  <button
+                    type="button"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      fileInputRef.current?.click();
+                    }}
+                    className="text-xs bg-black/60 hover:bg-white/20 text-white border border-white/15 px-2.5 py-1 rounded-lg backdrop-blur-md font-medium transition-colors flex items-center gap-1"
+                    title="Change Photo"
+                  >
+                    <Upload className="w-3 h-3" />
+                    Change
+                  </button>
+                  <button
+                    type="button"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setSelectedFile(null);
+                      setPreview(null);
+                      setResult(null);
+                      setError(null);
+                    }}
+                    className="bg-black/60 hover:bg-red-600/80 text-white border border-white/15 p-1 rounded-lg backdrop-blur-md transition-colors"
+                    title="Remove Photo"
+                  >
+                    <X className="w-3.5 h-3.5" />
+                  </button>
+                </div>
               </div>
             </div>
-          )}
+          ) : (
+            /* Selected raw format */
+            <div
+              className={`rounded-xl p-5 border-2 border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/80 transition-all
+                ${dragOver ? "border-blue-500 ring-4 ring-blue-500/10" : ""}`}
+              onDragOver={(e) => { e.preventDefault(); setDragOver(true); }}
+              onDragLeave={() => setDragOver(false)}
+              onDrop={handleDrop}
+            >
+              <div className="flex items-center justify-between gap-3">
+                <div className="flex items-center gap-3 min-w-0">
+                  <div className="w-10 h-10 rounded-xl bg-blue-100 dark:bg-blue-900/50 text-blue-600 dark:text-blue-400 flex items-center justify-center flex-shrink-0">
+                    <Upload className="w-5 h-5" />
+                  </div>
+                  <div className="min-w-0">
+                    <p className="text-sm font-semibold text-slate-800 dark:text-slate-200 truncate" title={selectedFile.name}>
+                      {selectedFile.name}
+                    </p>
+                    <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
+                      {(selectedFile.size / 1024 / 1024).toFixed(2)} MB · Raw Data
+                    </p>
+                  </div>
+                </div>
 
-          {/* No-preview format note */}
-          {selectedFile && !preview && (
-            <div className="bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg p-3 text-xs text-slate-600 dark:text-slate-300 flex items-center gap-2">
-              <AlertTriangle className="w-4 h-4 text-yellow-500 flex-shrink-0" />
-              {selectedFile.name} — Preview unavailable for this format.
-              Analysis will still run on the raw data.
+                <div className="flex items-center gap-2 flex-shrink-0">
+                  <button
+                    type="button"
+                    onClick={() => fileInputRef.current?.click()}
+                    className="text-xs bg-white dark:bg-slate-700 hover:bg-slate-100 dark:hover:bg-slate-600 text-slate-700 dark:text-slate-200 border border-slate-200 dark:border-slate-600 px-2.5 py-1.5 rounded-lg font-medium transition-colors"
+                  >
+                    Change
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setSelectedFile(null);
+                      setResult(null);
+                      setError(null);
+                    }}
+                    className="text-slate-400 hover:text-red-500 dark:hover:text-red-400 p-1.5 transition-colors"
+                    title="Remove"
+                  >
+                    <X className="w-4 h-4" />
+                  </button>
+                </div>
+              </div>
             </div>
           )}
 
@@ -160,7 +271,7 @@ export default function SatellitePage() {
             onClick={runAnalysis}
             disabled={!selectedFile || isAnalyzing}
             className="w-full bg-blue-600 hover:bg-blue-700 disabled:bg-slate-300 dark:disabled:bg-slate-700 disabled:cursor-not-allowed
-              text-white font-semibold py-3 rounded-xl transition-colors flex items-center justify-center gap-2"
+              text-white font-semibold py-3 rounded-xl transition-colors flex items-center justify-center gap-2 shadow-sm"
           >
             {isAnalyzing ? (
               <>
