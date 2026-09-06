@@ -15,6 +15,7 @@ import {
 } from "lucide-react";
 import { ActiveCyclonesPanel } from "./components/ActiveCyclonesPanel";
 import { OceanWeatherGrid } from "./components/OceanWeatherGrid";
+import { LiveWeatherInspector } from "./components/LiveWeatherInspector";
 import { LiveTickerBar } from "@/components/ui/LiveTickerBar";
 import { getRealtimeCyclones, getOceanGrid } from "@/services/realtimeService";
 import type { RealtimeCyclone, OceanWeatherPoint } from "@/types";
@@ -25,19 +26,24 @@ const CycloneMap = dynamic(
 );
 
 const WINDY_OVERLAYS = [
-  { key: "satellite",  label: "Satellite",     icon: "🛰️",  desc: "Live satellite imagery" },
-  { key: "wind",       label: "Wind",          icon: "💨",  desc: "Real-time wind speed & direction" },
-  { key: "rain",       label: "Precipitation", icon: "🌧️", desc: "Rainfall & precipitation" },
-  { key: "temp",       label: "Temperature",   icon: "🌡️", desc: "Surface temperature" },
-  { key: "pressure",   label: "Pressure",      icon: "📊",  desc: "Sea-level pressure" },
-  { key: "clouds",     label: "Clouds",        icon: "☁️",  desc: "Cloud cover" },
+  { key: "rain",       label: "Precipitation / Rain", icon: "🌧️", desc: "Live rainfall & precipitation" },
+  { key: "wind",       label: "Wind",                 icon: "💨",  desc: "Real-time wind speed & direction" },
+  { key: "satellite",  label: "Satellite",            icon: "🛰️",  desc: "Live satellite imagery" },
+  { key: "temp",       label: "Temperature",          icon: "🌡️", desc: "Surface temperature" },
+  { key: "clouds",     label: "Clouds",               icon: "☁️",  desc: "Cloud cover" },
+  { key: "pressure",   label: "Pressure",             icon: "📊",  desc: "Sea-level pressure" },
 ];
 
 export default function LiveSatellitePage() {
-  const [activeOverlay, setActiveOverlay] = useState("satellite");
+  const [activeOverlay, setActiveOverlay] = useState("rain");
   const [windyLoaded, setWindyLoaded] = useState(false);
-  const [mapCenter, setMapCenter] = useState<{ lat: number; lon: number }>({ lat: 15, lon: 75 });
-  const [mapZoom, setMapZoom] = useState<number>(4);
+  const [mapCenter, setMapCenter] = useState<{ lat: number; lon: number }>({ lat: 20.5937, lon: 78.9629 });
+  const [mapZoom, setMapZoom] = useState<number>(5);
+  const [selectedWeatherLoc, setSelectedWeatherLoc] = useState<{ name: string; lat: number; lon: number }>({
+    name: "Lucknow, UP",
+    lat: 26.8467,
+    lon: 80.9462,
+  });
 
   // Real-time Cyclone State
   const [cyclones, setCyclones] = useState<RealtimeCyclone[]>([]);
@@ -104,6 +110,11 @@ export default function LiveSatellitePage() {
     if (c.lat !== null && c.lon !== null) {
       setMapCenter({ lat: c.lat, lon: c.lon });
       setMapZoom(6);
+      setSelectedWeatherLoc({
+        name: `${c.name} (${c.basin})`,
+        lat: c.lat,
+        lon: c.lon,
+      });
     }
   };
 
@@ -112,12 +123,18 @@ export default function LiveSatellitePage() {
     setSelectedCycloneId(null);
     setMapCenter({ lat: pt.lat, lon: pt.lon });
     setMapZoom(6);
+    setSelectedWeatherLoc({
+      name: `${pt.name} Station`,
+      lat: pt.lat,
+      lon: pt.lon,
+    });
   };
 
   // Stats calculation
   const maxWindDetected = oceanPoints.reduce((max, pt) => Math.max(max, pt.wind_kt || 0), 0);
 
-  const windyUrl = `https://embed.windy.com/embed2.html?lat=${mapCenter.lat}&lon=${mapCenter.lon}&detailLat=${mapCenter.lat}&detailLon=${mapCenter.lon}&width=100%&height=100%&zoom=${mapZoom}&level=surface&overlay=${activeOverlay}&product=ecmwf&menu=&message=true&marker=&calendar=now&pressure=true&type=map&location=coordinates&detail=&metricWind=kt&metricTemp=%C2%B0C&radarRange=-1`;
+  // Clean Windy embed URL without popup bottom detail bar
+  const windyUrl = `https://embed.windy.com/embed2.html?lat=${mapCenter.lat}&lon=${mapCenter.lon}&width=100%&height=100%&zoom=${mapZoom}&level=surface&overlay=${activeOverlay}&product=ecmwf&menu=&message=false&marker=&calendar=now&pressure=true&type=map&location=coordinates&metricWind=kt&metricTemp=%C2%B0C&radarRange=-1`;
 
   return (
     <div className="space-y-6">
@@ -251,8 +268,18 @@ export default function LiveSatellitePage() {
           />
         </div>
 
-        {/* Right Column: Maps Workspace (8 cols) */}
+        {/* Right Column: Maps Workspace + Live Weather Inspector (8 cols) */}
         <div className="lg:col-span-8 space-y-5">
+
+          {/* Dedicated Live Rain & Weather Inspector Box */}
+          <LiveWeatherInspector
+            selectedLocation={selectedWeatherLoc}
+            onLocationChange={(loc) => {
+              setSelectedWeatherLoc(loc);
+              setMapCenter({ lat: loc.lat, lon: loc.lon });
+              setMapZoom(7);
+            }}
+          />
 
           {/* Windy Map Component */}
           <div className="glass-card rounded-2xl overflow-hidden shadow-xl border border-slate-200 dark:border-slate-800">
