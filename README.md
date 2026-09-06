@@ -13,7 +13,7 @@
 **Smart India Hackathon (SIH) Project**  
 *AI/ML-Powered Tropical Cyclone Identification, Saffir-Simpson Pattern Classification, 24h Track & Intensity Forecasting, and Real-Time Multi-Source Satellite Telemetry Hub.*
 
-[🌐 Live Web Demo](https://cyclone-ai-sih.vercel.app) • [📖 Technical Docs](docs/) • [📡 REST API Docs](http://localhost:8000/docs)
+[🌐 Live Web Demo](https://cyclone-ai-sih.vercel.app) • [📖 Technical Docs](docs/)
 
 </div>
 
