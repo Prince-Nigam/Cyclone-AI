@@ -271,16 +271,6 @@ export default function LiveSatellitePage() {
         {/* Right Column: Maps Workspace + Live Weather Inspector (8 cols) */}
         <div className="lg:col-span-8 space-y-5">
 
-          {/* Dedicated Live Rain & Weather Inspector Box */}
-          <LiveWeatherInspector
-            selectedLocation={selectedWeatherLoc}
-            onLocationChange={(loc) => {
-              setSelectedWeatherLoc(loc);
-              setMapCenter({ lat: loc.lat, lon: loc.lon });
-              setMapZoom(7);
-            }}
-          />
-
           {/* Windy Map Component */}
           <div className="glass-card rounded-2xl overflow-hidden shadow-xl border border-slate-200 dark:border-slate-800">
             <div className="flex items-center justify-between px-4 py-3 border-b border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900/60">
@@ -319,6 +309,16 @@ export default function LiveSatellitePage() {
               />
             </div>
           </div>
+
+          {/* Dedicated Live Rain & Weather Inspector Box (Below Map) */}
+          <LiveWeatherInspector
+            selectedLocation={selectedWeatherLoc}
+            onLocationChange={(loc) => {
+              setSelectedWeatherLoc(loc);
+              setMapCenter({ lat: loc.lat, lon: loc.lon });
+              setMapZoom(7);
+            }}
+          />
 
           {/* NASA GIBS Leaflet Map */}
           <div className="glass-card rounded-2xl overflow-hidden shadow-xl border border-slate-200 dark:border-slate-800">
