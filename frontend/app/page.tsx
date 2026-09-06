@@ -217,22 +217,122 @@ export default function DashboardPage() {
         <div className="relative">
           {/* Top header row: Logo + Title + Live badge */}
           <div className="flex flex-col sm:flex-row sm:items-center gap-4 mb-4">
-            <div className="w-14 h-14 flex-shrink-0 drop-shadow-xl">
+            <div className="w-14 h-14 flex-shrink-0 drop-shadow-[0_0_16px_rgba(56,189,248,0.5)] hover:scale-105 transition-all duration-300">
               <svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-14 h-14">
-                <circle cx="32" cy="32" r="30" fill="url(#heroGrad)" opacity="0.2"/>
-                <circle cx="32" cy="32" r="28" fill="url(#heroGrad)"/>
-                <circle cx="32" cy="32" r="20" stroke="rgba(255,255,255,0.2)" strokeWidth="1.5"/>
-                <circle cx="32" cy="32" r="12" stroke="rgba(255,255,255,0.3)" strokeWidth="1.5"/>
-                <path d="M32 10 C40 10 50 17 50 26 C50 33 44 38 36 40 C28 42 20 38 18 30" stroke="white" strokeWidth="3" strokeLinecap="round" fill="none" opacity="0.95"/>
-                <path d="M32 54 C24 54 14 47 14 38 C14 31 20 26 28 24 C36 22 44 26 46 34" stroke="rgba(255,255,255,0.55)" strokeWidth="2.2" strokeLinecap="round" fill="none"/>
-                <circle cx="32" cy="32" r="5" fill="white" opacity="0.95"/>
-                <circle cx="32" cy="32" r="2.5" fill="url(#heroGrad)"/>
                 <defs>
-                  <linearGradient id="heroGrad" x1="4" y1="4" x2="60" y2="60" gradientUnits="userSpaceOnUse">
-                    <stop offset="0%" stopColor="#60a5fa"/>
-                    <stop offset="100%" stopColor="#1d4ed8"/>
+                  {/* Globe radial gradient */}
+                  <radialGradient id="heroEarthSphere" cx="35%" cy="30%" r="70%">
+                    <stop offset="0%" stopColor="#1e3a8a" />
+                    <stop offset="45%" stopColor="#0f2452" />
+                    <stop offset="85%" stopColor="#08142c" />
+                    <stop offset="100%" stopColor="#030712" />
+                  </radialGradient>
+
+                  {/* Atmosphere rim glow */}
+                  <linearGradient id="heroAtmosGlow" x1="0" y1="0" x2="64" y2="64" gradientUnits="userSpaceOnUse">
+                    <stop offset="0%" stopColor="#38bdf8" stopOpacity="0.9" />
+                    <stop offset="50%" stopColor="#60a5fa" stopOpacity="0.4" />
+                    <stop offset="100%" stopColor="#1d4ed8" stopOpacity="0.8" />
                   </linearGradient>
+
+                  {/* Cyclone outer spiral gradient */}
+                  <linearGradient id="heroCycloneArm1" x1="12" y1="12" x2="52" y2="52" gradientUnits="userSpaceOnUse">
+                    <stop offset="0%" stopColor="#ffffff" stopOpacity="0.95" />
+                    <stop offset="40%" stopColor="#7dd3fc" stopOpacity="0.9" />
+                    <stop offset="80%" stopColor="#0284c7" stopOpacity="0.85" />
+                    <stop offset="100%" stopColor="#0369a1" stopOpacity="0.4" />
+                  </linearGradient>
+
+                  {/* Cyclone inner feeder band gradient */}
+                  <linearGradient id="heroCycloneArm2" x1="52" y1="52" x2="16" y2="16" gradientUnits="userSpaceOnUse">
+                    <stop offset="0%" stopColor="#38bdf8" stopOpacity="0.95" />
+                    <stop offset="50%" stopColor="#a5f3fc" stopOpacity="0.9" />
+                    <stop offset="100%" stopColor="#ffffff" stopOpacity="0.9" />
+                  </linearGradient>
+
+                  {/* Eye thermal core */}
+                  <radialGradient id="heroEyeCore" cx="50%" cy="50%" r="50%">
+                    <stop offset="0%" stopColor="#f59e0b" />
+                    <stop offset="60%" stopColor="#ef4444" />
+                    <stop offset="100%" stopColor="#7f1d1d" stopOpacity="0.2" />
+                  </radialGradient>
+
+                  <clipPath id="heroGlobeClip">
+                    <circle cx="32" cy="32" r="26.5" />
+                  </clipPath>
                 </defs>
+
+                {/* Outer atmospheric aura */}
+                <circle cx="32" cy="32" r="29.5" stroke="url(#heroAtmosGlow)" strokeWidth="1.2" opacity="0.4" strokeDasharray="4 3" />
+                <circle cx="32" cy="32" r="27.5" stroke="url(#heroAtmosGlow)" strokeWidth="1" opacity="0.8" />
+
+                {/* Earth Sphere Base */}
+                <circle cx="32" cy="32" r="26.5" fill="url(#heroEarthSphere)" />
+
+                {/* Clipped Earth Projection grid & landmass */}
+                <g clipPath="url(#heroGlobeClip)">
+                  {/* Stylized continent / landmass contours */}
+                  <path
+                    d="M21 17 C24 20 30 19 33 22 C37 25 35 30 30 35 C27 38 29 43 25 46 C22 41 19 35 17 28 Z"
+                    fill="rgba(52, 211, 153, 0.18)"
+                    stroke="rgba(52, 211, 153, 0.35)"
+                    strokeWidth="0.9"
+                  />
+                  <path
+                    d="M38 16 C43 17 49 24 48 30 C45 33 41 32 40 28 C38 24 40 19 38 16 Z"
+                    fill="rgba(52, 211, 153, 0.14)"
+                    stroke="rgba(52, 211, 153, 0.25)"
+                    strokeWidth="0.8"
+                  />
+
+                  {/* Latitude / Parallels */}
+                  <ellipse cx="32" cy="32" rx="26.5" ry="9" stroke="#38bdf8" strokeWidth="1" strokeOpacity="0.3" fill="none" />
+                  <ellipse cx="32" cy="21" rx="23" ry="6.5" stroke="#38bdf8" strokeWidth="0.85" strokeOpacity="0.22" fill="none" />
+                  <ellipse cx="32" cy="43" rx="23" ry="6.5" stroke="#38bdf8" strokeWidth="0.85" strokeOpacity="0.22" fill="none" />
+
+                  {/* Longitude / Meridians */}
+                  <ellipse cx="32" cy="32" rx="12" ry="26.5" stroke="#38bdf8" strokeWidth="1" strokeOpacity="0.3" fill="none" />
+                  <ellipse cx="32" cy="32" rx="21" ry="26.5" stroke="#38bdf8" strokeWidth="0.85" strokeOpacity="0.2" fill="none" />
+                  <line x1="32" y1="5.5" x2="32" y2="58.5" stroke="#38bdf8" strokeWidth="1" strokeOpacity="0.35" strokeDasharray="3 3" />
+
+                  {/* Globe specular illumination arc (top-left) */}
+                  <path
+                    d="M10 22 A26.5 26.5 0 0 1 32 5.5"
+                    stroke="white"
+                    strokeWidth="1.8"
+                    strokeOpacity="0.35"
+                    strokeLinecap="round"
+                    fill="none"
+                  />
+                </g>
+
+                {/* Cyclone System overlaid across Projection */}
+                {/* Main Outer Inflow Spiral Arm */}
+                <path
+                  d="M37 11 C49 13 57 22 54 35 C51 45 41 53 30 51 C19 50 11 40 13 29 C14 21 22 16 29 17 C35 19 40 24 38 30 C37 35 32 38 29 37"
+                  stroke="url(#heroCycloneArm1)"
+                  strokeWidth="3.4"
+                  strokeLinecap="round"
+                  fill="none"
+                />
+
+                {/* Secondary Inflow Rainband */}
+                <path
+                  d="M19 43 C11 37 10 24 18 16 C26 8 40 10 48 18 C54 26 51 37 43 42 C37 45 29 42 27 35 C25 30 29 26 33 27"
+                  stroke="url(#heroCycloneArm2)"
+                  strokeWidth="2.4"
+                  strokeLinecap="round"
+                  fill="none"
+                />
+
+                {/* Cyclone Core Eye (Thermal + Central Eye) */}
+                <circle cx="32" cy="31" r="5.2" fill="url(#heroEyeCore)" />
+                <circle cx="32" cy="31" r="2.4" fill="#020617" stroke="#38bdf8" strokeWidth="1" />
+                <circle cx="32" cy="31" r="1" fill="#ffffff" />
+
+                {/* Orbit Satellite indicator dot */}
+                <circle cx="53.5" cy="18.5" r="2" fill="#38bdf8" className="animate-pulse" />
+                <circle cx="53.5" cy="18.5" r="4.5" stroke="#38bdf8" strokeWidth="0.8" opacity="0.6" />
               </svg>
             </div>
 
