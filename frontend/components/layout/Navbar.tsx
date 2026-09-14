@@ -21,7 +21,6 @@ import { ThemeToggle } from "@/components/ui/ThemeToggle";
 interface NavLink {
   href: string;
   label: string;
-  highlight?: boolean;
   Icon: React.ComponentType<{ className?: string }>;
   info: string[];
 }
@@ -75,7 +74,6 @@ const NAV_LINKS: NavLink[] = [
     href: "/live-satellite",
     label: "Live",
     Icon: Radio,
-    highlight: true,
     info: [
       "Real-time Windy.com weather",
       "NASA GIBS MODIS/VIIRS tiles",
@@ -284,16 +282,11 @@ export function Navbar() {
                       "flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold tracking-wide border transition-all duration-150 shadow-sm",
                       isActive
                         ? "bg-blue-600 border-blue-400 text-white shadow-blue-500/25 shadow-md ring-1 ring-blue-400/40"
-                        : link.highlight
-                        ? "bg-emerald-950/40 border-emerald-500/50 text-emerald-300 hover:bg-emerald-900/60 hover:border-emerald-400 hover:text-white"
                         : "bg-slate-850 bg-[#0d1829] border-slate-700/80 text-slate-200 hover:text-white hover:bg-slate-800 hover:border-slate-500"
                     )}
                   >
-                    <LinkIcon className={clsx("w-3.5 h-3.5 flex-shrink-0", isActive ? "text-white" : link.highlight ? "text-emerald-400" : "text-slate-400 group-hover:text-white")} />
+                    <LinkIcon className={clsx("w-3.5 h-3.5 flex-shrink-0", isActive ? "text-white" : "text-slate-400 group-hover:text-white")} />
                     <span>{link.label}</span>
-                    {link.highlight && (
-                      <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse ml-0.5" />
-                    )}
                   </Link>
 
                   {/* Hover tooltip */}
