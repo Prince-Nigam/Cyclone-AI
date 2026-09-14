@@ -72,8 +72,20 @@ export default function DetectionPage() {
     setResult(null);
     try {
       const res = await analyzeImage(selectedFile, undefined, undefined, true);
+
+      // If detection ran but no cyclone was found — show error, not result
+      if (res.detection && res.detection.detected === false) {
+        const confidence = res.detection.confidence !== undefined
+          ? ` (Confidence: ${(res.detection.confidence * 100).toFixed(1)}%)`
+          : "";
+        const msg = `No cyclone detected in this image${confidence}. Please upload a satellite IR image containing a tropical cyclone.`;
+        setError(msg);
+        toast.error("No cyclone detected in this image.");
+        return;
+      }
+
       setResult(res);
-      toast.success("Analysis complete");
+      toast.success("Cyclone detected — analysis complete!");
     } catch (err: any) {
       const msg = err.message || "Analysis failed";
       setError(msg);

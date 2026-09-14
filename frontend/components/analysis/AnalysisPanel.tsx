@@ -25,13 +25,34 @@ export function AnalysisPanel({ result, isLoading, error }: Props) {
   }
 
   if (error) {
+    const isNoCyclone = error.includes("No cyclone detected");
     return (
-      <div className="p-6 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-700 rounded-lg">
-        <div className="flex items-center gap-2 text-red-700 dark:text-red-400 mb-2">
-          <XCircle className="w-5 h-5" />
-          <span className="font-semibold">Analysis Failed</span>
+      <div className={`p-6 rounded-lg border ${
+        isNoCyclone
+          ? "bg-amber-50 dark:bg-amber-900/20 border-amber-200 dark:border-amber-700"
+          : "bg-red-50 dark:bg-red-900/20 border-red-200 dark:border-red-700"
+      }`}>
+        <div className={`flex items-center gap-2 mb-2 ${
+          isNoCyclone ? "text-amber-700 dark:text-amber-400" : "text-red-700 dark:text-red-400"
+        }`}>
+          {isNoCyclone
+            ? <AlertTriangle className="w-5 h-5" />
+            : <XCircle className="w-5 h-5" />
+          }
+          <span className="font-semibold">
+            {isNoCyclone ? "No Cyclone Detected" : "Analysis Failed"}
+          </span>
         </div>
-        <p className="text-red-600 dark:text-red-300 text-sm">{error}</p>
+        <p className={`text-sm ${
+          isNoCyclone ? "text-amber-700 dark:text-amber-300" : "text-red-600 dark:text-red-300"
+        }`}>
+          {error}
+        </p>
+        {isNoCyclone && (
+          <p className="text-xs text-amber-600 dark:text-amber-400 mt-3 border-t border-amber-200 dark:border-amber-700 pt-2">
+            Tip: Upload a satellite infrared (IR) image with a visible tropical cyclone spiral structure.
+          </p>
+        )}
       </div>
     );
   }
