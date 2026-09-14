@@ -11,6 +11,7 @@
  */
 
 import React, { useEffect, useRef, useState } from "react";
+import { Satellite } from "lucide-react";
 import type { TrackPoint, PredictedTrackPoint } from "@/types";
 import { INTENSITY_COLORS, type IntensityClass } from "@/types";
 
@@ -64,7 +65,7 @@ const formatTrackPopup = (pt: TrackPoint) => `
     ${pt.pressure_hpa != null ? `<div>Pressure: <b>${pt.pressure_hpa} hPa</b></div>` : ""}
     ${pt.intensity_class ? `<div>Intensity: <b>${pt.intensity_class}</b></div>` : ""}
     <div style="margin-top:4px; color:#64748b; font-size:10px">
-      📦 ${pt.data_type || "HISTORICAL"} — ${pt.source || "IBTrACS"}
+      [DATA] ${pt.data_type || "HISTORICAL"} — ${pt.source || "IBTrACS"}
     </div>
   </div>
 `;
@@ -77,7 +78,7 @@ const formatPredictedPopup = (pt: PredictedTrackPoint) => `
     <div>Lat: <b>${pt.lat?.toFixed(3)}°N</b></div>
     <div>Lon: <b>${pt.lon?.toFixed(3)}°E</b></div>
     <div style="margin-top:4px; color:#ea580c; font-size:10px">
-      ⚠️ Model prediction — not an observation
+      [!] Model prediction — not an observation
     </div>
   </div>
 `;
@@ -127,9 +128,9 @@ export function CycloneMap({
         .setContent(`
           <div style="font-family: sans-serif; font-size: 12px; padding: 4px; min-width: 180px">
             <div style="display: flex; align-items: center; gap: 6px; font-weight: bold; color: #1e40af; margin-bottom: 4px">
-              <span>🌦️</span> Checking Live Weather & Rain...
+              Checking Live Weather &amp; Rain...
             </div>
-            <div style="color: #64748b; font-size: 11px">📍 ${lat.toFixed(3)}°N, ${lng.toFixed(3)}°E</div>
+            <div style="color: #64748b; font-size: 11px">Loc: ${lat.toFixed(3)}°N, ${lng.toFixed(3)}°E</div>
           </div>
         `)
         .openOn(mapInstance.current);
@@ -152,31 +153,30 @@ export function CycloneMap({
 
         // WMO Weather code translation
         let condition = "Clear Sky";
-        let icon = "☀️";
-        if (code >= 1 && code <= 3) { condition = "Partly Cloudy / Overcast"; icon = "⛅"; }
-        else if (code >= 45 && code <= 48) { condition = "Foggy"; icon = "🌫️"; }
-        else if (code >= 51 && code <= 55) { condition = "Light Drizzle"; icon = "🌦️"; }
-        else if (code >= 61 && code <= 65) { condition = "Rainfall"; icon = "🌧️"; }
-        else if (code >= 80 && code <= 82) { condition = "Rain Showers"; icon = "🌧️"; }
-        else if (code >= 95) { condition = "Thunderstorm / Heavy Storm"; icon = "⛈️"; }
+        if (code >= 1 && code <= 3) { condition = "Partly Cloudy / Overcast"; }
+        else if (code >= 45 && code <= 48) { condition = "Foggy"; }
+        else if (code >= 51 && code <= 55) { condition = "Light Drizzle"; }
+        else if (code >= 61 && code <= 65) { condition = "Rainfall"; }
+        else if (code >= 80 && code <= 82) { condition = "Rain Showers"; }
+        else if (code >= 95) { condition = "Thunderstorm / Heavy Storm"; }
 
         const isRaining = precip > 0;
 
         popup.setContent(`
           <div style="font-family: sans-serif; font-size: 12px; min-width: 220px; line-height: 1.4; color: #0f172a">
             <div style="display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid #e2e8f0; padding-bottom: 6px; margin-bottom: 6px">
-              <span style="font-weight: bold; font-size: 13px; color: #1e293b; display: flex; align-items: center; gap: 4px">
-                <span>${icon}</span> ${condition}
+              <span style="font-weight: bold; font-size: 13px; color: #1e293b">
+                ${condition}
               </span>
               <span style="font-size: 10px; background: ${isRaining ? '#dcfce7; color: #15803d' : '#f1f5f9; color: #475569'}; padding: 2px 6px; border-radius: 9999px; font-weight: bold">
-                ${isRaining ? '🌧️ RAINING' : 'NO RAIN'}
+                ${isRaining ? 'RAINING' : 'NO RAIN'}
               </span>
             </div>
 
             <!-- Precipitation / Rain Status -->
             <div style="background: ${isRaining ? '#eff6ff' : '#f8fafc'}; border: 1px solid ${isRaining ? '#bfdbfe' : '#e2e8f0'}; border-radius: 8px; padding: 6px 8px; margin-bottom: 6px">
               <div style="font-size: 11px; color: ${isRaining ? '#1d4ed8' : '#64748b'}; font-weight: 600">
-                🌧️ Precipitation / Rain: <b>${precip} mm/h</b>
+                Precipitation / Rain: <b>${precip} mm/h</b>
               </div>
               <div style="font-size: 10px; color: ${isRaining ? '#2563eb' : '#94a3b8'}; margin-top: 2px">
                 ${isRaining ? `Rain detected at this location (${precip} mm)` : 'Clear, no rain currently recorded'}
@@ -185,15 +185,15 @@ export function CycloneMap({
 
             <!-- Grid Details -->
             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 4px; font-size: 11px; color: #334155">
-              <div>🌡️ Temp: <b>${temp}°C</b></div>
-              <div>💨 Wind: <b>${wind} kt</b></div>
-              <div>💧 Humidity: <b>${humidity}%</b></div>
-              <div>☁️ Clouds: <b>${clouds}%</b></div>
-              <div>📊 Pressure: <b>${pressure} hPa</b></div>
+              <div>Temp: <b>${temp}°C</b></div>
+              <div>Wind: <b>${wind} kt</b></div>
+              <div>Humidity: <b>${humidity}%</b></div>
+              <div>Clouds: <b>${clouds}%</b></div>
+              <div>Pressure: <b>${pressure} hPa</b></div>
             </div>
 
             <div style="margin-top: 6px; padding-top: 4px; border-top: 1px solid #f1f5f9; font-size: 9px; color: #94a3b8; display: flex; justify-content: space-between">
-              <span>📍 ${lat.toFixed(2)}°N, ${lng.toFixed(2)}°E</span>
+              <span>${lat.toFixed(2)}°N, ${lng.toFixed(2)}°E</span>
               <span>Open-Meteo Live</span>
             </div>
           </div>
@@ -201,7 +201,7 @@ export function CycloneMap({
       } catch (err: any) {
         popup.setContent(`
           <div style="font-family: sans-serif; font-size: 11px; color: #ef4444; padding: 4px">
-            ⚠️ Could not load weather for (${lat.toFixed(2)}°N, ${lng.toFixed(2)}°E). Please try again.
+            [!] Could not load weather for (${lat.toFixed(2)}°N, ${lng.toFixed(2)}°E). Please try again.
           </div>
         `);
       }
@@ -341,7 +341,7 @@ export function CycloneMap({
                 : "bg-white text-slate-700 border-slate-300 hover:bg-slate-50"
             }`}
           >
-            🛰️ {satelliteOn ? "Satellite ON" : "Satellite OFF"}
+            <Satellite className="w-3.5 h-3.5" /> {satelliteOn ? "Satellite ON" : "Satellite OFF"}
           </button>
 
           {/* Layer selector — only shown when satellite is ON */}
@@ -383,7 +383,7 @@ export function CycloneMap({
         </div>
         {satelliteOn && (
           <div className="flex items-center gap-2 pt-1 border-t border-slate-100 mt-1">
-            <span className="text-blue-500">🛰️</span>
+            <Satellite className="w-3 h-3 text-blue-500" />
             <span className="text-blue-600 font-medium text-[10px]">NASA GIBS · {activeLayer}</span>
           </div>
         )}

@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from "react";
 import dynamic from "next/dynamic";
 import toast from "react-hot-toast";
-import { Plus, Trash2, Loader2, Database } from "lucide-react";
+import { Plus, Trash2, Loader2, Database, Activity, TrendingUp, AlertTriangle } from "lucide-react";
 import { DataTypeBadge } from "@/components/ui/DataTypeBadge";
 import { IntensityBadge } from "@/components/ui/IntensityBadge";
 import { predictIntensity, predictTrack, getCyclones, getCyclone } from "@/services/cycloneService";
@@ -134,7 +134,9 @@ export default function PredictionPage() {
       {/* Info stat cards */}
       <div className="grid grid-cols-2 gap-3">
         <div className="bg-orange-50 dark:bg-orange-900/20 border border-orange-200 dark:border-orange-700 rounded-xl p-4 flex items-center gap-3">
-          <span className="text-2xl">🧠</span>
+          <div className="w-10 h-10 rounded-xl bg-orange-100 dark:bg-orange-800/40 flex items-center justify-center flex-shrink-0 text-orange-600 dark:text-orange-400">
+            <Activity className="w-5 h-5" />
+          </div>
           <div>
             <p className="text-xs text-orange-600 dark:text-orange-400 font-semibold uppercase tracking-wide">Intensity Model</p>
             <p className="text-sm font-bold text-orange-900 dark:text-orange-200">CNN + LSTM (256 units)</p>
@@ -142,7 +144,9 @@ export default function PredictionPage() {
           </div>
         </div>
         <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-700 rounded-xl p-4 flex items-center gap-3">
-          <span className="text-2xl">🛤️</span>
+          <div className="w-10 h-10 rounded-xl bg-blue-100 dark:bg-blue-800/40 flex items-center justify-center flex-shrink-0 text-blue-600 dark:text-blue-400">
+            <TrendingUp className="w-5 h-5" />
+          </div>
           <div>
             <p className="text-xs text-blue-600 dark:text-blue-400 font-semibold uppercase tracking-wide">Track Model</p>
             <p className="text-sm font-bold text-blue-900 dark:text-blue-200">Seq2Seq Encoder-Decoder LSTM</p>
@@ -296,8 +300,9 @@ export default function PredictionPage() {
                   </div>
                 ))}
               </div>
-              <p className="text-xs text-slate-400 mt-2 italic">
-                ⚠️ Model predictions — not official forecasts
+              <p className="text-xs text-slate-400 mt-2 italic flex items-center gap-1">
+                <AlertTriangle className="w-3.5 h-3.5 inline text-amber-500" />
+                Model predictions — not official forecasts
               </p>
             </div>
           )}

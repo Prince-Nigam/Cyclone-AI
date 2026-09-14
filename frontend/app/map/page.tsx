@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import dynamic from "next/dynamic";
-import { Loader2 } from "lucide-react";
+import { Loader2, Waves, MapPin, CloudRain, Info } from "lucide-react";
 import { DataTypeBadge } from "@/components/ui/DataTypeBadge";
 import { IntensityBadge } from "@/components/ui/IntensityBadge";
 import { getCyclone, getCyclones, predictTrack } from "@/services/cycloneService";
@@ -19,66 +19,101 @@ export default function MapPage() {
   const [predictedTrack, setPredictedTrack] = useState<PredictedTrackPoint[]>([]);
   const [predicting, setPredicting] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [basin, setBasin] = useState("NI");
 
   useEffect(() => {
-    getCyclones({ basin: "NI", limit: 10 })
+    setLoading(true);
+    getCyclones({ basin, limit: 30 })
       .then((res) => {
-        setCyclones(res.cyclones);
-        if (res.cyclones[0]) loadCyclone(res.cyclones[0].id);
+        const list = res.cyclones || [];
+        setCyclones(list);
+        if (list[0]) {
+          loadCyclone(list[0].id);
+        } else {
+          setSelected(null);
+          setPredictedTrack([]);
+        }
       })
+      .catch(() => setCyclones([]))
       .finally(() => setLoading(false));
-  }, []);
+  }, [basin]);
 
   const loadCyclone = async (id: string) => {
-    const detail = await getCyclone(id);
-    setSelected(detail);
-    setPredictedTrack([]);
+    if (!id) {
+      setSelected(null);
+      setPredictedTrack([]);
+      return;
+    }
+    try {
+      const detail = await getCyclone(id);
+      setSelected(detail);
+      setPredictedTrack([]);
 
-    if (detail.track && detail.track.length >= 2) {
-      setPredicting(true);
-      try {
-        const history = detail.track.slice(-8).map((pt) => ({
-          lat: pt.latitude, lon: pt.longitude,
-          wind_kt: pt.wind_kt || 50, pressure_hpa: pt.pressure_hpa || 990,
+      const pts = detail.track || (detail as any).track_points;
+      if (pts && pts.length >= 2) {
+        setPredicting(true);
+        const history = pts.slice(-8).map((pt: any) => ({
+          lat: pt.latitude ?? pt.lat,
+          lon: pt.longitude ?? pt.lon,
+          wind_kt: pt.wind_kt ?? 50,
+          pressure_hpa: pt.pressure_hpa ?? 990,
         }));
         const result = await predictTrack(history);
         if (result.predicted_track) setPredictedTrack(result.predicted_track);
-      } catch {
-        setPredictedTrack([]);
-      } finally {
-        setPredicting(false);
       }
+    } catch {
+      setPredictedTrack([]);
+    } finally {
+      setPredicting(false);
     }
   };
 
   return (
-    <div className="space-y-4">
-      <div className="flex items-start justify-between flex-wrap gap-3">
+    <div className="space-y-6">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-slate-900 dark:text-slate-100">Interactive Cyclone Map</h1>
+          <h1 className="text-2xl font-bold text-slate-900 dark:text-slate-100">Cyclone Tracking Map</h1>
           <p className="text-slate-500 dark:text-slate-400 text-sm mt-1">
-            Historical tracks (<DataTypeBadge type="HISTORICAL" className="inline-flex" />) and
-            model predictions (<DataTypeBadge type="PREDICTED" className="inline-flex" />).
+            Visual track history and 24h AI trajectory forecasts on Leaflet.
           </p>
         </div>
 
-        {/* Cyclone selector */}
-        <select
-          onChange={(e) => loadCyclone(e.target.value)}
-          className="text-sm border border-slate-200 dark:border-slate-600 rounded-lg px-3 py-2 bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-200 min-w-48"
-        >
-          {cyclones.map((c) => (
-            <option key={c.id} value={c.id}>
-              {c.name} ({c.season}) — {c.peak_intensity}
-            </option>
-          ))}
-        </select>
+        <div className="flex items-center gap-2 flex-wrap">
+          {/* Basin filter */}
+          <select
+            value={basin}
+            onChange={(e) => setBasin(e.target.value)}
+            className="text-xs bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg px-3 py-2 text-slate-700 dark:text-slate-300"
+          >
+            <option value="NI">North Indian Ocean (NI)</option>
+            <option value="WP">West Pacific (WP)</option>
+            <option value="EP">East Pacific (EP)</option>
+            <option value="NA">North Atlantic (NA)</option>
+            <option value="">All Basins</option>
+          </select>
+
+          {/* Cyclone selector */}
+          <select
+            value={selected?.id || ""}
+            onChange={(e) => loadCyclone(e.target.value)}
+            className="text-xs bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg px-3 py-2 text-slate-700 dark:text-slate-300 min-w-48"
+          >
+            <option value="">Select Cyclone...</option>
+            {cyclones.map((c) => (
+              <option key={c.id} value={c.id}>
+                {c.name} ({c.season}) — {c.peak_intensity}
+              </option>
+            ))}
+          </select>
+        </div>
       </div>
 
       {/* Info stat cards */}
       <div className="grid grid-cols-2 gap-3">
         <div className="bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-700 rounded-xl p-4 flex items-center gap-3">
-          <span className="text-2xl">🌊</span>
+          <div className="w-10 h-10 rounded-xl bg-green-100 dark:bg-green-800/40 flex items-center justify-center flex-shrink-0 text-green-600 dark:text-green-400">
+            <Waves className="w-5 h-5" />
+          </div>
           <div>
             <p className="text-xs text-green-600 dark:text-green-400 font-semibold uppercase tracking-wide">Basin Coverage</p>
             <p className="text-sm font-bold text-green-900 dark:text-green-200">North Indian Ocean (NI)</p>
@@ -86,7 +121,9 @@ export default function MapPage() {
           </div>
         </div>
         <div className="bg-purple-50 dark:bg-purple-900/20 border border-purple-200 dark:border-purple-700 rounded-xl p-4 flex items-center gap-3">
-          <span className="text-2xl">📍</span>
+          <div className="w-10 h-10 rounded-xl bg-purple-100 dark:bg-purple-800/40 flex items-center justify-center flex-shrink-0 text-purple-600 dark:text-purple-400">
+            <MapPin className="w-5 h-5" />
+          </div>
           <div>
             <p className="text-xs text-purple-600 dark:text-purple-400 font-semibold uppercase tracking-wide">Track Data</p>
             <p className="text-sm font-bold text-purple-900 dark:text-purple-200">IBTrACS · 6-hourly obs.</p>
@@ -96,13 +133,16 @@ export default function MapPage() {
       </div>
       <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-700 rounded-xl px-4 py-3 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-sm">
         <div className="flex items-center gap-3">
-          <span className="text-2xl">🌦️</span>
+          <div className="w-10 h-10 rounded-xl bg-blue-100 dark:bg-blue-800/40 flex items-center justify-center flex-shrink-0 text-blue-600 dark:text-blue-400">
+            <CloudRain className="w-5 h-5" />
+          </div>
           <div>
             <p className="font-semibold text-blue-900 dark:text-blue-200">
               Live Rain, Weather & Satellite Imagery Active
             </p>
-            <p className="text-xs text-blue-700 dark:text-blue-300 mt-0.5">
-              💡 <b>Tip:</b> Map par kisi bhi location par click karein to waha ki live <b>Barish (Precipitation mm/h)</b>, Temperature, aur Wind speed turant dikhegi!
+            <p className="text-xs text-blue-700 dark:text-blue-300 mt-0.5 flex items-center gap-1">
+              <Info className="w-3.5 h-3.5 inline text-blue-500 flex-shrink-0" />
+              <span><b>Tip:</b> Map par kisi bhi location par click karein to waha ki live <b>Barish (Precipitation mm/h)</b>, Temperature, aur Wind speed turant dikhegi!</span>
             </p>
           </div>
         </div>

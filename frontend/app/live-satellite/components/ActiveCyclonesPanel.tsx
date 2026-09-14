@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { AlertCircle, ExternalLink, Globe, Navigation, RefreshCw, ShieldAlert, Wind, Gauge, Thermometer, Droplets, Waves, MapPin } from "lucide-react";
+import { AlertCircle, ExternalLink, Globe, Navigation, RefreshCw, ShieldAlert, Wind, Gauge, Thermometer, Droplets, Waves, MapPin, CheckCircle2 } from "lucide-react";
 import { DataTypeBadge } from "@/components/ui/DataTypeBadge";
 import { IntensityBadge } from "@/components/ui/IntensityBadge";
 import type { RealtimeCyclone, OceanWeatherPoint } from "@/types";
@@ -116,7 +116,7 @@ export function ActiveCyclonesPanel({
                 : "text-slate-500 hover:text-slate-700 dark:hover:text-slate-300"
             }`}
           >
-            🇮🇳 Indian Ocean
+            Indian Ocean
           </button>
         </div>
 
@@ -148,11 +148,11 @@ export function ActiveCyclonesPanel({
           <div className="space-y-3">
             {/* Status Banner */}
             <div className="flex items-center gap-2 p-2.5 rounded-xl bg-emerald-500/10 border border-emerald-500/20">
-              <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse flex-shrink-0" />
+              <CheckCircle2 className="w-4 h-4 text-emerald-500 flex-shrink-0" />
               <p className="text-[11px] font-semibold text-emerald-700 dark:text-emerald-300">
                 {indianOceanOnly
-                  ? "✅ Indian Ocean — No active cyclones currently"
-                  : "✅ All ocean basins tranquil — No active cyclones"}
+                  ? "Indian Ocean — No active cyclones currently"
+                  : "All ocean basins tranquil — No active cyclones"}
               </p>
             </div>
 
@@ -220,8 +220,8 @@ export function ActiveCyclonesPanel({
                           </div>
                           <div className="flex items-center gap-1">
                             {isPointSelected ? (
-                              <span className="text-[9px] font-bold px-1.5 py-0.5 rounded bg-blue-600 text-white animate-pulse">
-                                📍 Focused
+                              <span className="text-[9px] font-bold px-1.5 py-0.5 rounded bg-blue-600 text-white animate-pulse flex items-center gap-0.5">
+                                <MapPin className="w-2.5 h-2.5 inline-block" /> Focused
                               </span>
                             ) : (
                               <span className={`text-[9px] font-bold px-1.5 py-0.5 rounded border ${regionColor}`}>

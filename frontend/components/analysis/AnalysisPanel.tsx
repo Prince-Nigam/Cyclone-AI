@@ -95,7 +95,7 @@ export function AnalysisPanel({ result, isLoading, error }: Props) {
               : <CheckCircle className="w-5 h-5 text-green-600 dark:text-green-400" />
             }
             <span className={`font-semibold text-sm ${det.detected ? "text-red-700 dark:text-red-300" : "text-green-700 dark:text-green-300"}`}>
-              {det.detected ? "⚠️ Cyclone Detected" : "✓ No Cyclone Detected"}
+              {det.detected ? "Cyclone Detected" : "No Cyclone Detected"}
             </span>
           </div>
           {det.confidence !== undefined && (

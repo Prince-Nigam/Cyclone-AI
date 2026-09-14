@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useCallback, useRef, useState, useEffect } from "react";
-import { Upload, X, Satellite, AlertTriangle } from "lucide-react";
+import { Upload, X, Satellite, AlertTriangle, Cpu, FolderArchive } from "lucide-react";
 import toast from "react-hot-toast";
 import { AnalysisPanel } from "@/components/analysis/AnalysisPanel";
 import { analyzeImage } from "@/services/cycloneService";
@@ -113,7 +113,9 @@ export default function SatellitePage() {
       {/* Info stat cards */}
       <div className="grid grid-cols-2 gap-3">
         <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-700 rounded-xl p-4 flex items-center gap-3">
-          <span className="text-2xl">🤖</span>
+          <div className="w-10 h-10 rounded-xl bg-blue-100 dark:bg-blue-800/40 flex items-center justify-center flex-shrink-0 text-blue-600 dark:text-blue-400">
+            <Cpu className="w-5 h-5" />
+          </div>
           <div>
             <p className="text-xs text-blue-600 dark:text-blue-400 font-semibold uppercase tracking-wide">AI Pipeline</p>
             <p className="text-sm font-bold text-blue-900 dark:text-blue-200">EfficientNet-B0 + ResNet50</p>
@@ -121,7 +123,9 @@ export default function SatellitePage() {
           </div>
         </div>
         <div className="bg-slate-50 dark:bg-slate-700/50 border border-slate-200 dark:border-slate-600 rounded-xl p-4 flex items-center gap-3">
-          <span className="text-2xl">📁</span>
+          <div className="w-10 h-10 rounded-xl bg-slate-200 dark:bg-slate-600/40 flex items-center justify-center flex-shrink-0 text-slate-600 dark:text-slate-300">
+            <FolderArchive className="w-5 h-5" />
+          </div>
           <div>
             <p className="text-xs text-slate-600 dark:text-slate-400 font-semibold uppercase tracking-wide">Supported Formats</p>
             <p className="text-sm font-bold text-slate-800 dark:text-slate-200">PNG · JPG · TIFF · NetCDF · HDF5</p>

@@ -12,6 +12,11 @@ import {
   ShieldAlert,
   Clock,
   Sparkles,
+  CloudRain,
+  Thermometer,
+  Cloud,
+  BarChart3,
+  AlertTriangle,
 } from "lucide-react";
 import { ActiveCyclonesPanel } from "./components/ActiveCyclonesPanel";
 import { OceanWeatherGrid } from "./components/OceanWeatherGrid";
@@ -26,12 +31,12 @@ const CycloneMap = dynamic(
 );
 
 const WINDY_OVERLAYS = [
-  { key: "rain",       label: "Precipitation / Rain", icon: "🌧️", desc: "Live rainfall & precipitation" },
-  { key: "wind",       label: "Wind",                 icon: "💨",  desc: "Real-time wind speed & direction" },
-  { key: "satellite",  label: "Satellite",            icon: "🛰️",  desc: "Live satellite imagery" },
-  { key: "temp",       label: "Temperature",          icon: "🌡️", desc: "Surface temperature" },
-  { key: "clouds",     label: "Clouds",               icon: "☁️",  desc: "Cloud cover" },
-  { key: "pressure",   label: "Pressure",             icon: "📊",  desc: "Sea-level pressure" },
+  { key: "rain",       label: "Precipitation / Rain", Icon: CloudRain,   desc: "Live rainfall & precipitation" },
+  { key: "wind",       label: "Wind",                 Icon: Wind,        desc: "Real-time wind speed & direction" },
+  { key: "satellite",  label: "Satellite",            Icon: Satellite,   desc: "Live satellite imagery" },
+  { key: "temp",       label: "Temperature",          Icon: Thermometer, desc: "Surface temperature" },
+  { key: "clouds",     label: "Clouds",               Icon: Cloud,       desc: "Cloud cover" },
+  { key: "pressure",   label: "Pressure",             Icon: BarChart3,   desc: "Sea-level pressure" },
 ];
 
 export default function LiveSatellitePage() {
@@ -226,21 +231,24 @@ export default function LiveSatellitePage() {
         </div>
 
         <div className="flex flex-wrap gap-2">
-          {WINDY_OVERLAYS.map((o) => (
-            <button
-              key={o.key}
-              onClick={() => { setActiveOverlay(o.key); setWindyLoaded(false); }}
-              title={o.desc}
-              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold transition-all ${
-                activeOverlay === o.key
-                  ? "bg-blue-600 text-white shadow-md shadow-blue-600/30 scale-[1.02]"
-                  : "bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-700 hover:bg-slate-200 dark:hover:bg-slate-700"
-              }`}
-            >
-              <span>{o.icon}</span>
-              {o.label}
-            </button>
-          ))}
+          {WINDY_OVERLAYS.map((o) => {
+            const OverlayIcon = o.Icon;
+            return (
+              <button
+                key={o.key}
+                onClick={() => { setActiveOverlay(o.key); setWindyLoaded(false); }}
+                title={o.desc}
+                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold transition-all ${
+                  activeOverlay === o.key
+                    ? "bg-blue-600 text-white shadow-md shadow-blue-600/30 scale-[1.02]"
+                    : "bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-700 hover:bg-slate-200 dark:hover:bg-slate-700"
+                }`}
+              >
+                <OverlayIcon className="w-3.5 h-3.5 flex-shrink-0" />
+                {o.label}
+              </button>
+            );
+          })}
         </div>
       </div>
 
@@ -285,7 +293,7 @@ export default function LiveSatellitePage() {
           <div className="glass-card rounded-2xl overflow-hidden shadow-xl border border-slate-200 dark:border-slate-800">
             <div className="flex items-center justify-between px-4 py-3 border-b border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900/60">
               <div className="flex items-center gap-2">
-                <span className="text-lg">🌀</span>
+                <Wind className="w-4 h-4 text-blue-400" />
                 <span className="font-bold text-slate-800 dark:text-slate-200 text-sm">Windy Atmosphere Stream</span>
                 <span className="text-[11px] bg-blue-100 dark:bg-blue-900/40 text-blue-700 dark:text-blue-300 px-2 py-0.5 rounded-full font-medium">
                   {WINDY_OVERLAYS.find(o => o.key === activeOverlay)?.label}
@@ -324,7 +332,7 @@ export default function LiveSatellitePage() {
           <div className="glass-card rounded-2xl overflow-hidden shadow-xl border border-slate-200 dark:border-slate-800">
             <div className="flex items-center justify-between px-4 py-3 border-b border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900/60">
               <div className="flex items-center gap-2">
-                <span className="text-lg">🛰️</span>
+                <Satellite className="w-4 h-4 text-purple-400" />
                 <span className="font-bold text-slate-800 dark:text-slate-200 text-sm">NASA GIBS Satellite Layer</span>
                 <span className="text-[11px] bg-purple-100 dark:bg-purple-900/40 text-purple-700 dark:text-purple-300 px-2 py-0.5 rounded-full font-medium">
                   MODIS True Color / Thermal
@@ -397,8 +405,11 @@ export default function LiveSatellitePage() {
       </div>
 
       {/* ── Research Disclaimer ────────────────────────────────── */}
-      <div className="rounded-2xl border border-amber-500/30 bg-amber-500/10 px-5 py-3.5 text-xs text-amber-900 dark:text-amber-200 leading-relaxed">
-        <strong>⚠️ Real-Time Observational Data:</strong> All weather points and alerts shown on this page are <span className="underline font-bold">OBSERVED</span> data streams directly fetched from open scientific APIs (GDACS &amp; Open-Meteo). For official cyclone landfall advisories and warnings, consult the India Meteorological Department (<a href="https://mausam.imd.gov.in" target="_blank" rel="noopener noreferrer" className="underline font-bold">IMD</a>).
+      <div className="rounded-2xl border border-amber-500/30 bg-amber-500/10 px-5 py-3.5 text-xs text-amber-900 dark:text-amber-200 leading-relaxed flex items-start gap-2">
+        <AlertTriangle className="w-4 h-4 text-amber-500 flex-shrink-0 mt-0.5" />
+        <div>
+          <strong>Real-Time Observational Data:</strong> All weather points and alerts shown on this page are <span className="underline font-bold">OBSERVED</span> data streams directly fetched from open scientific APIs (GDACS &amp; Open-Meteo). For official cyclone landfall advisories and warnings, consult the India Meteorological Department (<a href="https://mausam.imd.gov.in" target="_blank" rel="noopener noreferrer" className="underline font-bold">IMD</a>).
+        </div>
       </div>
 
       {/* ── Real-Time 1s Telemetry Stream Bar (Bottom Status Bar) ── */}

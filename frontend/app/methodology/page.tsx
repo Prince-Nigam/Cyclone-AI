@@ -1,4 +1,5 @@
 import React from "react";
+import { Cpu, Database, AlertTriangle } from "lucide-react";
 
 export default function MethodologyPage() {
   return (
@@ -13,7 +14,9 @@ export default function MethodologyPage() {
       {/* Info stat cards */}
       <div className="grid grid-cols-2 gap-3">
         <div className="bg-purple-50 dark:bg-purple-900/20 border border-purple-200 dark:border-purple-700 rounded-xl p-4 flex items-center gap-3">
-          <span className="text-2xl">🔬</span>
+          <div className="w-10 h-10 rounded-xl bg-purple-100 dark:bg-purple-800/40 flex items-center justify-center flex-shrink-0 text-purple-600 dark:text-purple-400">
+            <Cpu className="w-5 h-5" />
+          </div>
           <div>
             <p className="text-xs text-purple-600 dark:text-purple-400 font-semibold uppercase tracking-wide">AI Models Used</p>
             <p className="text-sm font-bold text-purple-900 dark:text-purple-200">EfficientNet · ResNet50 · LSTM</p>
@@ -21,7 +24,9 @@ export default function MethodologyPage() {
           </div>
         </div>
         <div className="bg-slate-50 dark:bg-slate-700/50 border border-slate-200 dark:border-slate-600 rounded-xl p-4 flex items-center gap-3">
-          <span className="text-2xl">📦</span>
+          <div className="w-10 h-10 rounded-xl bg-slate-200 dark:bg-slate-600/40 flex items-center justify-center flex-shrink-0 text-slate-600 dark:text-slate-300">
+            <Database className="w-5 h-5" />
+          </div>
           <div>
             <p className="text-xs text-slate-600 dark:text-slate-400 font-semibold uppercase tracking-wide">Training Data</p>
             <p className="text-sm font-bold text-slate-800 dark:text-slate-200">HURSAT-B1 + IBTrACS</p>
@@ -115,7 +120,10 @@ export default function MethodologyPage() {
       ))}
 
       <div className="bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-700 rounded-xl p-5">
-        <h2 className="font-bold text-yellow-800 dark:text-yellow-300 mb-2">⚠️ Important Limitations</h2>
+        <h2 className="font-bold text-yellow-800 dark:text-yellow-300 mb-2 flex items-center gap-1.5">
+          <AlertTriangle className="w-4 h-4 text-amber-500" />
+          Important Limitations
+        </h2>
         <ul className="space-y-1 text-sm text-yellow-700 dark:text-yellow-400">
           <li>• HURSAT-B1 data covers 1978–2015 only. Recent storm patterns may not be represented.</li>
           <li>• Models trained on single IR channel. Multi-channel input would improve accuracy.</li>

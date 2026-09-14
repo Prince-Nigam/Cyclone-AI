@@ -1,5 +1,6 @@
 import React from "react";
 import Link from "next/link";
+import { AlertTriangle } from "lucide-react";
 
 export default function AboutPage() {
   return (
@@ -25,7 +26,10 @@ export default function AboutPage() {
           with explainable AI visualization through Grad-CAM.
         </p>
 
-        <h2 className="font-bold text-slate-800">⚠️ Important Disclaimer</h2>
+        <h2 className="font-bold text-slate-800 flex items-center gap-1.5">
+          <AlertTriangle className="w-4 h-4 text-amber-500" />
+          Important Disclaimer
+        </h2>
         <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-3 text-sm text-yellow-800">
           This is a <strong>research prototype</strong> for the Smart India Hackathon.
           It is NOT an official weather forecasting or warning system.

@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
-import { Search, Loader2, AlertTriangle } from "lucide-react";
+import { Search, Loader2, AlertTriangle, Archive, Globe } from "lucide-react";
 import dynamic from "next/dynamic";
 import { DataTypeBadge } from "@/components/ui/DataTypeBadge";
 import { IntensityBadge } from "@/components/ui/IntensityBadge";
@@ -76,7 +76,7 @@ function HistoricalContent() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-bold text-slate-900 dark:text-slate-100">Historical Cyclone Explorer</h1>
+        <h1 className="text-2xl font-bold text-slate-900 dark:text-slate-100">Historical Cyclone Records</h1>
         <p className="text-slate-500 dark:text-slate-400 text-sm mt-1">
           Browse archived cyclone records from IBTrACS dataset.
           All records are labeled as <DataTypeBadge type="HISTORICAL" className="inline-flex" />.
@@ -86,7 +86,9 @@ function HistoricalContent() {
       {/* Info stat cards */}
       <div className="grid grid-cols-2 gap-3">
         <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-700 rounded-xl p-4 flex items-center gap-3">
-          <span className="text-2xl">🗃️</span>
+          <div className="w-10 h-10 rounded-xl bg-blue-100 dark:bg-blue-800/40 flex items-center justify-center flex-shrink-0 text-blue-600 dark:text-blue-400">
+            <Archive className="w-5 h-5" />
+          </div>
           <div>
             <p className="text-xs text-blue-600 dark:text-blue-400 font-semibold uppercase tracking-wide">IBTrACS Dataset</p>
             <p className="text-sm font-bold text-blue-900 dark:text-blue-200">~3,000+ global cyclones</p>
@@ -94,7 +96,9 @@ function HistoricalContent() {
           </div>
         </div>
         <div className="bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-700 rounded-xl p-4 flex items-center gap-3">
-          <span className="text-2xl">🌏</span>
+          <div className="w-10 h-10 rounded-xl bg-green-100 dark:bg-green-800/40 flex items-center justify-center flex-shrink-0 text-green-600 dark:text-green-400">
+            <Globe className="w-5 h-5" />
+          </div>
           <div>
             <p className="text-xs text-green-600 dark:text-green-400 font-semibold uppercase tracking-wide">NI Basin Focus</p>
             <p className="text-sm font-bold text-green-900 dark:text-green-200">Arabian Sea + Bay of Bengal</p>

@@ -109,10 +109,10 @@ const STAT_THEMES: Record<string, {
 
 /* ── Architecture items ─────────────────────────────────────── */
 const ARCH = [
-  { icon: "📡", label: "Data",     items: ["GDACS Live", "IBTrACS", "Open-Meteo", "NASA GIBS"] },
-  { icon: "🧠", label: "AI Models",items: ["EfficientNet-B0", "ResNet50", "LSTM/GRU", "Grad-CAM"] },
-  { icon: "⚡", label: "Backend",  items: ["FastAPI", "PostgreSQL/SQLite", "Real-Time Service"] },
-  { icon: "🎨", label: "Frontend", items: ["Next.js 14", "Tailwind CSS", "Leaflet Maps"] },
+  { icon: Database, label: "Data",     items: ["GDACS Live", "IBTrACS", "Open-Meteo", "NASA GIBS"] },
+  { icon: Cpu,      label: "AI Models",items: ["EfficientNet-B0", "ResNet50", "LSTM/GRU", "Grad-CAM"] },
+  { icon: Radio,    label: "Backend",  items: ["FastAPI", "PostgreSQL/SQLite", "Real-Time Service"] },
+  { icon: Layers,   label: "Frontend", items: ["Next.js 14", "Tailwind CSS", "Leaflet Maps"] },
 ];
 
 /* ═══════════════════════════════════════════════════════════════ */
@@ -679,13 +679,15 @@ export default function DashboardPage() {
           <h2 className="font-bold text-white text-sm">System Architecture &amp; Data Pipeline</h2>
         </div>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-px bg-slate-700/40">
-          {ARCH.map(({ icon, label, items }) => (
-            <div key={label} className="bg-slate-900/60 p-5 text-center">
-              <div className="text-2xl mb-2">{icon}</div>
+          {ARCH.map(({ icon: Icon, label, items }) => (
+            <div key={label} className="bg-slate-900/60 p-5 text-center flex flex-col items-center">
+              <div className="w-10 h-10 rounded-xl bg-blue-500/10 border border-blue-500/20 flex items-center justify-center mb-3 text-blue-400">
+                <Icon className="w-5 h-5" />
+              </div>
               <p className="text-xs font-bold text-slate-300 uppercase tracking-widest mb-3">{label}</p>
-              <div className="space-y-1.5">
+              <div className="space-y-1.5 w-full">
                 {items.map((item) => (
-                  <p key={item} className="text-xs text-slate-500 bg-slate-800/60 rounded-lg px-2 py-1">{item}</p>
+                  <p key={item} className="text-xs text-slate-400 bg-slate-800/60 rounded-lg px-2 py-1">{item}</p>
                 ))}
               </div>
             </div>

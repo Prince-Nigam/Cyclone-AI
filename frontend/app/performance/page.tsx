@@ -16,6 +16,9 @@ import {
   TrendingUp,
   Zap,
   Info,
+  Target,
+  BarChart3,
+  Map,
 } from "lucide-react";
 import { getModels } from "@/services/cycloneService";
 import type { MLModel } from "@/types";
@@ -119,7 +122,9 @@ export default function PerformancePage() {
         <div className="stat-card bg-gradient-to-br from-blue-500/10 via-blue-500/5 to-transparent border-blue-500/20">
           <div className="flex items-center justify-between mb-2">
             <span className="text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider">Detection Accuracy</span>
-            <span className="p-1.5 rounded-lg bg-blue-500/20 text-blue-500">🎯</span>
+            <span className="p-1.5 rounded-lg bg-blue-500/20 text-blue-500">
+              <Target className="w-4 h-4" />
+            </span>
           </div>
           <p className="text-2xl font-black text-slate-900 dark:text-white font-mono">85.4%</p>
           <div className="flex items-center justify-between text-xs text-slate-500 dark:text-slate-400 mt-1">
@@ -131,7 +136,9 @@ export default function PerformancePage() {
         <div className="stat-card bg-gradient-to-br from-purple-500/10 via-purple-500/5 to-transparent border-purple-500/20">
           <div className="flex items-center justify-between mb-2">
             <span className="text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider">Pattern Classifier</span>
-            <span className="p-1.5 rounded-lg bg-purple-500/20 text-purple-500">📊</span>
+            <span className="p-1.5 rounded-lg bg-purple-500/20 text-purple-500">
+              <BarChart3 className="w-4 h-4" />
+            </span>
           </div>
           <p className="text-2xl font-black text-slate-900 dark:text-white font-mono">76.8%</p>
           <div className="flex items-center justify-between text-xs text-slate-500 dark:text-slate-400 mt-1">
@@ -143,7 +150,9 @@ export default function PerformancePage() {
         <div className="stat-card bg-gradient-to-br from-amber-500/10 via-amber-500/5 to-transparent border-amber-500/20">
           <div className="flex items-center justify-between mb-2">
             <span className="text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider">Intensity MAE</span>
-            <span className="p-1.5 rounded-lg bg-amber-500/20 text-amber-500">📈</span>
+            <span className="p-1.5 rounded-lg bg-amber-500/20 text-amber-500">
+              <TrendingUp className="w-4 h-4" />
+            </span>
           </div>
           <p className="text-2xl font-black text-slate-900 dark:text-white font-mono">8.32 kt</p>
           <div className="flex items-center justify-between text-xs text-slate-500 dark:text-slate-400 mt-1">
@@ -155,7 +164,9 @@ export default function PerformancePage() {
         <div className="stat-card bg-gradient-to-br from-emerald-500/10 via-emerald-500/5 to-transparent border-emerald-500/20">
           <div className="flex items-center justify-between mb-2">
             <span className="text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider">Track Position Error</span>
-            <span className="p-1.5 rounded-lg bg-emerald-500/20 text-emerald-500">🗺️</span>
+            <span className="p-1.5 rounded-lg bg-emerald-500/20 text-emerald-500">
+              <Map className="w-4 h-4" />
+            </span>
           </div>
           <p className="text-2xl font-black text-slate-900 dark:text-white font-mono">48.6 km</p>
           <div className="flex items-center justify-between text-xs text-slate-500 dark:text-slate-400 mt-1">
