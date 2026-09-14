@@ -182,79 +182,110 @@ class ModelManager:
             except Exception:
                 intensity_score = 0.55
 
-        # ── Satellite Image Validation ──────────────────────────────────────
-        # Check if this actually looks like a satellite IR/greyscale image.
-        # Regular photos (people, objects, etc.) should be rejected.
-        is_satellite_image = False
-        rejection_reason = "Image does not appear to be a satellite IR image."
+        # ── Strict Cyclone & Satellite Image Validation ─────────────────────
+        is_cyclone_image = False
+        rejection_reason = "Image does not match a tropical cyclone satellite structure."
 
         if img is not None:
             try:
                 img_arr = np.array(img.resize((128, 128)), dtype=np.float32)
-
                 r = img_arr[:, :, 0]
                 g = img_arr[:, :, 1]
                 b = img_arr[:, :, 2]
+                total_pixels = 128 * 128
 
-                # 1. Grayscale check: IR satellite images are nearly monochrome
+                # 1. Skin tone detection (People, Portraits, Selfies)
+                skin_mask = (
+                    (r > 85) & (g > 35) & (b > 20) &
+                    (np.maximum(np.maximum(r, g), b) - np.minimum(np.minimum(r, g), b) > 15) &
+                    (np.abs(r - g) > 12) &
+                    (r > g) & (r > b) &
+                    (g > b * 0.7)
+                )
+                skin_ratio = float(np.sum(skin_mask) / total_pixels)
+                if skin_ratio > 0.05:
+                    raise ValueError(f"Image appears to contain a person or portrait ({skin_ratio*100:.1f}% skin tones detected). Please upload a satellite IR image of a tropical cyclone.")
+
+                # 2. Document / Screenshot / Text Image detection
+                brightness = 0.299 * r + 0.587 * g + 0.114 * b
+                mean_bright = float(np.mean(brightness))
+                very_high_bright_ratio = float(np.sum(brightness > 230) / total_pixels)
+                high_bright_ratio = float(np.sum(brightness > 200) / total_pixels)
+
+                if very_high_bright_ratio > 0.38 or (high_bright_ratio > 0.48 and mean_bright > 160):
+                    raise ValueError(f"Image appears to be a document or text screenshot ({very_high_bright_ratio*100:.1f}% bright paper pixels). Please upload an infrared satellite image of a cyclone.")
+
+                # 3. Natural / Everyday photo color divergence
                 rg_diff = float(np.mean(np.abs(r - g)))
                 rb_diff = float(np.mean(np.abs(r - b)))
                 gb_diff = float(np.mean(np.abs(g - b)))
-                avg_channel_diff = (rg_diff + rb_diff + gb_diff) / 3.0
+                channel_diff = (rg_diff + rb_diff + gb_diff) / 3.0
 
-                # 2. Low-saturation check using HSV
-                from PIL import Image as PILImage
-                img_hsv = np.array(img.resize((128, 128)).convert("HSV"), dtype=np.float32)
-                mean_saturation = float(np.mean(img_hsv[:, :, 1]))
+                max_c = np.maximum(np.maximum(r, g), b)
+                min_c = np.minimum(np.minimum(r, g), b)
+                sat = np.where(max_c > 0, (max_c - min_c) / (max_c + 1e-5), 0)
+                high_sat_ratio = float(np.sum(sat > 0.30) / total_pixels)
 
-                # 3. Texture / contrast uniformity — satellite images have smooth gradients
-                gray = np.mean(img_arr, axis=2)
-                local_std = float(np.std(gray))
+                if channel_diff > 18.0 and high_sat_ratio > 0.20:
+                    raise ValueError(f"Image has high natural color saturation ({channel_diff:.1f} color divergence). Cyclone satellite imagery must be thermal infrared or meteorological view.")
 
-                # 4. Aspect ratio check — most satellite IR images are square or near-square
-                orig_w, orig_h = img.size
-                aspect_ratio = max(orig_w, orig_h) / max(min(orig_w, orig_h), 1)
+                # 4. Storm Convective Cloud Mass Coverage
+                cloud_mask = brightness > 125
+                cloud_ratio = float(np.sum(cloud_mask) / total_pixels)
+                if cloud_ratio < 0.10:
+                    raise ValueError("No significant cyclone cloud structure detected (less than 10% storm cloud coverage).")
+                if cloud_ratio > 0.90:
+                    raise ValueError("Image lacks storm contrast or boundaries (> 90% uniform area).")
 
-                # Decision rules:
-                # - Satellite IR images: low color variance, low saturation, moderate contrast
-                # - Regular photos: high color variance (skin, clothes, background), high saturation
-                is_low_color_variance = avg_channel_diff < 18.0    # near-grayscale
-                is_low_saturation = mean_saturation < 40.0          # muted colors
-                is_reasonable_aspect = aspect_ratio < 2.5           # not portrait selfie
+                # 5. Vortex Centroid & Multi-Quadrant Spiral Distribution
+                y_coords, x_coords = np.where(cloud_mask)
+                cx = float(np.mean(x_coords))
+                cy = float(np.mean(y_coords))
 
-                if is_low_color_variance and is_low_saturation and is_reasonable_aspect:
-                    is_satellite_image = True
-                elif is_low_color_variance and local_std > 20.0:
-                    # Grayscale but high texture — likely an IR image
-                    is_satellite_image = True
-                else:
-                    if not is_low_color_variance:
-                        rejection_reason = (
-                            f"High color variance detected (diff={avg_channel_diff:.1f}). "
-                            "Satellite IR images are near-monochrome. "
-                            "Please upload a grayscale or false-color infrared satellite image."
-                        )
-                    elif not is_low_saturation:
-                        rejection_reason = (
-                            f"Image has high color saturation ({mean_saturation:.1f}). "
-                            "IR satellite imagery should have low saturation. "
-                            "Please upload a proper satellite image."
-                        )
-                    else:
-                        rejection_reason = (
-                            "Image aspect ratio or color profile does not match a satellite IR image. "
-                            "Please upload a square or landscape-oriented infrared satellite image."
-                        )
-            except Exception as ve:
-                logger.warning(f"Satellite validation error: {ve}")
-                is_satellite_image = False
-                rejection_reason = "Could not validate image format. Please upload a valid satellite IR image."
+                if cx < 128 * 0.12 or cx > 128 * 0.88 or cy < 128 * 0.12 or cy > 128 * 0.88:
+                    raise ValueError("Cloud mass is off-center or clipped at edges. A cyclone vortex should be centered.")
+
+                q_tl = float(np.sum(cloud_mask[:int(cy), :int(cx)]) / max(1, int(cy) * int(cx)))
+                q_tr = float(np.sum(cloud_mask[:int(cy), int(cx):]) / max(1, int(cy) * (128 - int(cx))))
+                q_bl = float(np.sum(cloud_mask[int(cy):, :int(cx)]) / max(1, (128 - int(cy)) * int(cx)))
+                q_br = float(np.sum(cloud_mask[int(cy):, int(cx):]) / max(1, (128 - int(cy)) * (128 - int(cx))))
+                active_quads = sum(1 for q in [q_tl, q_tr, q_bl, q_br] if q > 0.05)
+
+                if active_quads < 3:
+                    raise ValueError(f"No circular vortex symmetry detected (clouds present in only {active_quads}/4 quadrants around center).")
+
+                # 6. Straight Cartesian edges (documents/grids vs fluid bands)
+                gx = np.zeros_like(brightness)
+                gy = np.zeros_like(brightness)
+                gx[:, 1:-1] = (brightness[:, 2:] - brightness[:, :-2]) * 0.5
+                gy[1:-1, :] = (brightness[2:, :] - brightness[:-2, :]) * 0.5
+                mag = np.sqrt(gx**2 + gy**2)
+                edge_mask = mag > 12.0
+                if np.sum(edge_mask) < 40:
+                    raise ValueError("Image lacks distinct cloud band gradients.")
+
+                horiz_or_vert = float(np.sum(
+                    ((np.abs(gx[edge_mask]) < 4.0) & (np.abs(gy[edge_mask]) > 12.0)) |
+                    ((np.abs(gy[edge_mask]) < 4.0) & (np.abs(gx[edge_mask]) > 12.0))
+                ) / np.sum(edge_mask))
+
+                if horiz_or_vert > 0.45:
+                    raise ValueError(f"Image is dominated by straight Cartesian lines/grid patterns ({horiz_or_vert*100:.1f}% axis-aligned lines).")
+
+                is_cyclone_image = True
+            except ValueError as ve:
+                is_cyclone_image = False
+                rejection_reason = str(ve)
+            except Exception as e:
+                logger.warning(f"Cyclone validation error: {e}")
+                is_cyclone_image = False
+                rejection_reason = "Could not validate image structure. Please upload a valid satellite IR image."
         else:
-            rejection_reason = "Could not read image. Please upload a valid PNG or JPG satellite image."
+            rejection_reason = "Could not read image file."
 
-        # ── Reject non-satellite images ──────────────────────────────────────
-        if not is_satellite_image:
-            logger.info(f"Non-satellite image rejected: {rejection_reason}")
+        # ── Reject non-cyclone images ─────────────────────────────────────────
+        if not is_cyclone_image:
+            logger.info(f"Non-cyclone image rejected: {rejection_reason}")
             return {
                 "success": True,
                 "detection": {
@@ -264,14 +295,14 @@ class ModelManager:
                     "data_type": "SIMULATED",
                     "disclaimer": rejection_reason,
                 },
-                "classification": {"available": False, "reason": "No cyclone detected."},
-                "intensity": {"available": False, "reason": "No cyclone detected."},
-                "track": {"available": False, "reason": "No cyclone detected."},
-                "explainability": {"available": False, "reason": "No cyclone detected."},
+                "classification": {"available": False, "reason": rejection_reason},
+                "intensity": {"available": False, "reason": rejection_reason},
+                "track": {"available": False, "reason": rejection_reason},
+                "explainability": {"available": False, "reason": rejection_reason},
                 "metadata": {
                     "data_type": "SIMULATED",
                     "inference_time_ms": 12,
-                    "note": "Image rejected — not a satellite IR image.",
+                    "note": rejection_reason,
                 },
             }
 

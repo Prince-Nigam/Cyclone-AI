@@ -5,6 +5,7 @@ import { Upload, X, Satellite, AlertTriangle } from "lucide-react";
 import toast from "react-hot-toast";
 import { AnalysisPanel } from "@/components/analysis/AnalysisPanel";
 import { analyzeImage } from "@/services/cycloneService";
+import { validateImageFileForCyclone } from "@/lib/cycloneDetector";
 import type { AnalysisResult } from "@/types";
 
 const SUPPORTED_FORMATS = ".png,.jpg,.jpeg,.tif,.tiff,.nc,.h5,.hdf5";
@@ -13,28 +14,22 @@ const MAX_SIZE_MB = 50;
 export default function SatellitePage() {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [preview, setPreview] = useState<string | null>(null);
+  const [dragOver, setDragOver] = useState(false);
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [result, setResult] = useState<AnalysisResult | null>(null);
   const [error, setError] = useState<string | null>(null);
-  const [dragOver, setDragOver] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleFileSelect = useCallback((file: File) => {
-    const ext = file.name.split(".").pop()?.toLowerCase() || "";
-    const allowed = ["png","jpg","jpeg","tif","tiff","nc","h5","hdf5"];
-    if (!allowed.includes(ext)) {
-      toast.error(`Unsupported format: .${ext}`);
-      return;
-    }
     if (file.size > MAX_SIZE_MB * 1024 * 1024) {
-      toast.error(`File too large (max ${MAX_SIZE_MB}MB)`);
+      toast.error(`File too large. Max ${MAX_SIZE_MB}MB.`);
       return;
     }
     setSelectedFile(file);
     setResult(null);
     setError(null);
-
-    if (["png","jpg","jpeg","tif","tiff"].includes(ext)) {
+    const previewable = ["image/png", "image/jpeg", "image/tiff", "image/gif", "image/webp"];
+    if (previewable.includes(file.type) || /\.(png|jpe?g|tiff?|webp)$/i.test(file.name)) {
       const reader = new FileReader();
       reader.onload = (e) => setPreview(e.target?.result as string);
       reader.readAsDataURL(file);
@@ -65,8 +60,8 @@ export default function SatellitePage() {
   const handleDrop = useCallback((e: React.DragEvent) => {
     e.preventDefault();
     setDragOver(false);
-    const file = e.dataTransfer.files[0];
-    if (file) handleFileSelect(file);
+    const f = e.dataTransfer.files[0];
+    if (f) handleFileSelect(f);
   }, [handleFileSelect]);
 
   const runAnalysis = async () => {
@@ -75,10 +70,28 @@ export default function SatellitePage() {
     setError(null);
     setResult(null);
 
+    // ── Client-side Cyclone Validation ─────────────────────────────────
+    const validation = await validateImageFileForCyclone(selectedFile);
+    if (!validation.isCyclone) {
+      const reasonMsg = validation.reason || "Image does not match a tropical cyclone satellite structure.";
+      setError(`No cyclone detected — ${reasonMsg}`);
+      toast.error("No cyclone detected in this image.");
+      setIsAnalyzing(false);
+      return;
+    }
+
     try {
       const res = await analyzeImage(selectedFile, undefined, undefined, true);
+
+      if (!res || !res.detection || res.detection.detected === false) {
+        const disclaimer = res?.detection?.disclaimer || "No cyclone detected in this image. Please upload an infrared satellite image of a tropical cyclone.";
+        setError(disclaimer);
+        toast.error("No cyclone detected in this image.");
+        return;
+      }
+
       setResult(res);
-      toast.success("Analysis complete");
+      toast.success("Cyclone detected — analysis complete!");
     } catch (err: any) {
       const msg = err.message || "Analysis failed";
       setError(msg);

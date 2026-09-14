@@ -6,6 +6,7 @@ import toast from "react-hot-toast";
 import { Satellite, Upload, X, ArrowRight, Loader2 } from "lucide-react";
 import { DataTypeBadge } from "@/components/ui/DataTypeBadge";
 import { analyzeImage } from "@/services/cycloneService";
+import { validateImageFileForCyclone } from "@/lib/cycloneDetector";
 import type { AnalysisResult } from "@/types";
 import { AnalysisPanel } from "@/components/analysis/AnalysisPanel";
 
@@ -65,130 +66,18 @@ export default function DetectionPage() {
     if (f) handleFileSelect(f);
   };
 
-  // ── Frontend Satellite Image Validator ─────────────────────────────────
-  // Uses Canvas API to check pixel statistics before calling backend.
-  // Rejects: normal photos, documents, screenshots, selfies.
-  // Accepts: near-grayscale IR satellite images.
-  const validateSatelliteImage = (file: File): Promise<{ valid: boolean; reason?: string }> => {
-    return new Promise((resolve) => {
-      // Non-image files (NetCDF, HDF5) skip validation
-      if (!/\.(png|jpe?g|tiff?|webp)$/i.test(file.name) && !file.type.startsWith("image/")) {
-        resolve({ valid: true });
-        return;
-      }
-
-      const img = new Image();
-      const url = URL.createObjectURL(file);
-
-      img.onload = () => {
-        try {
-          const SIZE = 128;
-          const canvas = document.createElement("canvas");
-          canvas.width = SIZE;
-          canvas.height = SIZE;
-          const ctx = canvas.getContext("2d")!;
-          ctx.drawImage(img, 0, 0, SIZE, SIZE);
-          const { data } = ctx.getImageData(0, 0, SIZE, SIZE);
-          URL.revokeObjectURL(url);
-
-          const total = SIZE * SIZE;
-          let sumR = 0, sumG = 0, sumB = 0;
-          let veryBrightCount = 0;   // near-white pixels (> 220)
-          let veryDarkCount = 0;     // near-black pixels (< 30)
-          let highSatCount = 0;      // colorful pixels (max-min channel > 40)
-
-          for (let i = 0; i < data.length; i += 4) {
-            const r = data[i], g = data[i + 1], b = data[i + 2];
-            sumR += r; sumG += g; sumB += b;
-            const brightness = (r + g + b) / 3;
-            if (brightness > 220) veryBrightCount++;
-            if (brightness < 30) veryDarkCount++;
-            const maxC = Math.max(r, g, b);
-            const minC = Math.min(r, g, b);
-            if (maxC - minC > 40) highSatCount++;
-          }
-
-          const meanR = sumR / total;
-          const meanG = sumG / total;
-          const meanB = sumB / total;
-          const meanBrightness = (meanR + meanG + meanB) / 3;
-
-          // Channel difference — satellite IR is near-grayscale
-          const rgDiff = Math.abs(meanR - meanG);
-          const rbDiff = Math.abs(meanR - meanB);
-          const gbDiff = Math.abs(meanG - meanB);
-          const avgChannelDiff = (rgDiff + rbDiff + gbDiff) / 3;
-
-          // Fractions
-          const brightFrac = veryBrightCount / total;
-          const darkFrac = veryDarkCount / total;
-          const colorFrac = highSatCount / total;
-
-          // ── Rejection Rules ──────────────────────────────────────────────
-
-          // 1. Document / screenshot: > 55% pixels are near-white
-          if (brightFrac > 0.55) {
-            resolve({
-              valid: false,
-              reason: `This appears to be a document or screenshot (${(brightFrac * 100).toFixed(0)}% near-white pixels). Please upload a satellite infrared image of a cyclone.`,
-            });
-            return;
-          }
-
-          // 2. Colorful / regular photo: too many saturated pixels
-          if (colorFrac > 0.35) {
-            resolve({
-              valid: false,
-              reason: `This appears to be a regular photo (${(colorFrac * 100).toFixed(0)}% colorful pixels). Satellite IR images are near-grayscale. Please upload an infrared satellite image.`,
-            });
-            return;
-          }
-
-          // 3. High color channel difference — not grayscale
-          if (avgChannelDiff > 20) {
-            resolve({
-              valid: false,
-              reason: `Image has high color variance (channel diff: ${avgChannelDiff.toFixed(1)}). Satellite IR imagery should be near-grayscale. Please upload a proper satellite image.`,
-            });
-            return;
-          }
-
-          // 4. Bimodal document (black text on white): high bright + high dark, little mid-tone
-          if (brightFrac > 0.40 && darkFrac > 0.08 && colorFrac < 0.05) {
-            resolve({
-              valid: false,
-              reason: `Image appears to be a black-and-white document or text image. Please upload an infrared satellite image of a cyclone.`,
-            });
-            return;
-          }
-
-          resolve({ valid: true });
-        } catch {
-          URL.revokeObjectURL(url);
-          resolve({ valid: true }); // allow if validation fails
-        }
-      };
-
-      img.onerror = () => {
-        URL.revokeObjectURL(url);
-        resolve({ valid: true }); // non-image binary files pass through
-      };
-
-      img.src = url;
-    });
-  };
-
   const runAnalysis = async () => {
     if (!selectedFile) return;
     setIsAnalyzing(true);
     setError(null);
     setResult(null);
 
-    // ── Client-side validation BEFORE hitting the API ──────────────────
-    const validation = await validateSatelliteImage(selectedFile);
-    if (!validation.valid) {
-      setError(`No cyclone detected — ${validation.reason}`);
-      toast.error("Invalid image — please upload a satellite IR image.");
+    // ── Client-side Cyclone Validation ─────────────────────────────────
+    const validation = await validateImageFileForCyclone(selectedFile);
+    if (!validation.isCyclone) {
+      const reasonMsg = validation.reason || "Image does not match a tropical cyclone satellite structure.";
+      setError(`No cyclone detected — ${reasonMsg}`);
+      toast.error("No cyclone detected in this image.");
       setIsAnalyzing(false);
       return;
     }
@@ -196,13 +85,10 @@ export default function DetectionPage() {
     try {
       const res = await analyzeImage(selectedFile, undefined, undefined, true);
 
-      // If detection ran but no cyclone was found — show error, not result
-      if (res.detection && res.detection.detected === false) {
-        const confidence = res.detection.confidence !== undefined
-          ? ` (Confidence: ${(res.detection.confidence * 100).toFixed(1)}%)`
-          : "";
-        const msg = `No cyclone detected in this image${confidence}. Please upload a satellite IR image containing a tropical cyclone.`;
-        setError(msg);
+      // If detection ran but no cyclone was found — show error, never fake results
+      if (!res || !res.detection || res.detection.detected === false) {
+        const disclaimer = res?.detection?.disclaimer || "No cyclone detected in this image. Please upload a satellite IR image containing an active tropical cyclone.";
+        setError(disclaimer);
         toast.error("No cyclone detected in this image.");
         return;
       }

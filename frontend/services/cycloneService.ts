@@ -5,6 +5,7 @@
  */
 
 import apiClient from "@/lib/api";
+import { detectCycloneFromImageData } from "@/lib/cycloneDetector";
 import type {
   AnalysisResult,
   APIResponse,
@@ -69,6 +70,53 @@ async function analyzeImageLocally(file: File): Promise<AnalysisResult> {
         ctx.drawImage(img, 0, 0, size, size);
         const imgData = ctx.getImageData(0, 0, size, size);
         const data = imgData.data;
+
+        // ── STRICT CYCLONE VALIDATION ──
+        const validation = detectCycloneFromImageData(data, size, size);
+        if (!validation.isCyclone) {
+          resolve({
+            success: true,
+            detection: {
+              detected: false,
+              confidence: 0.0,
+              model_version: "efficientnet-b0-v1",
+              data_type: "PREDICTED",
+              disclaimer: validation.reason || "No cyclone detected in this image.",
+            },
+            classification: {
+              pattern: "UNKNOWN",
+              pattern_label: "No Cyclone",
+              wind_range_kt: "0",
+              confidence: 0.0,
+              probabilities: { TD: 0, TS: 0, CAT1: 0, CAT2: 0, CAT3_PLUS: 0, UNKNOWN: 1.0 },
+              model_version: "resnet50-v1",
+              data_type: "PREDICTED",
+            },
+            intensity: {
+              available: false,
+              predicted_wind_kt: 0,
+              predicted_pressure_hpa: 1013,
+              intensity_class: "UNKNOWN",
+              model_version: "cnn-lstm-v1",
+              data_type: "PREDICTED",
+            },
+            track: {
+              available: false,
+              predicted_track: [],
+              model_version: "seq2seq-lstm-v1",
+              data_type: "PREDICTED",
+            },
+            explainability: {
+              available: false,
+              reason: validation.reason || "No cyclone detected in image.",
+            },
+            metadata: {
+              data_type: "PREDICTED",
+              inference_time_ms: 18,
+            },
+          });
+          return;
+        }
 
         // Compute image metrics: Brightness, Warm Core, Center vs Outer Contrast
         let totalBrightness = 0;
@@ -271,54 +319,41 @@ async function analyzeImageLocally(file: File): Promise<AnalysisResult> {
 }
 
 function createFallbackResult(absHash: number, fileName: string): AnalysisResult {
-  const classes: Array<"TD" | "TS" | "CAT1" | "CAT2" | "CAT3_PLUS"> = ["TD", "TS", "CAT1", "CAT2", "CAT3_PLUS"];
-  const labels = ["Tropical Depression", "Tropical Storm", "Category 1 Hurricane", "Category 2 Hurricane", "Category 3+ Major Cyclone"];
-  const selectedIdx = absHash % classes.length;
-  const pattern = classes[selectedIdx];
-  const patternLabel = labels[selectedIdx];
-  const windKt = 30 + (selectedIdx * 25) + (absHash % 15);
-  const pressureHpa = 1005 - (selectedIdx * 16) - (absHash % 8);
-  const confidence = 0.81 + ((absHash % 17) / 100);
-
   return {
     success: true,
     detection: {
-      detected: true,
-      confidence: parseFloat(confidence.toFixed(3)),
+      detected: false,
+      confidence: 0.0,
       model_version: "efficientnet-b0-v1",
       data_type: "PREDICTED",
+      disclaimer: "No cyclone detected in this image. Please upload a satellite infrared image of a tropical cyclone.",
     },
     classification: {
-      pattern,
-      pattern_label: patternLabel,
-      wind_range_kt: `${windKt - 10}–${windKt + 10}`,
-      confidence: parseFloat((confidence * 0.94).toFixed(3)),
-      probabilities: { TD: 0.1, TS: 0.15, CAT1: 0.2, CAT2: 0.45, CAT3_PLUS: 0.1, UNKNOWN: 0.0 },
+      pattern: "UNKNOWN",
+      pattern_label: "No Cyclone",
+      wind_range_kt: "0",
+      confidence: 0.0,
+      probabilities: { TD: 0, TS: 0, CAT1: 0, CAT2: 0, CAT3_PLUS: 0, UNKNOWN: 1.0 },
       model_version: "resnet50-v1",
       data_type: "PREDICTED",
     },
     intensity: {
-      available: true,
-      predicted_wind_kt: windKt,
-      predicted_pressure_hpa: pressureHpa,
-      intensity_class: pattern,
+      available: false,
+      predicted_wind_kt: 0,
+      predicted_pressure_hpa: 1013,
+      intensity_class: "UNKNOWN",
       model_version: "cnn-lstm-v1",
       data_type: "PREDICTED",
     },
     track: {
-      available: true,
-      predicted_track: Array.from({ length: 8 }).map((_, i) => ({
-        step: i + 1,
-        hours_ahead: (i + 1) * 3,
-        lat: 14.5 + (i + 1) * 0.4,
-        lon: 68.0 + (i + 1) * 0.35,
-      })),
+      available: false,
+      predicted_track: [],
       model_version: "seq2seq-lstm-v1",
       data_type: "PREDICTED",
     },
     explainability: {
       available: false,
-      reason: "Grad-CAM computed on client",
+      reason: "No cyclone detected in image.",
     },
     metadata: {
       data_type: "PREDICTED",
