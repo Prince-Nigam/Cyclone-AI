@@ -182,6 +182,99 @@ class ModelManager:
             except Exception:
                 intensity_score = 0.55
 
+        # ── Satellite Image Validation ──────────────────────────────────────
+        # Check if this actually looks like a satellite IR/greyscale image.
+        # Regular photos (people, objects, etc.) should be rejected.
+        is_satellite_image = False
+        rejection_reason = "Image does not appear to be a satellite IR image."
+
+        if img is not None:
+            try:
+                img_arr = np.array(img.resize((128, 128)), dtype=np.float32)
+
+                r = img_arr[:, :, 0]
+                g = img_arr[:, :, 1]
+                b = img_arr[:, :, 2]
+
+                # 1. Grayscale check: IR satellite images are nearly monochrome
+                rg_diff = float(np.mean(np.abs(r - g)))
+                rb_diff = float(np.mean(np.abs(r - b)))
+                gb_diff = float(np.mean(np.abs(g - b)))
+                avg_channel_diff = (rg_diff + rb_diff + gb_diff) / 3.0
+
+                # 2. Low-saturation check using HSV
+                from PIL import Image as PILImage
+                img_hsv = np.array(img.resize((128, 128)).convert("HSV"), dtype=np.float32)
+                mean_saturation = float(np.mean(img_hsv[:, :, 1]))
+
+                # 3. Texture / contrast uniformity — satellite images have smooth gradients
+                gray = np.mean(img_arr, axis=2)
+                local_std = float(np.std(gray))
+
+                # 4. Aspect ratio check — most satellite IR images are square or near-square
+                orig_w, orig_h = img.size
+                aspect_ratio = max(orig_w, orig_h) / max(min(orig_w, orig_h), 1)
+
+                # Decision rules:
+                # - Satellite IR images: low color variance, low saturation, moderate contrast
+                # - Regular photos: high color variance (skin, clothes, background), high saturation
+                is_low_color_variance = avg_channel_diff < 18.0    # near-grayscale
+                is_low_saturation = mean_saturation < 40.0          # muted colors
+                is_reasonable_aspect = aspect_ratio < 2.5           # not portrait selfie
+
+                if is_low_color_variance and is_low_saturation and is_reasonable_aspect:
+                    is_satellite_image = True
+                elif is_low_color_variance and local_std > 20.0:
+                    # Grayscale but high texture — likely an IR image
+                    is_satellite_image = True
+                else:
+                    if not is_low_color_variance:
+                        rejection_reason = (
+                            f"High color variance detected (diff={avg_channel_diff:.1f}). "
+                            "Satellite IR images are near-monochrome. "
+                            "Please upload a grayscale or false-color infrared satellite image."
+                        )
+                    elif not is_low_saturation:
+                        rejection_reason = (
+                            f"Image has high color saturation ({mean_saturation:.1f}). "
+                            "IR satellite imagery should have low saturation. "
+                            "Please upload a proper satellite image."
+                        )
+                    else:
+                        rejection_reason = (
+                            "Image aspect ratio or color profile does not match a satellite IR image. "
+                            "Please upload a square or landscape-oriented infrared satellite image."
+                        )
+            except Exception as ve:
+                logger.warning(f"Satellite validation error: {ve}")
+                is_satellite_image = False
+                rejection_reason = "Could not validate image format. Please upload a valid satellite IR image."
+        else:
+            rejection_reason = "Could not read image. Please upload a valid PNG or JPG satellite image."
+
+        # ── Reject non-satellite images ──────────────────────────────────────
+        if not is_satellite_image:
+            logger.info(f"Non-satellite image rejected: {rejection_reason}")
+            return {
+                "success": True,
+                "detection": {
+                    "detected": False,
+                    "confidence": 0.0,
+                    "model_version": "detection-v1",
+                    "data_type": "SIMULATED",
+                    "disclaimer": rejection_reason,
+                },
+                "classification": {"available": False, "reason": "No cyclone detected."},
+                "intensity": {"available": False, "reason": "No cyclone detected."},
+                "track": {"available": False, "reason": "No cyclone detected."},
+                "explainability": {"available": False, "reason": "No cyclone detected."},
+                "metadata": {
+                    "data_type": "SIMULATED",
+                    "inference_time_ms": 12,
+                    "note": "Image rejected — not a satellite IR image.",
+                },
+            }
+
         # Classify based on intensity score
         if intensity_score < 0.28:
             pattern = "TD"
