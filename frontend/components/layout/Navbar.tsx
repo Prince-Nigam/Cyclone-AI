@@ -348,8 +348,6 @@ export function Navbar() {
                   "flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-sm font-semibold border transition-all",
                   isActive
                     ? "bg-blue-600 border-blue-400 text-white shadow-md"
-                    : link.highlight
-                    ? "bg-emerald-950/40 border-emerald-500/50 text-emerald-300 hover:text-white"
                     : "bg-slate-900/80 border-slate-800 text-slate-200 hover:text-white hover:bg-slate-800"
                 )}
               >
