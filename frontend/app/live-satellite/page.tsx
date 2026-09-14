@@ -371,46 +371,9 @@ export default function LiveSatellitePage() {
         onSelectPoint={handleSelectWeatherPoint}
       />
 
-      {/* ── Data Source Info Cards ─────────────────────────────── */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <div className="glass-card rounded-2xl p-4 bg-gradient-to-br from-blue-500/5 to-transparent">
-          <div className="flex items-center gap-2 mb-2">
-            <Satellite className="w-5 h-5 text-blue-500" />
-            <span className="font-bold text-slate-800 dark:text-slate-200 text-sm">NASA GIBS Imagery</span>
-          </div>
-          <p className="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">
-            Direct Web Map Tile Service (WMTS) feed offering global true-color and infrared reflectance tiles from Terra, Aqua (MODIS), and Suomi NPP (VIIRS).
-          </p>
-        </div>
 
-        <div className="glass-card rounded-2xl p-4 bg-gradient-to-br from-emerald-500/5 to-transparent">
-          <div className="flex items-center gap-2 mb-2">
-            <ShieldAlert className="w-5 h-5 text-emerald-500" />
-            <span className="font-bold text-slate-800 dark:text-slate-200 text-sm">GDACS Disaster Alerts</span>
-          </div>
-          <p className="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">
-            UN/EC Global Disaster Alert and Coordination System provides real-time event identification, severity classifications, and population impact estimations.
-          </p>
-        </div>
 
-        <div className="glass-card rounded-2xl p-4 bg-gradient-to-br from-purple-500/5 to-transparent">
-          <div className="flex items-center gap-2 mb-2">
-            <Sparkles className="w-5 h-5 text-purple-500" />
-            <span className="font-bold text-slate-800 dark:text-slate-200 text-sm">Open-Meteo Marine Grid</span>
-          </div>
-          <p className="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">
-            High-resolution numerical weather prediction models delivering 10m wind speeds, sea surface pressure, temperature, and humidity without rate limits.
-          </p>
-        </div>
-      </div>
 
-      {/* ── Research Disclaimer ────────────────────────────────── */}
-      <div className="rounded-2xl border border-amber-500/30 bg-amber-500/10 px-5 py-3.5 text-xs text-amber-900 dark:text-amber-200 leading-relaxed flex items-start gap-2">
-        <AlertTriangle className="w-4 h-4 text-amber-500 flex-shrink-0 mt-0.5" />
-        <div>
-          <strong>Real-Time Observational Data:</strong> All weather points and alerts shown on this page are <span className="underline font-bold">OBSERVED</span> data streams directly fetched from open scientific APIs (GDACS &amp; Open-Meteo). For official cyclone landfall advisories and warnings, consult the India Meteorological Department (<a href="https://mausam.imd.gov.in" target="_blank" rel="noopener noreferrer" className="underline font-bold">IMD</a>).
-        </div>
-      </div>
 
       {/* ── Real-Time 1s Telemetry Stream Bar (Bottom Status Bar) ── */}
       <section className="pt-2">
