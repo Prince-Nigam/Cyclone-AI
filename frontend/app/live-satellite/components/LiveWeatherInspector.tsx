@@ -95,13 +95,13 @@ export function LiveWeatherInspector({ selectedLocation, onLocationChange }: Pro
 
       // Translate WMO Weather Code
       let condition = "Clear Sky";
-      let icon = "☀️";
-      if (code >= 1 && code <= 3) { condition = "Partly Cloudy / Overcast"; icon = "⛅"; }
-      else if (code >= 45 && code <= 48) { condition = "Foggy"; icon = "🌫️"; }
-      else if (code >= 51 && code <= 55) { condition = "Light Drizzle"; icon = "🌦️"; }
-      else if (code >= 61 && code <= 65) { condition = "Rainfall"; icon = "🌧️"; }
-      else if (code >= 80 && code <= 82) { condition = "Rain Showers"; icon = "🌧️"; }
-      else if (code >= 95) { condition = "Thunderstorm / Heavy Storm"; icon = "⛈️"; }
+      let icon = "CLEAR";
+      if (code >= 1 && code <= 3) { condition = "Partly Cloudy / Overcast"; icon = "CLOUDY"; }
+      else if (code >= 45 && code <= 48) { condition = "Foggy"; icon = "FOG"; }
+      else if (code >= 51 && code <= 55) { condition = "Light Drizzle"; icon = "DRIZZLE"; }
+      else if (code >= 61 && code <= 65) { condition = "Rainfall"; icon = "RAIN"; }
+      else if (code >= 80 && code <= 82) { condition = "Rain Showers"; icon = "RAIN"; }
+      else if (code >= 95) { condition = "Thunderstorm / Heavy Storm"; icon = "STORM"; }
 
       // Format hourly (next 12 hours)
       const now = new Date();
@@ -305,7 +305,7 @@ export function LiveWeatherInspector({ selectedLocation, onLocationChange }: Pro
       {/* Error state */}
       {error && (
         <div className="p-3 rounded-xl bg-red-500/15 border border-red-500/30 text-red-300 text-xs flex items-center justify-between">
-          <span>⚠️ {error}</span>
+          <span>{error}</span>
           <button onClick={() => fetchWeather(currentLoc)} className="underline hover:text-white font-medium">
             Retry
           </button>
@@ -337,7 +337,6 @@ export function LiveWeatherInspector({ selectedLocation, onLocationChange }: Pro
                 </div>
 
                 <div className="flex items-center gap-3 pt-1">
-                  <span className="text-3xl sm:text-4xl">{weather.icon}</span>
                   <div>
                     <div className="text-3xl font-black text-white font-mono tracking-tight">
                       {weather.temp}°C
@@ -363,7 +362,7 @@ export function LiveWeatherInspector({ selectedLocation, onLocationChange }: Pro
                         : "bg-slate-800 text-slate-400 border-slate-700"
                     }`}
                   >
-                    {weather.isRaining ? "🌧️ RAINING NOW" : "☀️ NO RAIN"}
+                    {weather.isRaining ? "RAINING NOW" : "NO RAIN"}
                   </span>
                 </div>
 
@@ -451,9 +450,6 @@ export function LiveWeatherInspector({ selectedLocation, onLocationChange }: Pro
                     }`}
                   >
                     <span className="text-[10px] text-slate-400 font-mono">{h.time}</span>
-                    <span className="text-base my-1">
-                      {h.precip > 1.5 ? "🌧️" : h.precip > 0 ? "🌦️" : "⛅"}
-                    </span>
                     <span className="text-xs font-bold font-mono">{h.temp}°C</span>
                     <span
                       className={`text-[9px] font-mono mt-1 px-1.5 py-0.5 rounded ${

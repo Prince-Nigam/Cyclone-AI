@@ -72,17 +72,7 @@ const NAV_LINKS: NavLink[] = [
       "Arabian Sea & Bay of Bengal",
     ],
   },
-  {
-    href: "/satellite",
-    label: "Satellite",
-    icon: "🌍",
-    info: [
-      "Upload PNG / TIFF / NetCDF",
-      "Full AI analysis pipeline",
-      "ResNet50 pattern classification",
-      "Grad-CAM XAI visualization",
-    ],
-  },
+
   {
     href: "/historical",
     label: "Historical",
@@ -103,17 +93,6 @@ const NAV_LINKS: NavLink[] = [
       "Per-class precision & recall",
       "Registered model registry",
       "Test set evaluation metrics",
-    ],
-  },
-  {
-    href: "/methodology",
-    label: "Methodology",
-    icon: "📖",
-    info: [
-      "Detection & classification pipeline",
-      "LSTM track & intensity models",
-      "Multi-source data fusion strategy",
-      "Temporal train/val/test split",
     ],
   },
 ];
