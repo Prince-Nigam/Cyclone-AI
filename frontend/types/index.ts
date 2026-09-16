@@ -29,12 +29,12 @@ export const INTENSITY_WIND_RANGES: Record<IntensityClass, string> = {
 };
 
 export const INTENSITY_COLORS: Record<IntensityClass, string> = {
-  TD:        "#60a5fa", // light sky blue
-  TS:        "#3b82f6", // vibrant blue
-  CAT1:      "#2563eb", // blue
-  CAT2:      "#1d4ed8", // deep blue
-  CAT3_PLUS: "#1e3a8a", // dark navy blue
-  UNKNOWN:   "#475569", // slate gray
+  TD:        "#10b981", // emerald green (safe/low depression)
+  TS:        "#06b6d4", // cyan / tropical storm
+  CAT1:      "#f59e0b", // amber / Category 1
+  CAT2:      "#f97316", // vivid orange / Category 2
+  CAT3_PLUS: "#ef4444", // crimson red / Category 3-5 high danger
+  UNKNOWN:   "#64748b", // slate gray
 };
 
 export interface TrackPoint {

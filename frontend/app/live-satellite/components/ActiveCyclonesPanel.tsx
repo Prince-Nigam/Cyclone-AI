@@ -47,20 +47,20 @@ export function ActiveCyclonesPanel({
   const getAlertBadgeClass = (alert: string) => {
     switch (alert.toUpperCase()) {
       case "RED":
-        return "bg-blue-900/40 text-blue-200 border-blue-700/60";
+        return "bg-red-500/20 text-red-300 border-red-500/50 shadow-sm shadow-red-500/20 font-bold";
       case "ORANGE":
-        return "bg-blue-600/20 text-blue-300 border-blue-500/40";
+        return "bg-amber-500/20 text-amber-300 border-amber-500/40 font-bold";
       case "GREEN":
       default:
-        return "bg-blue-500/20 text-blue-400 border-blue-500/30";
+        return "bg-emerald-500/20 text-emerald-300 border-emerald-500/40 font-bold";
     }
   };
 
   const getWindClass = (kt: number | null) => {
     if (!kt) return "text-slate-700 dark:text-slate-300";
-    if (kt >= 34) return "text-blue-800 dark:text-blue-200 font-bold";
-    if (kt >= 22) return "text-blue-600 dark:text-blue-400 font-semibold";
-    return "text-blue-500 dark:text-blue-300";
+    if (kt >= 34) return "text-red-600 dark:text-red-400 font-bold";
+    if (kt >= 22) return "text-amber-600 dark:text-amber-400 font-semibold";
+    return "text-emerald-600 dark:text-emerald-400 font-medium";
   };
 
   // Indian Ocean stations to show in empty state
@@ -147,12 +147,12 @@ export function ActiveCyclonesPanel({
         ) : filtered.length === 0 ? (
           <div className="space-y-3">
             {/* Status Banner */}
-            <div className="flex items-center gap-2 p-2.5 rounded-xl bg-blue-500/10 border border-blue-500/20">
-              <CheckCircle2 className="w-4 h-4 text-blue-400 flex-shrink-0" />
-              <p className="text-[11px] font-semibold text-blue-700 dark:text-blue-300">
+            <div className="flex items-center gap-2 p-2.5 rounded-xl bg-emerald-500/15 border border-emerald-500/30 text-emerald-700 dark:text-emerald-300 shadow-sm shadow-emerald-500/10">
+              <CheckCircle2 className="w-4 h-4 text-emerald-500 flex-shrink-0" />
+              <p className="text-[11px] font-semibold">
                 {indianOceanOnly
-                  ? "Indian Ocean — No active cyclones currently"
-                  : "All ocean basins tranquil — No active cyclones"}
+                  ? "Indian Ocean — All Basins Tranquil (No active cyclones)"
+                  : "All ocean basins tranquil — No active cyclones detected"}
               </p>
             </div>
 

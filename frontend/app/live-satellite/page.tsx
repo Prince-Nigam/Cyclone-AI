@@ -160,9 +160,12 @@ export default function LiveSatellitePage() {
 
         {/* Live Status Indicators */}
         <div className="flex items-center gap-2.5 flex-wrap">
-          <div className="flex items-center gap-2 bg-blue-500/10 border border-blue-500/20 px-3.5 py-1.5 rounded-full">
-            <span className="w-2.5 h-2.5 bg-blue-400 rounded-full animate-pulse" />
-            <span className="text-blue-600 dark:text-blue-300 text-xs font-semibold">
+          <div className="flex items-center gap-2 bg-emerald-500/15 border border-emerald-500/30 px-3.5 py-1.5 rounded-full shadow-sm shadow-emerald-500/15">
+            <span className="relative flex h-2.5 w-2.5">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+              <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-400"></span>
+            </span>
+            <span className="text-emerald-600 dark:text-emerald-300 text-xs font-semibold">
               Live Stream Active
             </span>
           </div>
@@ -178,20 +181,20 @@ export default function LiveSatellitePage() {
 
       {/* ── Metric Highlights Bar ─────────────────────────────── */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-        <div className="stat-card bg-gradient-to-br from-blue-600/10 to-transparent border-blue-500/20 flex flex-col items-center text-center p-5">
+        <div className="stat-card bg-gradient-to-br from-red-500/15 to-transparent border-red-500/40 shadow-sm shadow-red-500/10 flex flex-col items-center text-center p-5">
           <div className="flex items-center justify-center gap-2 mb-2">
-            <ShieldAlert className="w-4 h-4 text-blue-400" />
-            <span className="text-xs font-bold text-slate-700 dark:text-slate-300">Active Alert Cyclones</span>
+            <ShieldAlert className="w-4 h-4 text-red-500" />
+            <span className="text-xs font-bold text-red-700 dark:text-red-300">Active Alert Cyclones</span>
           </div>
-          <p className="text-2xl font-black text-slate-900 dark:text-white font-mono">
+          <p className="text-2xl font-black text-red-600 dark:text-red-400 font-mono">
             {cyclonesLoading ? "..." : cyclones.length}
           </p>
           <p className="text-[11px] text-slate-500 dark:text-slate-400 mt-1">GDACS Global Feed</p>
         </div>
 
-        <div className="stat-card bg-gradient-to-br from-blue-500/10 to-transparent border-blue-500/20 flex flex-col items-center text-center p-5">
+        <div className="stat-card bg-gradient-to-br from-amber-500/10 to-transparent border-amber-500/30 flex flex-col items-center text-center p-5">
           <div className="flex items-center justify-center gap-2 mb-2">
-            <Wind className="w-4 h-4 text-blue-400" />
+            <Wind className="w-4 h-4 text-amber-500" />
             <span className="text-xs font-bold text-slate-700 dark:text-slate-300">Max Marine Wind</span>
           </div>
           <p className="text-2xl font-black text-slate-900 dark:text-white font-mono">
@@ -200,12 +203,12 @@ export default function LiveSatellitePage() {
           <p className="text-[11px] text-slate-500 dark:text-slate-400 mt-1">Surface Level 10m</p>
         </div>
 
-        <div className="stat-card bg-gradient-to-br from-blue-400/10 to-transparent border-blue-500/20 flex flex-col items-center text-center p-5">
+        <div className="stat-card bg-gradient-to-br from-emerald-500/15 to-transparent border-emerald-500/40 shadow-sm shadow-emerald-500/10 flex flex-col items-center text-center p-5">
           <div className="flex items-center justify-center gap-2 mb-2">
-            <Waves className="w-4 h-4 text-blue-400" />
-            <span className="text-xs font-bold text-slate-700 dark:text-slate-300">Monitoring Stations</span>
+            <Waves className="w-4 h-4 text-emerald-400" />
+            <span className="text-xs font-bold text-emerald-700 dark:text-emerald-300">Monitoring Stations</span>
           </div>
-          <p className="text-2xl font-black text-slate-900 dark:text-white font-mono">
+          <p className="text-2xl font-black text-emerald-600 dark:text-emerald-400 font-mono">
             {oceanPoints.length} Points
           </p>
           <p className="text-[11px] text-slate-500 dark:text-slate-400 mt-1">Arabian Sea &amp; Bay of Bengal</p>

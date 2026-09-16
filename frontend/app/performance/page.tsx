@@ -39,11 +39,11 @@ interface ClassBenchmark {
 }
 
 const CLASS_BENCHMARKS: ClassBenchmark[] = [
-  { class: "TD",    label: "Tropical Depression", windSpeed: "< 34 kt (< 63 km/h)", precision: 0.84, recall: 0.81, f1: 0.82, support: 420, color: "#93c5fd" },
-  { class: "TS",    label: "Tropical Storm",      windSpeed: "34–63 kt (63–118 km/h)", precision: 0.79, recall: 0.83, f1: 0.81, support: 650, color: "#60a5fa" },
-  { class: "CAT1",  label: "Category 1 Hurricane",windSpeed: "64–82 kt (119–153 km/h)", precision: 0.76, recall: 0.72, f1: 0.74, support: 380, color: "#3b82f6" },
-  { class: "CAT2",  label: "Category 2 Hurricane",windSpeed: "83–95 kt (154–177 km/h)", precision: 0.72, recall: 0.75, f1: 0.73, support: 290, color: "#2563eb" },
-  { class: "CAT3+", label: "Major Cyclone (3-5)", windSpeed: "≥ 96 kt (≥ 178 km/h)", precision: 0.74, recall: 0.69, f1: 0.71, support: 210, color: "#1d4ed8" },
+  { class: "TD",    label: "Tropical Depression", windSpeed: "< 34 kt (< 63 km/h)", precision: 0.84, recall: 0.81, f1: 0.82, support: 420, color: "#10b981" },
+  { class: "TS",    label: "Tropical Storm",      windSpeed: "34–63 kt (63–118 km/h)", precision: 0.79, recall: 0.83, f1: 0.81, support: 650, color: "#06b6d4" },
+  { class: "CAT1",  label: "Category 1 Hurricane",windSpeed: "64–82 kt (119–153 km/h)", precision: 0.76, recall: 0.72, f1: 0.74, support: 380, color: "#f59e0b" },
+  { class: "CAT2",  label: "Category 2 Hurricane",windSpeed: "83–95 kt (154–177 km/h)", precision: 0.72, recall: 0.75, f1: 0.73, support: 290, color: "#f97316" },
+  { class: "CAT3+", label: "Major Cyclone (3-5)", windSpeed: "≥ 96 kt (≥ 178 km/h)", precision: 0.74, recall: 0.69, f1: 0.71, support: 210, color: "#ef4444" },
 ];
 
 /* ── Epoch loss curve data ──────────────────────────────────── */

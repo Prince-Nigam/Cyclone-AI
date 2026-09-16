@@ -24,16 +24,16 @@ export function LiveTickerBar() {
         {/* Left: Live status beacon */}
         <div className="flex items-center gap-3">
           <div className="relative flex items-center justify-center">
-            <span className={`absolute w-3.5 h-3.5 rounded-full bg-blue-400 opacity-75 ${pulse ? "scale-150 animate-ping" : "scale-100"}`} />
-            <span className="relative w-2.5 h-2.5 rounded-full bg-blue-500" />
+            <span className={`absolute w-3.5 h-3.5 rounded-full bg-emerald-400 opacity-75 ${pulse ? "scale-150 animate-ping" : "scale-100"}`} />
+            <span className="relative w-2.5 h-2.5 rounded-full bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.8)]" />
           </div>
 
           <div className="flex items-center gap-2">
-            <span className="text-xs font-black tracking-wider text-blue-400 uppercase flex items-center gap-1.5">
-              <Radio className="w-3.5 h-3.5 animate-pulse" />
+            <span className="text-xs font-black tracking-wider text-emerald-400 uppercase flex items-center gap-1.5">
+              <Radio className="w-3.5 h-3.5 animate-pulse text-emerald-400" />
               Live 1s Telemetry Stream
             </span>
-            <span className="text-[10px] px-2 py-0.5 rounded-full bg-blue-500/20 text-blue-300 font-mono font-semibold border border-blue-500/30">
+            <span className="text-[10px] px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 font-mono font-semibold border border-emerald-500/30">
               FRAME #{telemetry?.pulse_id ? telemetry.pulse_id % 10000 : "..."}
             </span>
           </div>
@@ -49,13 +49,21 @@ export function LiveTickerBar() {
         {/* Right: Sync countdown & Quick stats */}
         <div className="flex items-center gap-2.5 text-xs">
           <div className="hidden sm:flex items-center gap-2 text-slate-400 text-[11px]">
-            <span className="flex items-center gap-1">
-              <Activity className="w-3 h-3 text-blue-400" />
-              Active Storms: <strong className="text-white font-mono">{activeStorms}</strong>
+            <span className="flex items-center gap-1.5">
+              <Activity className={`w-3.5 h-3.5 ${activeStorms > 0 ? "text-red-400" : "text-emerald-400"}`} />
+              Active Storms:{" "}
+              {activeStorms > 0 ? (
+                <span className="inline-flex items-center gap-1 px-1.5 py-0.2 rounded-md bg-red-500/20 text-red-300 border border-red-500/40 font-mono font-bold">
+                  <span className="w-1.5 h-1.5 rounded-full bg-red-400 animate-pulse" />
+                  {activeStorms} ALERT
+                </span>
+              ) : (
+                <strong className="text-emerald-400 font-mono font-bold">0 Tranquil</strong>
+              )}
             </span>
             {topStorm && (
-              <span className="text-slate-500">
-                (Latest: <span className="text-blue-300 font-semibold">{topStorm.name}</span>)
+              <span className="text-slate-400">
+                (Latest: <span className="text-red-300 font-semibold">{topStorm.name}</span>)
               </span>
             )}
           </div>
@@ -65,8 +73,8 @@ export function LiveTickerBar() {
             className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700 transition-all text-[11px] font-medium"
             title="Force immediate telemetry frame sync"
           >
-            <RefreshCw className={`w-3 h-3 text-blue-400 ${syncCountdown === 1 ? "animate-spin" : ""}`} />
-            <span>Sync: <span className="font-mono font-bold text-blue-400">{syncCountdown}s</span></span>
+            <RefreshCw className={`w-3 h-3 text-emerald-400 ${syncCountdown === 1 ? "animate-spin" : ""}`} />
+            <span>Sync: <span className="font-mono font-bold text-emerald-400">{syncCountdown}s</span></span>
           </button>
         </div>
       </div>
@@ -75,13 +83,13 @@ export function LiveTickerBar() {
       {liveLogs.length > 0 && (
         <div className="mt-2 pt-2 border-t border-slate-800/80 flex items-center justify-between text-[11px] font-mono text-slate-400">
           <div className="flex items-center gap-2 truncate">
-            <span className="text-[10px] uppercase font-bold text-blue-400 px-1.5 py-0.2 rounded bg-blue-500/10 border border-blue-500/20">
+            <span className="text-[10px] uppercase font-bold text-emerald-400 px-1.5 py-0.2 rounded bg-emerald-500/15 border border-emerald-500/30">
               LOG STREAM
             </span>
             <span className="text-slate-300 truncate">{liveLogs[0]}</span>
           </div>
-          <span className="text-[10px] text-blue-400 font-semibold flex items-center gap-1 flex-shrink-0 ml-2">
-            <Wifi className="w-2.5 h-2.5" /> ONLINE
+          <span className="text-[10px] text-emerald-400 font-semibold flex items-center gap-1 flex-shrink-0 ml-2 bg-emerald-500/10 border border-emerald-500/30 px-2 py-0.5 rounded-full shadow-sm shadow-emerald-500/10">
+            <Wifi className="w-2.5 h-2.5 text-emerald-400" /> ONLINE
           </span>
         </div>
       )}

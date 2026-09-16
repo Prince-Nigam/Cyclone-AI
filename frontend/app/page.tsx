@@ -67,12 +67,12 @@ const FEATURE_CARDS = [
 ];
 
 const COLOR_MAP: Record<string, { bg: string; icon: string; tag: string }> = {
-  blue:   { bg: "bg-blue-100   dark:bg-blue-500/15",   icon: "text-blue-600   dark:text-blue-400",   tag: "bg-blue-100   dark:bg-blue-500/20   text-blue-700   dark:text-blue-300"   },
-  purple: { bg: "bg-blue-100 dark:bg-blue-900/30", icon: "text-blue-600 dark:text-blue-300", tag: "bg-blue-100 dark:bg-blue-900/40 text-blue-700 dark:text-blue-300" },
-  orange: { bg: "bg-sky-100 dark:bg-sky-950/40", icon: "text-sky-600 dark:text-sky-400", tag: "bg-sky-100 dark:bg-sky-950/50 text-sky-700 dark:text-sky-300" },
-  red:    { bg: "bg-blue-100    dark:bg-blue-950/50",    icon: "text-blue-700    dark:text-blue-300",    tag: "bg-blue-100    dark:bg-blue-950/60    text-blue-800    dark:text-blue-200"    },
-  cyan:   { bg: "bg-sky-100   dark:bg-sky-900/20",   icon: "text-sky-500   dark:text-sky-300",   tag: "bg-sky-100   dark:bg-sky-900/30   text-sky-600   dark:text-sky-200"   },
-  slate:  { bg: "bg-slate-100  dark:bg-slate-500/15",  icon: "text-slate-600  dark:text-slate-400",  tag: "bg-slate-100  dark:bg-slate-500/20  text-slate-700  dark:text-slate-300"  },
+  blue:   { bg: "bg-blue-100 dark:bg-blue-500/15",       icon: "text-blue-600 dark:text-blue-400",       tag: "bg-blue-100 dark:bg-blue-500/20 text-blue-700 dark:text-blue-300" },
+  purple: { bg: "bg-purple-100 dark:bg-purple-900/30",   icon: "text-purple-600 dark:text-purple-400",   tag: "bg-purple-100 dark:bg-purple-900/40 text-purple-700 dark:text-purple-300" },
+  orange: { bg: "bg-amber-100 dark:bg-amber-950/40",     icon: "text-amber-600 dark:text-amber-400",     tag: "bg-amber-100 dark:bg-amber-950/50 text-amber-700 dark:text-amber-300" },
+  red:    { bg: "bg-red-100 dark:bg-red-950/40",         icon: "text-red-600 dark:text-red-400",         tag: "bg-red-100 dark:bg-red-950/50 text-red-700 dark:text-red-300 border border-red-500/30" },
+  cyan:   { bg: "bg-emerald-100 dark:bg-emerald-950/30", icon: "text-emerald-600 dark:text-emerald-400", tag: "bg-emerald-100 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-300 border border-emerald-500/30" },
+  slate:  { bg: "bg-slate-100 dark:bg-slate-500/15",     icon: "text-slate-600 dark:text-slate-400",     tag: "bg-slate-100 dark:bg-slate-500/20 text-slate-700 dark:text-slate-300" },
 };
 
 const STAT_THEMES: Record<string, {
@@ -82,10 +82,10 @@ const STAT_THEMES: Record<string, {
   gradient: string;
 }> = {
   red: {
-    border: "border-blue-300 dark:border-blue-500/40",
-    iconBg: "bg-blue-100 dark:bg-blue-500/20",
-    iconColor: "text-blue-600 dark:text-blue-400",
-    gradient: "from-blue-600/10 dark:from-blue-600/15 to-transparent",
+    border: "border-red-300 dark:border-red-500/50 shadow-sm shadow-red-500/10",
+    iconBg: "bg-red-100 dark:bg-red-500/20",
+    iconColor: "text-red-600 dark:text-red-400",
+    gradient: "from-red-500/15 to-transparent",
   },
   blue: {
     border: "border-blue-200 dark:border-blue-500/30",
@@ -94,16 +94,16 @@ const STAT_THEMES: Record<string, {
     gradient: "from-blue-500/10 dark:from-blue-500/15 to-transparent",
   },
   green: {
-    border: "border-sky-200 dark:border-sky-500/30",
-    iconBg: "bg-sky-100 dark:bg-sky-500/20",
-    iconColor: "text-sky-600 dark:text-sky-400",
-    gradient: "from-sky-500/10 dark:from-sky-500/15 to-transparent",
+    border: "border-emerald-300 dark:border-emerald-500/50 shadow-sm shadow-emerald-500/10",
+    iconBg: "bg-emerald-100 dark:bg-emerald-500/20",
+    iconColor: "text-emerald-600 dark:text-emerald-400",
+    gradient: "from-emerald-500/15 to-transparent",
   },
   purple: {
-    border: "border-blue-300 dark:border-blue-600/30",
-    iconBg: "bg-blue-100 dark:bg-blue-600/20",
-    iconColor: "text-blue-500 dark:text-blue-300",
-    gradient: "from-blue-700/10 dark:from-blue-700/15 to-transparent",
+    border: "border-purple-300 dark:border-purple-600/30",
+    iconBg: "bg-purple-100 dark:bg-purple-600/20",
+    iconColor: "text-purple-600 dark:text-purple-400",
+    gradient: "from-purple-700/10 dark:from-purple-700/15 to-transparent",
   },
 };
 
@@ -161,12 +161,12 @@ export default function DashboardPage() {
   const getAlertBadgeClass = (alert: string) => {
     switch (alert?.toUpperCase()) {
       case "RED":
-        return "bg-blue-900/40 text-blue-200 border-blue-700/60";
+        return "bg-red-500/20 text-red-300 border-red-500/50 shadow-sm shadow-red-500/20 font-bold";
       case "ORANGE":
-        return "bg-blue-600/20 text-blue-300 border-blue-500/40";
+        return "bg-amber-500/20 text-amber-300 border-amber-500/40 font-bold";
       case "GREEN":
       default:
-        return "bg-blue-500/20 text-blue-400 border-blue-500/30";
+        return "bg-emerald-500/20 text-emerald-300 border-emerald-500/40 font-bold";
     }
   };
 
@@ -207,12 +207,12 @@ export default function DashboardPage() {
     <div className="space-y-10">
 
       {/* ── Hero ──────────────────────────────────────────── */}
-      <section className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-slate-900 via-[#0f1e3d] to-slate-900 border border-slate-700/60 p-6 sm:p-8 shadow-2xl animate-fade-in-up">
-        {/* Glow blobs */}
-        <div className="pointer-events-none absolute -top-24 -right-24 w-80 h-80 rounded-full bg-blue-600/15 blur-3xl" />
-        <div className="pointer-events-none absolute -bottom-16 -left-16 w-64 h-64 rounded-full bg-purple-600/10 blur-3xl" />
+      <section className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-slate-900 via-[#0a152d] to-slate-900 border border-slate-700/60 p-6 sm:p-8 shadow-2xl animate-fade-in-up">
+        {/* Radar dual glow blobs (Red alert vs Emerald safe) */}
+        <div className="pointer-events-none absolute -top-24 -right-24 w-80 h-80 rounded-full bg-red-600/15 blur-3xl" />
+        <div className="pointer-events-none absolute -bottom-16 -left-16 w-64 h-64 rounded-full bg-emerald-600/15 blur-3xl" />
         {/* Subtle grid overlay */}
-        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_80%_50%_at_50%_-20%,rgba(59,130,246,0.12),transparent)]" />
+        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_80%_50%_at_50%_-20%,rgba(16,185,129,0.08),transparent)]" />
 
         <div className="relative">
           {/* Top header row: Logo + Title + Live badge */}
@@ -338,14 +338,14 @@ export default function DashboardPage() {
 
             <div>
               <div className="flex items-center gap-2 mb-1">
-                <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-blue-500/20 text-blue-300 text-xs font-semibold border border-blue-500/30">
-                  <span className="w-1.5 h-1.5 rounded-full bg-blue-400 animate-pulse" />
+                <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 text-xs font-semibold border border-emerald-500/40 shadow-sm shadow-emerald-500/10">
+                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
                   Live Telemetry Active
                 </span>
               </div>
               <h1 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">
                 Tropical Cyclone{" "}
-                <span className="bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-blue-200">
+                <span className="bg-clip-text text-transparent bg-gradient-to-r from-emerald-400 via-sky-300 to-rose-400">
                   AI Platform
                 </span>
               </h1>
@@ -368,8 +368,12 @@ export default function DashboardPage() {
 
           {/* Buttons */}
           <div className="flex flex-wrap gap-3">
-            <Link href="/live-satellite" className="btn-primary">
-              <Radio className="w-4 h-4 animate-pulse" /> Live Satellite &amp; Storms
+            <Link href="/live-satellite" className="btn-primary flex items-center gap-2 shadow-lg shadow-blue-600/30 hover:shadow-emerald-500/30">
+              <span className="relative flex h-2.5 w-2.5">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-400"></span>
+              </span>
+              <Radio className="w-4 h-4" /> Live Satellite &amp; Storms
             </Link>
             <Link href="/satellite" className="btn-secondary">
               AI Image Analysis <ArrowRight className="w-4 h-4" />
@@ -413,13 +417,17 @@ export default function DashboardPage() {
                 onClick={() => setActiveTab("LIVE")}
                 className={`flex items-center gap-1.5 py-1 px-3 rounded-lg font-semibold transition-all ${
                   activeTab === "LIVE"
-                    ? "bg-blue-600 text-white shadow-sm"
+                    ? "bg-slate-900 dark:bg-slate-700 text-white shadow-sm border border-slate-700"
                     : "text-slate-500 hover:text-slate-800 dark:hover:text-slate-200"
                 }`}
               >
-                <span className="w-2 h-2 rounded-full bg-blue-400 animate-pulse" />
+                <span className={`w-2 h-2 rounded-full ${liveCyclones.length > 0 ? "bg-red-500 animate-ping" : "bg-emerald-400 animate-pulse"}`} />
                 Active Storms (Live)
-                <span className="ml-1 text-[10px] px-1.5 py-0.2 rounded-full bg-white/20 text-white">
+                <span className={`ml-1 text-[10px] px-1.5 py-0.2 rounded-full font-bold ${
+                  liveCyclones.length > 0
+                    ? "bg-red-500/30 text-red-200 border border-red-500/50"
+                    : "bg-emerald-500/30 text-emerald-200 border border-emerald-500/50"
+                }`}>
                   {liveCyclones.length}
                 </span>
               </button>
@@ -498,10 +506,10 @@ export default function DashboardPage() {
                   </thead>
                   <tbody className="divide-y divide-slate-100/70 dark:divide-slate-800/50">
                     {liveCyclones.map((c) => (
-                      <tr key={c.id} className="hover:bg-blue-50/60 dark:hover:bg-blue-500/10 transition-colors group">
+                      <tr key={c.id} className="hover:bg-slate-50 dark:hover:bg-slate-800/60 transition-colors group">
                         <td className="px-3.5 py-2">
                           <div className="flex items-center gap-2">
-                            <span className="w-2 h-2 rounded-full bg-blue-400 animate-pulse flex-shrink-0" />
+                            <span className="w-2 h-2 rounded-full bg-red-500 animate-pulse flex-shrink-0 shadow-[0_0_6px_rgba(239,68,68,0.8)]" />
                             <div className="max-w-[200px] truncate">
                               <p className="font-bold text-slate-900 dark:text-slate-100 text-xs truncate">
                                 {c.name !== "UNNAMED" ? c.name : c.title.slice(0, 30)}
@@ -529,7 +537,9 @@ export default function DashboardPage() {
 
                         <td className="px-3.5 py-2 font-mono text-xs text-slate-800 dark:text-slate-200 whitespace-nowrap">
                           {c.wind_kt ? (
-                            <span className="flex items-center gap-1 font-semibold text-blue-600 dark:text-blue-400">
+                            <span className={`flex items-center gap-1 font-semibold ${
+                              c.wind_kt >= 34 ? "text-red-600 dark:text-red-400 font-bold" : "text-emerald-600 dark:text-emerald-400"
+                            }`}>
                               <Wind className="w-3 h-3 flex-shrink-0" />
                               {c.wind_kt} kt <span className="text-[10px] text-slate-400 font-normal">({c.wind_kmh ? Math.round(c.wind_kmh) : Math.round(c.wind_kt * 1.852)} km/h)</span>
                             </span>

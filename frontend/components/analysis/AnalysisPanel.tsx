@@ -29,14 +29,14 @@ export function AnalysisPanel({ result, isLoading, error }: Props) {
     return (
       <div className={`p-6 rounded-lg border ${
         isNoCyclone
-          ? "bg-blue-50 dark:bg-blue-950/40 border-blue-200 dark:border-blue-800"
+          ? "bg-red-50 dark:bg-red-950/40 border-red-300 dark:border-red-800/80"
           : "bg-slate-100 dark:bg-slate-900 border-slate-300 dark:border-slate-700"
       }`}>
         <div className={`flex items-center gap-2 mb-2 ${
-          isNoCyclone ? "text-blue-700 dark:text-blue-300" : "text-slate-700 dark:text-slate-300"
+          isNoCyclone ? "text-red-700 dark:text-red-300" : "text-slate-700 dark:text-slate-300"
         }`}>
           {isNoCyclone
-            ? <AlertTriangle className="w-5 h-5 text-blue-500" />
+            ? <AlertTriangle className="w-5 h-5 text-red-500" />
             : <XCircle className="w-5 h-5 text-slate-500" />
           }
           <span className="font-semibold">
@@ -44,12 +44,12 @@ export function AnalysisPanel({ result, isLoading, error }: Props) {
           </span>
         </div>
         <p className={`text-sm ${
-          isNoCyclone ? "text-blue-800 dark:text-blue-200" : "text-slate-600 dark:text-slate-300"
+          isNoCyclone ? "text-red-800 dark:text-red-200" : "text-slate-600 dark:text-slate-300"
         }`}>
           {error}
         </p>
         {isNoCyclone && (
-          <p className="text-xs text-blue-600 dark:text-blue-400 mt-3 border-t border-blue-200 dark:border-blue-800 pt-2">
+          <p className="text-xs text-red-600 dark:text-red-400 mt-3 border-t border-red-200 dark:border-red-800/60 pt-2">
             Tip: Upload a satellite infrared (IR) image with a visible tropical cyclone spiral structure.
           </p>
         )}
@@ -86,15 +86,15 @@ export function AnalysisPanel({ result, isLoading, error }: Props) {
       {det && (
         <div className={`p-4 rounded-lg border ${
           det.detected
-            ? "bg-blue-50 dark:bg-blue-950/40 border-blue-300 dark:border-blue-700"
-            : "bg-slate-50 dark:bg-slate-800/60 border-slate-200 dark:border-slate-700"
+            ? "bg-emerald-50 dark:bg-emerald-950/40 border-emerald-300 dark:border-emerald-700 shadow-sm shadow-emerald-500/10"
+            : "bg-red-50 dark:bg-red-950/40 border-red-300 dark:border-red-700 shadow-sm shadow-red-500/10"
         }`}>
           <div className="flex items-center gap-2 mb-1">
             {det.detected
-              ? <CheckCircle className="w-5 h-5 text-blue-500" />
-              : <XCircle className="w-5 h-5 text-slate-400" />
+              ? <CheckCircle className="w-5 h-5 text-emerald-500" />
+              : <XCircle className="w-5 h-5 text-red-500" />
             }
-            <span className={`font-semibold text-sm ${det.detected ? "text-blue-700 dark:text-blue-200" : "text-slate-700 dark:text-slate-300"}`}>
+            <span className={`font-semibold text-sm ${det.detected ? "text-emerald-700 dark:text-emerald-200" : "text-red-700 dark:text-red-300"}`}>
               {det.detected ? "Cyclone Detected" : "No Cyclone Detected"}
             </span>
           </div>
@@ -102,11 +102,11 @@ export function AnalysisPanel({ result, isLoading, error }: Props) {
             <div className="mt-2">
               <div className="flex justify-between text-xs text-slate-600 dark:text-slate-400 mb-1">
                 <span>Model Confidence</span>
-                <span className="font-mono">{(det.confidence * 100).toFixed(1)}%</span>
+                <span className="font-mono font-bold">{(det.confidence * 100).toFixed(1)}%</span>
               </div>
               <div className="w-full bg-slate-200 dark:bg-slate-700 rounded-full h-2">
                 <div
-                  className={`h-2 rounded-full transition-all ${det.detected ? "bg-blue-600" : "bg-slate-400"}`}
+                  className={`h-2 rounded-full transition-all ${det.detected ? "bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.5)]" : "bg-red-500"}`}
                   style={{ width: `${(det.confidence * 100).toFixed(1)}%` }}
                 />
               </div>

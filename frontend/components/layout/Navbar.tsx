@@ -128,8 +128,8 @@ export function Navbar() {
           : "bg-[#070e1c] border-b border-slate-700/50"
       )}
     >
-      {/* Top accent line */}
-      <div className="h-px bg-gradient-to-r from-transparent via-blue-500 to-transparent opacity-60" />
+      {/* Top radar spectrum accent line (Green safe -> Sky -> Red alert) */}
+      <div className="h-[2px] bg-gradient-to-r from-emerald-500 via-sky-500 to-rose-500 opacity-85 shadow-[0_0_8px_rgba(16,185,129,0.5)]" />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-14">
@@ -285,14 +285,17 @@ export function Navbar() {
                       isActive
                         ? "bg-blue-600 border-blue-400 text-white shadow-blue-500/25 shadow-md ring-1 ring-blue-400/40"
                         : link.highlight
-                        ? "bg-blue-950/60 border-blue-500/50 text-blue-300 hover:bg-blue-900/60 hover:border-blue-400 hover:text-white"
+                        ? "bg-emerald-950/50 border-emerald-500/50 text-emerald-300 hover:bg-emerald-900/60 hover:border-emerald-400 hover:text-white shadow-sm shadow-emerald-500/15"
                         : "bg-[#0d1829] border-slate-700/80 text-slate-200 hover:text-white hover:bg-slate-800 hover:border-slate-500"
                     )}
                   >
-                    <LinkIcon className={clsx("w-3.5 h-3.5 flex-shrink-0", isActive ? "text-white" : link.highlight ? "text-blue-400" : "text-slate-400 group-hover:text-white")} />
+                    <LinkIcon className={clsx("w-3.5 h-3.5 flex-shrink-0", isActive ? "text-white" : link.highlight ? "text-emerald-400" : "text-slate-400 group-hover:text-white")} />
                     <span>{link.label}</span>
                     {link.highlight && (
-                      <span className="w-1.5 h-1.5 rounded-full bg-blue-400 animate-pulse ml-0.5" />
+                      <span className="relative flex h-2 w-2 ml-0.5">
+                        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                        <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+                      </span>
                     )}
                   </Link>
 
@@ -321,11 +324,12 @@ export function Navbar() {
           </div>
 
           {/* Right side */}
-          <div className="hidden lg:flex items-center gap-2">
+          <div className="hidden lg:flex items-center gap-2.5">
             <ThemeToggle />
-            <div className="flex items-center gap-1.5 bg-blue-500/10 border border-blue-500/25 px-2.5 py-1 rounded-full">
-              <Zap className="w-3 h-3 text-blue-400" />
-              <span className="text-xs text-blue-400 font-medium">Research</span>
+            <div className="flex items-center gap-1.5 bg-emerald-500/10 border border-emerald-500/30 px-2.5 py-1 rounded-full shadow-sm shadow-emerald-500/10">
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+              <Zap className="w-3 h-3 text-emerald-400" />
+              <span className="text-xs text-emerald-400 font-semibold tracking-wide">Live Feed</span>
             </div>
           </div>
 

@@ -19,17 +19,17 @@ const config: Config = {
           900: "#1e3a8a",
         },
         cyclone: {
-          td:       "#93c5fd", // light blue
-          ts:       "#60a5fa", // sky blue
-          cat1:     "#3b82f6", // royal blue
-          cat2:     "#2563eb", // dark blue
-          cat3plus: "#1d4ed8", // deep navy blue
+          td:       "#10b981", // emerald green (TD)
+          ts:       "#06b6d4", // cyan (TS)
+          cat1:     "#f59e0b", // amber (Cat 1)
+          cat2:     "#f97316", // vivid orange (Cat 2)
+          cat3plus: "#ef4444", // crimson red (Cat 3+)
         },
         data: {
-          observed:  "#38bdf8",
+          observed:  "#10b981", // emerald green
           historical:"#3b82f6",
-          simulated: "#60a5fa",
-          predicted: "#1d4ed8",
+          simulated: "#f59e0b",
+          predicted: "#ef4444", // red alert prediction
         },
       },
       fontFamily: {
@@ -40,11 +40,15 @@ const config: Config = {
         "hero-gradient": "linear-gradient(135deg, #0f172a 0%, #1e1b4b 40%, #0c1a3a 100%)",
         "card-gradient": "linear-gradient(135deg, rgba(255,255,255,0.05) 0%, rgba(255,255,255,0) 100%)",
         "blue-glow": "radial-gradient(ellipse 80% 50% at 50% -20%, rgba(59,130,246,0.18), transparent)",
+        "radar-glow": "radial-gradient(ellipse 80% 50% at 50% -20%, rgba(16,185,129,0.15), rgba(239,68,68,0.12), transparent)",
       },
       boxShadow: {
         "card":       "0 1px 3px rgba(0,0,0,0.06), 0 4px 16px rgba(0,0,0,0.06)",
         "card-hover": "0 4px 12px rgba(0,0,0,0.10), 0 12px 32px rgba(59,130,246,0.10)",
         "glow-blue":  "0 0 20px rgba(59,130,246,0.35)",
+        "glow-red":   "0 0 22px rgba(239,68,68,0.40)",
+        "glow-green": "0 0 22px rgba(16,185,129,0.40)",
+        "glow-amber": "0 0 20px rgba(245,158,11,0.35)",
         "glow-sm":    "0 0 10px rgba(59,130,246,0.20)",
         "inner-sm":   "inset 0 1px 0 rgba(255,255,255,0.06)",
       },
