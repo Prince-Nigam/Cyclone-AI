@@ -24,12 +24,12 @@ export function LiveTickerBar() {
         {/* Left: Live status beacon */}
         <div className="flex items-center gap-3">
           <div className="relative flex items-center justify-center">
-            <span className={`absolute w-3.5 h-3.5 rounded-full bg-emerald-400 opacity-75 ${pulse ? "scale-150 animate-ping" : "scale-100"}`} />
-            <span className="relative w-2.5 h-2.5 rounded-full bg-emerald-500" />
+            <span className={`absolute w-3.5 h-3.5 rounded-full bg-blue-400 opacity-75 ${pulse ? "scale-150 animate-ping" : "scale-100"}`} />
+            <span className="relative w-2.5 h-2.5 rounded-full bg-blue-500" />
           </div>
 
           <div className="flex items-center gap-2">
-            <span className="text-xs font-black tracking-wider text-emerald-400 uppercase flex items-center gap-1.5">
+            <span className="text-xs font-black tracking-wider text-blue-400 uppercase flex items-center gap-1.5">
               <Radio className="w-3.5 h-3.5 animate-pulse" />
               Live 1s Telemetry Stream
             </span>
@@ -50,12 +50,12 @@ export function LiveTickerBar() {
         <div className="flex items-center gap-2.5 text-xs">
           <div className="hidden sm:flex items-center gap-2 text-slate-400 text-[11px]">
             <span className="flex items-center gap-1">
-              <Activity className="w-3 h-3 text-cyan-400" />
+              <Activity className="w-3 h-3 text-blue-400" />
               Active Storms: <strong className="text-white font-mono">{activeStorms}</strong>
             </span>
             {topStorm && (
               <span className="text-slate-500">
-                (Latest: <span className="text-amber-300 font-semibold">{topStorm.name}</span>)
+                (Latest: <span className="text-blue-300 font-semibold">{topStorm.name}</span>)
               </span>
             )}
           </div>
@@ -80,7 +80,7 @@ export function LiveTickerBar() {
             </span>
             <span className="text-slate-300 truncate">{liveLogs[0]}</span>
           </div>
-          <span className="text-[10px] text-emerald-400 font-semibold flex items-center gap-1 flex-shrink-0 ml-2">
+          <span className="text-[10px] text-blue-400 font-semibold flex items-center gap-1 flex-shrink-0 ml-2">
             <Wifi className="w-2.5 h-2.5" /> ONLINE
           </span>
         </div>

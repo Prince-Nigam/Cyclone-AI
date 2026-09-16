@@ -218,7 +218,7 @@ export function LiveWeatherInspector({ selectedLocation, onLocationChange }: Pro
           <div>
             <h2 className="font-bold text-slate-100 text-sm sm:text-base flex items-center gap-2">
               Live Rain &amp; Weather Inspector
-              <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+              <span className="w-2 h-2 rounded-full bg-blue-400 animate-pulse" />
             </h2>
             <p className="text-[11px] text-slate-400">
               Check real-time precipitation, rain chance, and storm forecast for any location
@@ -398,32 +398,32 @@ export function LiveWeatherInspector({ selectedLocation, onLocationChange }: Pro
             </div>
 
             <div className="p-3 rounded-xl bg-slate-900/90 border border-slate-800/90 flex items-center gap-3">
-              <div className="p-2 rounded-lg bg-cyan-500/10 text-cyan-400">
+              <div className="p-2 rounded-lg bg-blue-500/10 text-blue-400">
                 <Droplets className="w-4 h-4" />
               </div>
               <div>
                 <span className="text-[10px] text-slate-400 font-medium uppercase">Humidity</span>
-                <p className="text-sm font-bold text-cyan-300 font-mono">{weather.humidity}%</p>
+                <p className="text-sm font-bold text-blue-300 font-mono">{weather.humidity}%</p>
               </div>
             </div>
 
             <div className="p-3 rounded-xl bg-slate-900/90 border border-slate-800/90 flex items-center gap-3">
-              <div className="p-2 rounded-lg bg-purple-500/10 text-purple-400">
+              <div className="p-2 rounded-lg bg-blue-600/10 text-blue-400">
                 <Gauge className="w-4 h-4" />
               </div>
               <div>
                 <span className="text-[10px] text-slate-400 font-medium uppercase">Pressure</span>
-                <p className="text-sm font-bold text-purple-300 font-mono">{weather.pressure} hPa</p>
+                <p className="text-sm font-bold text-blue-200 font-mono">{weather.pressure} hPa</p>
               </div>
             </div>
 
             <div className="p-3 rounded-xl bg-slate-900/90 border border-slate-800/90 flex items-center gap-3">
-              <div className="p-2 rounded-lg bg-amber-500/10 text-amber-400">
+              <div className="p-2 rounded-lg bg-sky-500/10 text-sky-400">
                 <Cloud className="w-4 h-4" />
               </div>
               <div>
                 <span className="text-[10px] text-slate-400 font-medium uppercase">Cloud Cover</span>
-                <p className="text-sm font-bold text-amber-300 font-mono">{weather.cloudCover}%</p>
+                <p className="text-sm font-bold text-sky-300 font-mono">{weather.cloudCover}%</p>
               </div>
             </div>
           </div>

@@ -39,11 +39,11 @@ interface ClassBenchmark {
 }
 
 const CLASS_BENCHMARKS: ClassBenchmark[] = [
-  { class: "TD",    label: "Tropical Depression", windSpeed: "< 34 kt (< 63 km/h)", precision: 0.84, recall: 0.81, f1: 0.82, support: 420, color: "#38bdf8" },
+  { class: "TD",    label: "Tropical Depression", windSpeed: "< 34 kt (< 63 km/h)", precision: 0.84, recall: 0.81, f1: 0.82, support: 420, color: "#93c5fd" },
   { class: "TS",    label: "Tropical Storm",      windSpeed: "34–63 kt (63–118 km/h)", precision: 0.79, recall: 0.83, f1: 0.81, support: 650, color: "#60a5fa" },
-  { class: "CAT1",  label: "Category 1 Hurricane",windSpeed: "64–82 kt (119–153 km/h)", precision: 0.76, recall: 0.72, f1: 0.74, support: 380, color: "#facc15" },
-  { class: "CAT2",  label: "Category 2 Hurricane",windSpeed: "83–95 kt (154–177 km/h)", precision: 0.72, recall: 0.75, f1: 0.73, support: 290, color: "#fb923c" },
-  { class: "CAT3+", label: "Major Cyclone (3-5)", windSpeed: "≥ 96 kt (≥ 178 km/h)", precision: 0.74, recall: 0.69, f1: 0.71, support: 210, color: "#f87171" },
+  { class: "CAT1",  label: "Category 1 Hurricane",windSpeed: "64–82 kt (119–153 km/h)", precision: 0.76, recall: 0.72, f1: 0.74, support: 380, color: "#3b82f6" },
+  { class: "CAT2",  label: "Category 2 Hurricane",windSpeed: "83–95 kt (154–177 km/h)", precision: 0.72, recall: 0.75, f1: 0.73, support: 290, color: "#2563eb" },
+  { class: "CAT3+", label: "Major Cyclone (3-5)", windSpeed: "≥ 96 kt (≥ 178 km/h)", precision: 0.74, recall: 0.69, f1: 0.71, support: 210, color: "#1d4ed8" },
 ];
 
 /* ── Epoch loss curve data ──────────────────────────────────── */
@@ -129,49 +129,49 @@ export default function PerformancePage() {
           <p className="text-2xl font-black text-slate-900 dark:text-white font-mono">85.4%</p>
           <div className="flex items-center justify-between text-xs text-slate-500 dark:text-slate-400 mt-1">
             <span>EfficientNet-B0</span>
-            <span className="text-emerald-600 dark:text-emerald-400 font-semibold">F1: 0.851</span>
+            <span className="text-blue-600 dark:text-blue-400 font-semibold">F1: 0.851</span>
           </div>
         </div>
 
-        <div className="stat-card bg-gradient-to-br from-purple-500/10 via-purple-500/5 to-transparent border-purple-500/20">
+        <div className="stat-card bg-gradient-to-br from-blue-600/10 via-blue-600/5 to-transparent border-blue-500/20">
           <div className="flex items-center justify-between mb-2">
             <span className="text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider">Pattern Classifier</span>
-            <span className="p-1.5 rounded-lg bg-purple-500/20 text-purple-500">
+            <span className="p-1.5 rounded-lg bg-blue-500/20 text-blue-400">
               <BarChart3 className="w-4 h-4" />
             </span>
           </div>
           <p className="text-2xl font-black text-slate-900 dark:text-white font-mono">76.8%</p>
           <div className="flex items-center justify-between text-xs text-slate-500 dark:text-slate-400 mt-1">
             <span>ResNet50 (5 classes)</span>
-            <span className="text-purple-600 dark:text-purple-400 font-semibold">Avg F1: 0.748</span>
+            <span className="text-blue-500 dark:text-blue-300 font-semibold">Avg F1: 0.748</span>
           </div>
         </div>
 
-        <div className="stat-card bg-gradient-to-br from-amber-500/10 via-amber-500/5 to-transparent border-amber-500/20">
+        <div className="stat-card bg-gradient-to-br from-blue-700/10 via-blue-700/5 to-transparent border-blue-500/20">
           <div className="flex items-center justify-between mb-2">
             <span className="text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider">Intensity MAE</span>
-            <span className="p-1.5 rounded-lg bg-amber-500/20 text-amber-500">
+            <span className="p-1.5 rounded-lg bg-blue-500/20 text-blue-400">
               <TrendingUp className="w-4 h-4" />
             </span>
           </div>
           <p className="text-2xl font-black text-slate-900 dark:text-white font-mono">8.32 kt</p>
           <div className="flex items-center justify-between text-xs text-slate-500 dark:text-slate-400 mt-1">
             <span>CNN + LSTM(128)</span>
-            <span className="text-amber-600 dark:text-amber-400 font-semibold">R² = 0.835</span>
+            <span className="text-blue-400 dark:text-blue-300 font-semibold">R² = 0.835</span>
           </div>
         </div>
 
-        <div className="stat-card bg-gradient-to-br from-emerald-500/10 via-emerald-500/5 to-transparent border-emerald-500/20">
+        <div className="stat-card bg-gradient-to-br from-blue-800/10 via-blue-800/5 to-transparent border-blue-500/20">
           <div className="flex items-center justify-between mb-2">
             <span className="text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider">Track Position Error</span>
-            <span className="p-1.5 rounded-lg bg-emerald-500/20 text-emerald-500">
+            <span className="p-1.5 rounded-lg bg-blue-500/20 text-blue-400">
               <Map className="w-4 h-4" />
             </span>
           </div>
           <p className="text-2xl font-black text-slate-900 dark:text-white font-mono">48.6 km</p>
           <div className="flex items-center justify-between text-xs text-slate-500 dark:text-slate-400 mt-1">
             <span>Seq2Seq LSTM 24h</span>
-            <span className="text-emerald-600 dark:text-emerald-400 font-semibold">R² = 0.892</span>
+            <span className="text-blue-500 dark:text-blue-300 font-semibold">R² = 0.892</span>
           </div>
         </div>
       </div>
@@ -213,8 +213,8 @@ export default function PerformancePage() {
                   <span className="font-bold text-slate-900 dark:text-slate-100 text-base capitalize flex items-center gap-1.5">
                     {model.name}
                   </span>
-                  <span className="text-[11px] px-2.5 py-0.5 rounded-full font-bold bg-emerald-500/20 text-emerald-700 dark:text-emerald-400 border border-emerald-500/30 flex items-center gap-1">
-                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                  <span className="text-[11px] px-2.5 py-0.5 rounded-full font-bold bg-blue-500/20 text-blue-700 dark:text-blue-300 border border-blue-500/30 flex items-center gap-1">
+                    <span className="w-1.5 h-1.5 rounded-full bg-blue-500 animate-pulse" />
                     ready
                   </span>
                 </div>
@@ -244,7 +244,7 @@ export default function PerformancePage() {
                   {model.mae != null && (
                     <div className="flex justify-between items-center py-1.5 bg-slate-50 dark:bg-slate-800/60 px-2.5 rounded-lg">
                       <span className="text-slate-500 dark:text-slate-400 font-medium">MAE Error</span>
-                      <span className="font-mono font-bold text-amber-600 dark:text-amber-400">
+                      <span className="font-mono font-bold text-blue-600 dark:text-blue-300">
                         {model.mae.toFixed(2)} {model.name === "intensity" ? "kt" : "km"}
                       </span>
                     </div>
@@ -294,7 +294,7 @@ export default function PerformancePage() {
                       <td className="px-4 py-3 font-mono text-xs text-slate-300">{m.architecture}</td>
                       <td className="px-4 py-3 font-mono text-xs text-blue-400">{m.version}</td>
                       <td className="px-4 py-3">
-                        <span className="text-[11px] font-bold px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">
+                        <span className="text-[11px] font-bold px-2 py-0.5 rounded-full bg-blue-500/20 text-blue-300 border border-blue-500/30">
                           {m.status || "loaded"}
                         </span>
                       </td>
@@ -324,7 +324,7 @@ export default function PerformancePage() {
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-slate-800">
               <div>
                 <h2 className="font-bold text-slate-100 text-lg flex items-center gap-2">
-                  <BarChart2 className="w-5 h-5 text-purple-400" />
+                  <BarChart2 className="w-5 h-5 text-blue-400" />
                   ResNet50 Classification Metrics by Category
                 </h2>
                 <p className="text-xs text-slate-400 mt-0.5">
@@ -335,11 +335,11 @@ export default function PerformancePage() {
                 <span className="flex items-center gap-1.5 text-blue-400">
                   <span className="w-3 h-3 rounded-sm bg-blue-500" /> Precision
                 </span>
-                <span className="flex items-center gap-1.5 text-emerald-400">
-                  <span className="w-3 h-3 rounded-sm bg-emerald-500" /> Recall
+                <span className="flex items-center gap-1.5 text-sky-300">
+                  <span className="w-3 h-3 rounded-sm bg-sky-400" /> Recall
                 </span>
-                <span className="flex items-center gap-1.5 text-amber-400">
-                  <span className="w-3 h-3 rounded-sm bg-amber-500" /> F1 Score
+                <span className="flex items-center gap-1.5 text-blue-200">
+                  <span className="w-3 h-3 rounded-sm bg-blue-300" /> F1 Score
                 </span>
               </div>
             </div>
@@ -383,19 +383,19 @@ export default function PerformancePage() {
                         {/* Precision Bar */}
                         <div
                           style={{ height: `${c.precision * 100}%` }}
-                          className="w-1/3 bg-gradient-to-t from-blue-600 to-blue-400 rounded-t-md transition-all duration-300 shadow-[0_0_8px_rgba(59,130,246,0.3)] group-hover:brightness-125"
+                          className="w-1/3 bg-gradient-to-t from-blue-700 to-blue-500 rounded-t-md transition-all duration-300 shadow-[0_0_8px_rgba(59,130,246,0.3)] group-hover:brightness-125"
                           title={`Precision: ${(c.precision * 100).toFixed(1)}%`}
                         />
                         {/* Recall Bar */}
                         <div
                           style={{ height: `${c.recall * 100}%` }}
-                          className="w-1/3 bg-gradient-to-t from-emerald-600 to-emerald-400 rounded-t-md transition-all duration-300 shadow-[0_0_8px_rgba(16,185,129,0.3)] group-hover:brightness-125"
+                          className="w-1/3 bg-gradient-to-t from-blue-500 to-sky-400 rounded-t-md transition-all duration-300 shadow-[0_0_8px_rgba(56,189,248,0.3)] group-hover:brightness-125"
                           title={`Recall: ${(c.recall * 100).toFixed(1)}%`}
                         />
                         {/* F1 Bar */}
                         <div
                           style={{ height: `${c.f1 * 100}%` }}
-                          className="w-1/3 bg-gradient-to-t from-amber-600 to-amber-400 rounded-t-md transition-all duration-300 shadow-[0_0_8px_rgba(245,158,11,0.3)] group-hover:brightness-125"
+                          className="w-1/3 bg-gradient-to-t from-sky-400 to-blue-300 rounded-t-md transition-all duration-300 shadow-[0_0_8px_rgba(147,197,253,0.3)] group-hover:brightness-125"
                           title={`F1: ${(c.f1 * 100).toFixed(1)}%`}
                         />
                       </div>
@@ -442,11 +442,11 @@ export default function PerformancePage() {
                     </div>
                     <div className="flex justify-between items-center">
                       <span className="text-slate-400 text-[11px]">Recall</span>
-                      <span className="font-mono font-bold text-emerald-400">{(c.recall * 100).toFixed(1)}%</span>
+                      <span className="font-mono font-bold text-sky-300">{(c.recall * 100).toFixed(1)}%</span>
                     </div>
                     <div className="flex justify-between items-center">
                       <span className="text-slate-400 text-[11px]">F1 Score</span>
-                      <span className="font-mono font-bold text-amber-400">{(c.f1 * 100).toFixed(1)}%</span>
+                      <span className="font-mono font-bold text-blue-200">{(c.f1 * 100).toFixed(1)}%</span>
                     </div>
                   </div>
                 </div>
@@ -499,10 +499,10 @@ export default function PerformancePage() {
                             style={{
                               backgroundColor: isDiagonal
                                 ? `rgba(59, 130, 246, ${opacity})`
-                                : `rgba(239, 68, 68, ${opacity * 0.4})`,
+                                : `rgba(30, 58, 138, ${opacity * 0.3})`,
                             }}
                             className={`p-3 rounded-xl font-mono text-xs font-bold transition-all ${
-                              isDiagonal ? "text-white shadow-md shadow-blue-500/30 ring-1 ring-blue-400/40" : "text-slate-300"
+                              isDiagonal ? "text-white shadow-md shadow-blue-500/30 ring-1 ring-blue-400/40" : "text-slate-400"
                             }`}
                           >
                             {val}%
@@ -530,7 +530,7 @@ export default function PerformancePage() {
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-slate-800">
               <div>
                 <h2 className="font-bold text-slate-100 text-lg flex items-center gap-2">
-                  <LineChart className="w-5 h-5 text-emerald-400" />
+                  <LineChart className="w-5 h-5 text-blue-400" />
                   Loss &amp; Validation Accuracy Convergence
                 </h2>
                 <p className="text-xs text-slate-400 mt-0.5">
@@ -540,14 +540,14 @@ export default function PerformancePage() {
 
               {/* Legends */}
               <div className="flex flex-wrap items-center gap-4 text-xs font-semibold bg-slate-800/80 px-3.5 py-1.5 rounded-xl border border-slate-700/60">
-                <span className="flex items-center gap-1.5 text-red-400">
-                  <span className="w-3 h-0.5 bg-red-500 rounded" /> Training Loss
-                </span>
-                <span className="flex items-center gap-1.5 text-amber-400">
-                  <span className="w-3 h-0.5 bg-amber-500 rounded" /> Val Loss
+                <span className="flex items-center gap-1.5 text-blue-300">
+                  <span className="w-3 h-0.5 bg-blue-400 rounded" /> Training Loss
                 </span>
                 <span className="flex items-center gap-1.5 text-blue-400">
-                  <span className="w-3 h-0.5 bg-blue-400 rounded" /> Val Accuracy
+                  <span className="w-3 h-0.5 bg-blue-600 rounded" /> Val Loss
+                </span>
+                <span className="flex items-center gap-1.5 text-white">
+                  <span className="w-3 h-0.5 bg-white rounded" /> Val Accuracy
                 </span>
               </div>
             </div>
@@ -558,12 +558,12 @@ export default function PerformancePage() {
                 <svg viewBox="0 0 700 300" preserveAspectRatio="none" className="w-full h-full overflow-visible">
                   <defs>
                     <linearGradient id="trainLossGrad" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="0%" stopColor="#ef4444" stopOpacity="0.25" />
-                      <stop offset="100%" stopColor="#ef4444" stopOpacity="0" />
+                      <stop offset="0%" stopColor="#3b82f6" stopOpacity="0.25" />
+                      <stop offset="100%" stopColor="#3b82f6" stopOpacity="0" />
                     </linearGradient>
                     <linearGradient id="valAccGrad" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="0%" stopColor="#38bdf8" stopOpacity="0.25" />
-                      <stop offset="100%" stopColor="#38bdf8" stopOpacity="0" />
+                      <stop offset="0%" stopColor="#60a5fa" stopOpacity="0.25" />
+                      <stop offset="100%" stopColor="#60a5fa" stopOpacity="0" />
                     </linearGradient>
                   </defs>
 
@@ -597,7 +597,7 @@ export default function PerformancePage() {
                     fill="url(#valAccGrad)"
                   />
 
-                  {/* Training Loss Path (Red) */}
+                  {/* Training Loss Path (Blue-300) */}
                   <path
                     d={TRAINING_HISTORY.map((p, idx) => {
                       const x = 40 + ((p.epoch - 1) / 29) * 650;
@@ -605,12 +605,12 @@ export default function PerformancePage() {
                       return `${idx === 0 ? "M" : "L"} ${x} ${y}`;
                     }).join(" ")}
                     fill="none"
-                    stroke="#ef4444"
+                    stroke="#93c5fd"
                     strokeWidth="2.5"
                     strokeLinecap="round"
                   />
 
-                  {/* Validation Loss Path (Amber) */}
+                  {/* Validation Loss Path (Blue-500) */}
                   <path
                     d={TRAINING_HISTORY.map((p, idx) => {
                       const x = 40 + ((p.epoch - 1) / 29) * 650;
@@ -618,13 +618,13 @@ export default function PerformancePage() {
                       return `${idx === 0 ? "M" : "L"} ${x} ${y}`;
                     }).join(" ")}
                     fill="none"
-                    stroke="#f59e0b"
+                    stroke="#3b82f6"
                     strokeWidth="2.5"
                     strokeDasharray="5 3"
                     strokeLinecap="round"
                   />
 
-                  {/* Validation Accuracy Path (Blue) */}
+                  {/* Validation Accuracy Path (White) */}
                   <path
                     d={TRAINING_HISTORY.map((p, idx) => {
                       const x = 40 + ((p.epoch - 1) / 29) * 650;
@@ -632,7 +632,7 @@ export default function PerformancePage() {
                       return `${idx === 0 ? "M" : "L"} ${x} ${y}`;
                     }).join(" ")}
                     fill="none"
-                    stroke="#38bdf8"
+                    stroke="#ffffff"
                     strokeWidth="3"
                     strokeLinecap="round"
                   />
@@ -652,8 +652,8 @@ export default function PerformancePage() {
                           cx={x}
                           cy={y}
                           r={isSelected ? 6 : 4}
-                          fill="#38bdf8"
-                          stroke="#0f172a"
+                          fill="#ffffff"
+                          stroke="#1d4ed8"
                           strokeWidth="2"
                           className="transition-all duration-200"
                         />
@@ -663,7 +663,7 @@ export default function PerformancePage() {
                             y1="20"
                             x2={x}
                             y2="260"
-                            stroke="#38bdf8"
+                            stroke="#ffffff"
                             strokeWidth="1.5"
                             strokeDasharray="3 3"
                             opacity="0.8"
@@ -701,16 +701,16 @@ export default function PerformancePage() {
                     </span>
                   </div>
                   <div className="flex flex-col justify-center">
-                    <span className="text-[10px] text-red-400 uppercase tracking-wide">Train Loss</span>
-                    <span className="text-base font-bold text-red-400 font-mono">{hoveredEpoch.train_loss.toFixed(3)}</span>
+                    <span className="text-[10px] text-blue-300 uppercase tracking-wide">Train Loss</span>
+                    <span className="text-base font-bold text-blue-300 font-mono">{hoveredEpoch.train_loss.toFixed(3)}</span>
                   </div>
                   <div className="flex flex-col justify-center">
-                    <span className="text-[10px] text-amber-400 uppercase tracking-wide">Val Loss</span>
-                    <span className="text-base font-bold text-amber-400 font-mono">{hoveredEpoch.val_loss.toFixed(3)}</span>
+                    <span className="text-[10px] text-blue-400 uppercase tracking-wide">Val Loss</span>
+                    <span className="text-base font-bold text-blue-400 font-mono">{hoveredEpoch.val_loss.toFixed(3)}</span>
                   </div>
                   <div className="flex flex-col justify-center">
-                    <span className="text-[10px] text-blue-400 uppercase tracking-wide">Val Accuracy</span>
-                    <span className="text-base font-bold text-blue-400 font-mono">{(hoveredEpoch.val_acc * 100).toFixed(1)}%</span>
+                    <span className="text-[10px] text-white uppercase tracking-wide">Val Accuracy</span>
+                    <span className="text-base font-bold text-white font-mono">{(hoveredEpoch.val_acc * 100).toFixed(1)}%</span>
                   </div>
                   <div className="flex flex-col justify-center">
                     <span className="text-[10px] text-slate-400 uppercase tracking-wide">Learning Rate</span>
@@ -725,7 +725,7 @@ export default function PerformancePage() {
               <div className="p-4 rounded-xl bg-slate-900/60 border border-slate-800">
                 <span className="text-xs text-slate-400 font-medium">Initial Loss (Epoch 1)</span>
                 <p className="text-lg font-bold text-slate-200 font-mono mt-1">1.62 <span className="text-xs text-slate-500 font-normal">→ 0.29 (Final)</span></p>
-                <p className="text-[11px] text-emerald-400 mt-1">82.1% loss reduction</p>
+                <p className="text-[11px] text-blue-400 mt-1">82.1% loss reduction</p>
               </div>
 
               <div className="p-4 rounded-xl bg-slate-900/60 border border-slate-800">
@@ -736,7 +736,7 @@ export default function PerformancePage() {
 
               <div className="p-4 rounded-xl bg-slate-900/60 border border-slate-800">
                 <span className="text-xs text-slate-400 font-medium">Generalization Gap</span>
-                <p className="text-lg font-bold text-amber-400 font-mono mt-1">Δ = 0.19</p>
+                <p className="text-lg font-bold text-blue-300 font-mono mt-1">Δ = 0.19</p>
                 <p className="text-[11px] text-slate-400 mt-1">Minimal overfitting observed</p>
               </div>
 

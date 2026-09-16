@@ -19,17 +19,17 @@ const config: Config = {
           900: "#1e3a8a",
         },
         cyclone: {
-          td:       "#22c55e",
-          ts:       "#eab308",
-          cat1:     "#f97316",
-          cat2:     "#ef4444",
-          cat3plus: "#9333ea",
+          td:       "#93c5fd", // light blue
+          ts:       "#60a5fa", // sky blue
+          cat1:     "#3b82f6", // royal blue
+          cat2:     "#2563eb", // dark blue
+          cat3plus: "#1d4ed8", // deep navy blue
         },
         data: {
-          observed:  "#22c55e",
+          observed:  "#38bdf8",
           historical:"#3b82f6",
-          simulated: "#eab308",
-          predicted: "#f97316",
+          simulated: "#60a5fa",
+          predicted: "#1d4ed8",
         },
       },
       fontFamily: {

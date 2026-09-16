@@ -29,27 +29,27 @@ export function AnalysisPanel({ result, isLoading, error }: Props) {
     return (
       <div className={`p-6 rounded-lg border ${
         isNoCyclone
-          ? "bg-amber-50 dark:bg-amber-900/20 border-amber-200 dark:border-amber-700"
-          : "bg-red-50 dark:bg-red-900/20 border-red-200 dark:border-red-700"
+          ? "bg-blue-50 dark:bg-blue-950/40 border-blue-200 dark:border-blue-800"
+          : "bg-slate-100 dark:bg-slate-900 border-slate-300 dark:border-slate-700"
       }`}>
         <div className={`flex items-center gap-2 mb-2 ${
-          isNoCyclone ? "text-amber-700 dark:text-amber-400" : "text-red-700 dark:text-red-400"
+          isNoCyclone ? "text-blue-700 dark:text-blue-300" : "text-slate-700 dark:text-slate-300"
         }`}>
           {isNoCyclone
-            ? <AlertTriangle className="w-5 h-5" />
-            : <XCircle className="w-5 h-5" />
+            ? <AlertTriangle className="w-5 h-5 text-blue-500" />
+            : <XCircle className="w-5 h-5 text-slate-500" />
           }
           <span className="font-semibold">
             {isNoCyclone ? "No Cyclone Detected" : "Analysis Failed"}
           </span>
         </div>
         <p className={`text-sm ${
-          isNoCyclone ? "text-amber-700 dark:text-amber-300" : "text-red-600 dark:text-red-300"
+          isNoCyclone ? "text-blue-800 dark:text-blue-200" : "text-slate-600 dark:text-slate-300"
         }`}>
           {error}
         </p>
         {isNoCyclone && (
-          <p className="text-xs text-amber-600 dark:text-amber-400 mt-3 border-t border-amber-200 dark:border-amber-700 pt-2">
+          <p className="text-xs text-blue-600 dark:text-blue-400 mt-3 border-t border-blue-200 dark:border-blue-800 pt-2">
             Tip: Upload a satellite infrared (IR) image with a visible tropical cyclone spiral structure.
           </p>
         )}
@@ -86,15 +86,15 @@ export function AnalysisPanel({ result, isLoading, error }: Props) {
       {det && (
         <div className={`p-4 rounded-lg border ${
           det.detected
-            ? "bg-red-50 dark:bg-red-900/20 border-red-200 dark:border-red-700"
-            : "bg-green-50 dark:bg-green-900/20 border-green-200 dark:border-green-700"
+            ? "bg-blue-50 dark:bg-blue-950/40 border-blue-300 dark:border-blue-700"
+            : "bg-slate-50 dark:bg-slate-800/60 border-slate-200 dark:border-slate-700"
         }`}>
           <div className="flex items-center gap-2 mb-1">
             {det.detected
-              ? <XCircle className="w-5 h-5 text-red-600 dark:text-red-400" />
-              : <CheckCircle className="w-5 h-5 text-green-600 dark:text-green-400" />
+              ? <CheckCircle className="w-5 h-5 text-blue-500" />
+              : <XCircle className="w-5 h-5 text-slate-400" />
             }
-            <span className={`font-semibold text-sm ${det.detected ? "text-red-700 dark:text-red-300" : "text-green-700 dark:text-green-300"}`}>
+            <span className={`font-semibold text-sm ${det.detected ? "text-blue-700 dark:text-blue-200" : "text-slate-700 dark:text-slate-300"}`}>
               {det.detected ? "Cyclone Detected" : "No Cyclone Detected"}
             </span>
           </div>
@@ -106,7 +106,7 @@ export function AnalysisPanel({ result, isLoading, error }: Props) {
               </div>
               <div className="w-full bg-slate-200 dark:bg-slate-700 rounded-full h-2">
                 <div
-                  className={`h-2 rounded-full transition-all ${det.detected ? "bg-red-500" : "bg-green-500"}`}
+                  className={`h-2 rounded-full transition-all ${det.detected ? "bg-blue-600" : "bg-slate-400"}`}
                   style={{ width: `${(det.confidence * 100).toFixed(1)}%` }}
                 />
               </div>
@@ -154,24 +154,24 @@ export function AnalysisPanel({ result, isLoading, error }: Props) {
 
       {/* Intensity */}
       {intensity?.available !== false && intensity?.predicted_wind_kt ? (
-        <div className="p-4 rounded-lg border bg-orange-50 dark:bg-orange-900/20 border-orange-200 dark:border-orange-700">
-          <p className="text-xs font-semibold text-orange-700 dark:text-orange-400 uppercase mb-2">Intensity Prediction</p>
+        <div className="p-4 rounded-lg border bg-blue-50 dark:bg-blue-950/40 border-blue-200 dark:border-blue-800">
+          <p className="text-xs font-semibold text-blue-700 dark:text-blue-300 uppercase mb-2">Intensity Prediction</p>
           <div className="grid grid-cols-2 gap-3">
             <div>
               <p className="text-xs text-slate-500 dark:text-slate-400">Max Wind Speed</p>
-              <p className="text-xl font-bold text-orange-700 dark:text-orange-400 font-mono">
+              <p className="text-xl font-bold text-blue-700 dark:text-blue-300 font-mono">
                 {intensity.predicted_wind_kt?.toFixed(0)} <span className="text-sm font-normal">kt</span>
               </p>
             </div>
             <div>
               <p className="text-xs text-slate-500 dark:text-slate-400">Central Pressure</p>
-              <p className="text-xl font-bold text-orange-700 dark:text-orange-400 font-mono">
+              <p className="text-xl font-bold text-blue-700 dark:text-blue-300 font-mono">
                 {intensity.predicted_pressure_hpa?.toFixed(0)} <span className="text-sm font-normal">hPa</span>
               </p>
             </div>
           </div>
           {intensity.disclaimer && (
-            <p className="text-xs text-orange-600 dark:text-orange-400 mt-2 italic">{intensity.disclaimer}</p>
+            <p className="text-xs text-blue-600 dark:text-blue-400 mt-2 italic">{intensity.disclaimer}</p>
           )}
         </div>
       ) : intensity?.available === false ? (

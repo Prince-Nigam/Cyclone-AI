@@ -27,10 +27,10 @@ export default function AboutPage() {
         </p>
 
         <h2 className="font-bold text-slate-800 flex items-center gap-1.5">
-          <AlertTriangle className="w-4 h-4 text-amber-500" />
+          <AlertTriangle className="w-4 h-4 text-blue-500" />
           Important Disclaimer
         </h2>
-        <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-3 text-sm text-yellow-800">
+        <div className="bg-blue-50 dark:bg-blue-950/40 border border-blue-200 dark:border-blue-800 rounded-lg p-3 text-sm text-blue-900 dark:text-blue-200">
           This is a <strong>research prototype</strong> for the Smart India Hackathon.
           It is NOT an official weather forecasting or warning system.
           All predictions are clearly labeled as model outputs.

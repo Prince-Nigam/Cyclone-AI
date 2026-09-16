@@ -68,10 +68,10 @@ const FEATURE_CARDS = [
 
 const COLOR_MAP: Record<string, { bg: string; icon: string; tag: string }> = {
   blue:   { bg: "bg-blue-100   dark:bg-blue-500/15",   icon: "text-blue-600   dark:text-blue-400",   tag: "bg-blue-100   dark:bg-blue-500/20   text-blue-700   dark:text-blue-300"   },
-  purple: { bg: "bg-purple-100 dark:bg-purple-500/15", icon: "text-purple-600 dark:text-purple-400", tag: "bg-purple-100 dark:bg-purple-500/20 text-purple-700 dark:text-purple-300" },
-  orange: { bg: "bg-orange-100 dark:bg-orange-500/15", icon: "text-orange-600 dark:text-orange-400", tag: "bg-orange-100 dark:bg-orange-500/20 text-orange-700 dark:text-orange-300" },
-  red:    { bg: "bg-red-100    dark:bg-red-500/15",    icon: "text-red-600    dark:text-red-400",    tag: "bg-red-100    dark:bg-red-500/20    text-red-700    dark:text-red-300"    },
-  cyan:   { bg: "bg-cyan-100   dark:bg-cyan-500/15",   icon: "text-cyan-600   dark:text-cyan-400",   tag: "bg-cyan-100   dark:bg-cyan-500/20   text-cyan-700   dark:text-cyan-300"   },
+  purple: { bg: "bg-blue-100 dark:bg-blue-900/30", icon: "text-blue-600 dark:text-blue-300", tag: "bg-blue-100 dark:bg-blue-900/40 text-blue-700 dark:text-blue-300" },
+  orange: { bg: "bg-sky-100 dark:bg-sky-950/40", icon: "text-sky-600 dark:text-sky-400", tag: "bg-sky-100 dark:bg-sky-950/50 text-sky-700 dark:text-sky-300" },
+  red:    { bg: "bg-blue-100    dark:bg-blue-950/50",    icon: "text-blue-700    dark:text-blue-300",    tag: "bg-blue-100    dark:bg-blue-950/60    text-blue-800    dark:text-blue-200"    },
+  cyan:   { bg: "bg-sky-100   dark:bg-sky-900/20",   icon: "text-sky-500   dark:text-sky-300",   tag: "bg-sky-100   dark:bg-sky-900/30   text-sky-600   dark:text-sky-200"   },
   slate:  { bg: "bg-slate-100  dark:bg-slate-500/15",  icon: "text-slate-600  dark:text-slate-400",  tag: "bg-slate-100  dark:bg-slate-500/20  text-slate-700  dark:text-slate-300"  },
 };
 
@@ -82,10 +82,10 @@ const STAT_THEMES: Record<string, {
   gradient: string;
 }> = {
   red: {
-    border: "border-red-200 dark:border-red-500/30",
-    iconBg: "bg-red-100 dark:bg-red-500/20",
-    iconColor: "text-red-600 dark:text-red-400",
-    gradient: "from-red-500/10 dark:from-red-500/15 to-transparent",
+    border: "border-blue-300 dark:border-blue-500/40",
+    iconBg: "bg-blue-100 dark:bg-blue-500/20",
+    iconColor: "text-blue-600 dark:text-blue-400",
+    gradient: "from-blue-600/10 dark:from-blue-600/15 to-transparent",
   },
   blue: {
     border: "border-blue-200 dark:border-blue-500/30",
@@ -94,16 +94,16 @@ const STAT_THEMES: Record<string, {
     gradient: "from-blue-500/10 dark:from-blue-500/15 to-transparent",
   },
   green: {
-    border: "border-emerald-200 dark:border-emerald-500/30",
-    iconBg: "bg-emerald-100 dark:bg-emerald-500/20",
-    iconColor: "text-emerald-600 dark:text-emerald-400",
-    gradient: "from-emerald-500/10 dark:from-emerald-500/15 to-transparent",
+    border: "border-sky-200 dark:border-sky-500/30",
+    iconBg: "bg-sky-100 dark:bg-sky-500/20",
+    iconColor: "text-sky-600 dark:text-sky-400",
+    gradient: "from-sky-500/10 dark:from-sky-500/15 to-transparent",
   },
   purple: {
-    border: "border-purple-200 dark:border-purple-500/30",
-    iconBg: "bg-purple-100 dark:bg-purple-500/20",
-    iconColor: "text-purple-600 dark:text-purple-400",
-    gradient: "from-purple-500/10 dark:from-purple-500/15 to-transparent",
+    border: "border-blue-300 dark:border-blue-600/30",
+    iconBg: "bg-blue-100 dark:bg-blue-600/20",
+    iconColor: "text-blue-500 dark:text-blue-300",
+    gradient: "from-blue-700/10 dark:from-blue-700/15 to-transparent",
   },
 };
 
@@ -161,12 +161,12 @@ export default function DashboardPage() {
   const getAlertBadgeClass = (alert: string) => {
     switch (alert?.toUpperCase()) {
       case "RED":
-        return "bg-red-500/20 text-red-700 dark:text-red-400 border-red-500/30";
+        return "bg-blue-900/40 text-blue-200 border-blue-700/60";
       case "ORANGE":
-        return "bg-amber-500/20 text-amber-700 dark:text-amber-400 border-amber-500/30";
+        return "bg-blue-600/20 text-blue-300 border-blue-500/40";
       case "GREEN":
       default:
-        return "bg-emerald-500/20 text-emerald-700 dark:text-emerald-400 border-emerald-500/30";
+        return "bg-blue-500/20 text-blue-400 border-blue-500/30";
     }
   };
 
@@ -338,14 +338,14 @@ export default function DashboardPage() {
 
             <div>
               <div className="flex items-center gap-2 mb-1">
-                <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 text-xs font-semibold border border-emerald-500/30">
-                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-blue-500/20 text-blue-300 text-xs font-semibold border border-blue-500/30">
+                  <span className="w-1.5 h-1.5 rounded-full bg-blue-400 animate-pulse" />
                   Live Telemetry Active
                 </span>
               </div>
               <h1 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">
                 Tropical Cyclone{" "}
-                <span className="bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-cyan-400">
+                <span className="bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-blue-200">
                   AI Platform
                 </span>
               </h1>
@@ -417,7 +417,7 @@ export default function DashboardPage() {
                     : "text-slate-500 hover:text-slate-800 dark:hover:text-slate-200"
                 }`}
               >
-                <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+                <span className="w-2 h-2 rounded-full bg-blue-400 animate-pulse" />
                 Active Storms (Live)
                 <span className="ml-1 text-[10px] px-1.5 py-0.2 rounded-full bg-white/20 text-white">
                   {liveCyclones.length}
@@ -479,7 +479,7 @@ export default function DashboardPage() {
             </div>
           ) : liveCyclones.length === 0 ? (
             <div className="glass-card rounded-2xl p-8 text-center">
-              <Activity className="w-8 h-8 mx-auto mb-2 text-emerald-500" />
+              <Activity className="w-8 h-8 mx-auto mb-2 text-blue-500" />
               <p className="text-sm font-semibold text-slate-700 dark:text-slate-200">No Active Tropical Cyclones Detected</p>
               <p className="text-xs text-slate-400 mt-1">All ocean basins currently tranquil according to GDACS alert feeds.</p>
             </div>
@@ -501,7 +501,7 @@ export default function DashboardPage() {
                       <tr key={c.id} className="hover:bg-blue-50/60 dark:hover:bg-blue-500/10 transition-colors group">
                         <td className="px-3.5 py-2">
                           <div className="flex items-center gap-2">
-                            <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse flex-shrink-0" />
+                            <span className="w-2 h-2 rounded-full bg-blue-400 animate-pulse flex-shrink-0" />
                             <div className="max-w-[200px] truncate">
                               <p className="font-bold text-slate-900 dark:text-slate-100 text-xs truncate">
                                 {c.name !== "UNNAMED" ? c.name : c.title.slice(0, 30)}

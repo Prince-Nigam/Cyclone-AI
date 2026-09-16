@@ -28,9 +28,9 @@ export function OceanWeatherGrid({
 
   const getWindRiskClass = (windKt: number | null) => {
     if (!windKt) return "text-slate-700 dark:text-slate-300";
-    if (windKt >= 34) return "text-red-500 font-bold";
-    if (windKt >= 22) return "text-amber-500 font-semibold";
-    return "text-emerald-600 dark:text-emerald-400";
+    if (windKt >= 34) return "text-blue-800 dark:text-blue-200 font-bold";
+    if (windKt >= 22) return "text-blue-600 dark:text-blue-400 font-semibold";
+    return "text-blue-500 dark:text-blue-300";
   };
 
   const getRegionBadge = (region: string) => {
@@ -38,10 +38,10 @@ export function OceanWeatherGrid({
       case "AS":
         return { label: "Arabian Sea", color: "bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 border-blue-200 dark:border-blue-800" };
       case "BOB":
-        return { label: "Bay of Bengal", color: "bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-300 border-purple-200 dark:border-purple-800" };
+        return { label: "Bay of Bengal", color: "bg-blue-950/60 text-blue-200 border-blue-700/60" };
       case "IO":
       default:
-        return { label: "Indian Ocean", color: "bg-cyan-100 dark:bg-cyan-900/30 text-cyan-700 dark:text-cyan-300 border-cyan-200 dark:border-cyan-800" };
+        return { label: "Indian Ocean", color: "bg-sky-100 dark:bg-sky-900/30 text-sky-700 dark:text-sky-300 border-sky-200 dark:border-sky-800" };
     }
   };
 
@@ -56,7 +56,7 @@ export function OceanWeatherGrid({
           <div>
             <h2 className="font-bold text-slate-900 dark:text-slate-100 text-sm sm:text-base flex items-center gap-2">
               Indian Ocean Real-Time Monitoring Grid
-              <span className="text-xs px-2 py-0.5 rounded-full bg-emerald-100 dark:bg-emerald-900/40 text-emerald-700 dark:text-emerald-300 font-medium">
+              <span className="text-xs px-2 py-0.5 rounded-full bg-blue-100 dark:bg-blue-900/40 text-blue-700 dark:text-blue-300 font-medium">
                 Open-Meteo Live
               </span>
             </h2>
@@ -146,7 +146,7 @@ export function OceanWeatherGrid({
 
                   {/* Pressure */}
                   <div className="flex items-center gap-1.5">
-                    <Gauge className="w-3.5 h-3.5 text-purple-500 flex-shrink-0" />
+                    <Gauge className="w-3.5 h-3.5 text-blue-400 flex-shrink-0" />
                     <div>
                       <p className="text-[10px] text-slate-400">Pressure</p>
                       <p className="text-xs font-mono font-semibold text-slate-700 dark:text-slate-300">
@@ -157,7 +157,7 @@ export function OceanWeatherGrid({
 
                   {/* Temperature */}
                   <div className="flex items-center gap-1.5">
-                    <Thermometer className="w-3.5 h-3.5 text-orange-500 flex-shrink-0" />
+                    <Thermometer className="w-3.5 h-3.5 text-blue-500 flex-shrink-0" />
                     <div>
                       <p className="text-[10px] text-slate-400">Temp</p>
                       <p className="text-xs font-mono font-semibold text-slate-700 dark:text-slate-300">
@@ -168,7 +168,7 @@ export function OceanWeatherGrid({
 
                   {/* Humidity / Direction */}
                   <div className="flex items-center gap-1.5">
-                    <Droplets className="w-3.5 h-3.5 text-cyan-500 flex-shrink-0" />
+                    <Droplets className="w-3.5 h-3.5 text-blue-400 flex-shrink-0" />
                     <div>
                       <p className="text-[10px] text-slate-400">Humidity</p>
                       <p className="text-xs font-mono font-semibold text-slate-700 dark:text-slate-300">

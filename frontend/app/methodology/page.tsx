@@ -119,12 +119,12 @@ export default function MethodologyPage() {
         </div>
       ))}
 
-      <div className="bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-700 rounded-xl p-5">
-        <h2 className="font-bold text-yellow-800 dark:text-yellow-300 mb-2 flex items-center gap-1.5">
-          <AlertTriangle className="w-4 h-4 text-amber-500" />
+      <div className="bg-blue-50 dark:bg-blue-950/40 border border-blue-200 dark:border-blue-800 rounded-xl p-5">
+        <h2 className="font-bold text-blue-900 dark:text-blue-200 mb-2 flex items-center gap-1.5">
+          <AlertTriangle className="w-4 h-4 text-blue-500" />
           Important Limitations
         </h2>
-        <ul className="space-y-1 text-sm text-yellow-700 dark:text-yellow-400">
+        <ul className="space-y-1 text-sm text-blue-800 dark:text-blue-300">
           <li>• HURSAT-B1 data covers 1978–2015 only. Recent storm patterns may not be represented.</li>
           <li>• Models trained on single IR channel. Multi-channel input would improve accuracy.</li>
           <li>• Track prediction limited to 24h. Beyond 72h, errors increase significantly.</li>

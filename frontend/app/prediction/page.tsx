@@ -295,13 +295,13 @@ export default function PredictionPage() {
               <div className="space-y-1 max-h-48 overflow-y-auto">
                 {predictedTrack.map((pt) => (
                   <div key={pt.step} className="flex items-center justify-between text-xs py-1 border-b border-slate-50 dark:border-slate-700">
-                    <span className="text-orange-600 dark:text-orange-400 font-medium">t+{pt.hours_ahead}h</span>
+                    <span className="text-blue-600 dark:text-blue-400 font-medium">t+{pt.hours_ahead}h</span>
                     <span className="font-mono text-slate-700 dark:text-slate-300">{pt.lat.toFixed(2)}°N, {pt.lon.toFixed(2)}°E</span>
                   </div>
                 ))}
               </div>
               <p className="text-xs text-slate-400 mt-2 italic flex items-center gap-1">
-                <AlertTriangle className="w-3.5 h-3.5 inline text-amber-500" />
+                <AlertTriangle className="w-3.5 h-3.5 inline text-blue-400" />
                 Model predictions — not official forecasts
               </p>
             </div>

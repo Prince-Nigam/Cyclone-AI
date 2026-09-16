@@ -47,20 +47,20 @@ export function ActiveCyclonesPanel({
   const getAlertBadgeClass = (alert: string) => {
     switch (alert.toUpperCase()) {
       case "RED":
-        return "bg-red-500/20 text-red-700 dark:text-red-400 border-red-500/30";
+        return "bg-blue-900/40 text-blue-200 border-blue-700/60";
       case "ORANGE":
-        return "bg-amber-500/20 text-amber-700 dark:text-amber-400 border-amber-500/30";
+        return "bg-blue-600/20 text-blue-300 border-blue-500/40";
       case "GREEN":
       default:
-        return "bg-emerald-500/20 text-emerald-700 dark:text-emerald-400 border-emerald-500/30";
+        return "bg-blue-500/20 text-blue-400 border-blue-500/30";
     }
   };
 
   const getWindClass = (kt: number | null) => {
     if (!kt) return "text-slate-700 dark:text-slate-300";
-    if (kt >= 34) return "text-red-500 font-bold";
-    if (kt >= 22) return "text-amber-500 font-semibold";
-    return "text-emerald-600 dark:text-emerald-400";
+    if (kt >= 34) return "text-blue-800 dark:text-blue-200 font-bold";
+    if (kt >= 22) return "text-blue-600 dark:text-blue-400 font-semibold";
+    return "text-blue-500 dark:text-blue-300";
   };
 
   // Indian Ocean stations to show in empty state
@@ -71,7 +71,7 @@ export function ActiveCyclonesPanel({
       {/* Header */}
       <div className="flex items-center justify-between pb-3 border-b border-slate-200 dark:border-slate-800 mb-3">
         <div className="flex items-center gap-2">
-          <div className="p-2 rounded-xl bg-red-500/10 text-red-600 dark:text-red-400">
+          <div className="p-2 rounded-xl bg-blue-500/10 text-blue-600 dark:text-blue-400">
             <ShieldAlert className="w-5 h-5" />
           </div>
           <div>
@@ -147,9 +147,9 @@ export function ActiveCyclonesPanel({
         ) : filtered.length === 0 ? (
           <div className="space-y-3">
             {/* Status Banner */}
-            <div className="flex items-center gap-2 p-2.5 rounded-xl bg-emerald-500/10 border border-emerald-500/20">
-              <CheckCircle2 className="w-4 h-4 text-emerald-500 flex-shrink-0" />
-              <p className="text-[11px] font-semibold text-emerald-700 dark:text-emerald-300">
+            <div className="flex items-center gap-2 p-2.5 rounded-xl bg-blue-500/10 border border-blue-500/20">
+              <CheckCircle2 className="w-4 h-4 text-blue-400 flex-shrink-0" />
+              <p className="text-[11px] font-semibold text-blue-700 dark:text-blue-300">
                 {indianOceanOnly
                   ? "Indian Ocean — No active cyclones currently"
                   : "All ocean basins tranquil — No active cyclones"}
@@ -197,8 +197,8 @@ export function ActiveCyclonesPanel({
                     const isPointSelected = selectedPointName === pt.name;
                     const regionLabel = pt.region === "AS" ? "Arabian Sea" : pt.region === "BOB" ? "Bay of Bengal" : "Indian Ocean";
                     const regionColor = pt.region === "AS" ? "bg-blue-500/10 border-blue-500/20 text-blue-600 dark:text-blue-400"
-                      : pt.region === "BOB" ? "bg-purple-500/10 border-purple-500/20 text-purple-600 dark:text-purple-400"
-                      : "bg-cyan-500/10 border-cyan-500/20 text-cyan-600 dark:text-cyan-400";
+                      : pt.region === "BOB" ? "bg-blue-950/60 border-blue-700/60 text-blue-300"
+                      : "bg-sky-500/10 border-sky-500/20 text-sky-600 dark:text-sky-400";
 
                     return (
                       <div
@@ -239,21 +239,21 @@ export function ActiveCyclonesPanel({
                             <p className="text-[9px] text-slate-400">Wind</p>
                           </div>
                           <div className="text-center p-1 rounded-lg bg-slate-100 dark:bg-slate-800/60">
-                            <Gauge className="w-2.5 h-2.5 mx-auto mb-0.5 text-purple-500" />
+                            <Gauge className="w-2.5 h-2.5 mx-auto mb-0.5 text-blue-400" />
                             <p className="text-[10px] font-mono font-bold text-slate-700 dark:text-slate-300">
                               {pt.pressure_hpa ? `${Math.round(pt.pressure_hpa)}` : "—"}
                             </p>
                             <p className="text-[9px] text-slate-400">hPa</p>
                           </div>
                           <div className="text-center p-1 rounded-lg bg-slate-100 dark:bg-slate-800/60">
-                            <Thermometer className="w-2.5 h-2.5 mx-auto mb-0.5 text-orange-500" />
+                            <Thermometer className="w-2.5 h-2.5 mx-auto mb-0.5 text-blue-500" />
                             <p className="text-[10px] font-mono font-bold text-slate-700 dark:text-slate-300">
                               {pt.temp_c !== null ? `${pt.temp_c}°` : "—"}
                             </p>
                             <p className="text-[9px] text-slate-400">°C</p>
                           </div>
                           <div className="text-center p-1 rounded-lg bg-slate-100 dark:bg-slate-800/60">
-                            <Droplets className="w-2.5 h-2.5 mx-auto mb-0.5 text-cyan-500" />
+                            <Droplets className="w-2.5 h-2.5 mx-auto mb-0.5 text-blue-400" />
                             <p className="text-[10px] font-mono font-bold text-slate-700 dark:text-slate-300">
                               {pt.humidity_pct !== null ? `${pt.humidity_pct}%` : "—"}
                             </p>
@@ -310,7 +310,7 @@ export function ActiveCyclonesPanel({
                     <IntensityBadge intensity={cyclone.intensity_class} />
                     {cyclone.wind_kt && (
                       <span className="text-[11px] font-mono text-slate-600 dark:text-slate-300 flex items-center gap-0.5">
-                        <Wind className="w-3 h-3 text-cyan-500" />
+                        <Wind className="w-3 h-3 text-blue-400" />
                         {cyclone.wind_kt} kt ({cyclone.wind_kmh} km/h)
                       </span>
                     )}
@@ -347,8 +347,8 @@ export function ActiveCyclonesPanel({
       {/* Footer info */}
       <div className="mt-3 pt-2.5 border-t border-slate-200 dark:border-slate-800 text-[11px] text-slate-400 flex items-center justify-between">
         <span>Updates every ~5m</span>
-        <span className="text-emerald-500 font-medium flex items-center gap-1">
-          <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+        <span className="text-blue-400 font-medium flex items-center gap-1">
+          <span className="w-1.5 h-1.5 rounded-full bg-blue-400 animate-pulse" />
           Live Source
         </span>
       </div>

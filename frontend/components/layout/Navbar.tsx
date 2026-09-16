@@ -177,9 +177,9 @@ export function Navbar() {
 
                   {/* Eye thermal core */}
                   <radialGradient id="eyeCore" cx="50%" cy="50%" r="50%">
-                    <stop offset="0%" stopColor="#f59e0b" />
-                    <stop offset="60%" stopColor="#ef4444" />
-                    <stop offset="100%" stopColor="#7f1d1d" stopOpacity="0.2" />
+                    <stop offset="0%" stopColor="#93c5fd" />
+                    <stop offset="60%" stopColor="#3b82f6" />
+                    <stop offset="100%" stopColor="#1e3a8a" stopOpacity="0.4" />
                   </radialGradient>
 
                   <clipPath id="globeClip">
@@ -199,14 +199,14 @@ export function Navbar() {
                   {/* Subtle stylized continent / landmass contours */}
                   <path
                     d="M13 11 C15 13 19 12 21 14 C23 16 22 19 19 22 C17 24 18 27 16 29 C14 26 12 22 11 18 Z"
-                    fill="rgba(52, 211, 153, 0.18)"
-                    stroke="rgba(52, 211, 153, 0.35)"
+                    fill="rgba(96, 165, 250, 0.18)"
+                    stroke="rgba(96, 165, 250, 0.35)"
                     strokeWidth="0.6"
                   />
                   <path
                     d="M24 10 C27 11 31 15 30 19 C28 21 26 20 25 18 C24 15 25 12 24 10 Z"
-                    fill="rgba(52, 211, 153, 0.14)"
-                    stroke="rgba(52, 211, 153, 0.25)"
+                    fill="rgba(96, 165, 250, 0.14)"
+                    stroke="rgba(96, 165, 250, 0.25)"
                     strokeWidth="0.5"
                   />
 
@@ -285,14 +285,14 @@ export function Navbar() {
                       isActive
                         ? "bg-blue-600 border-blue-400 text-white shadow-blue-500/25 shadow-md ring-1 ring-blue-400/40"
                         : link.highlight
-                        ? "bg-emerald-950/40 border-emerald-500/50 text-emerald-300 hover:bg-emerald-900/60 hover:border-emerald-400 hover:text-white"
-                        : "bg-slate-850 bg-[#0d1829] border-slate-700/80 text-slate-200 hover:text-white hover:bg-slate-800 hover:border-slate-500"
+                        ? "bg-blue-950/60 border-blue-500/50 text-blue-300 hover:bg-blue-900/60 hover:border-blue-400 hover:text-white"
+                        : "bg-[#0d1829] border-slate-700/80 text-slate-200 hover:text-white hover:bg-slate-800 hover:border-slate-500"
                     )}
                   >
-                    <LinkIcon className={clsx("w-3.5 h-3.5 flex-shrink-0", isActive ? "text-white" : link.highlight ? "text-emerald-400" : "text-slate-400 group-hover:text-white")} />
+                    <LinkIcon className={clsx("w-3.5 h-3.5 flex-shrink-0", isActive ? "text-white" : link.highlight ? "text-blue-400" : "text-slate-400 group-hover:text-white")} />
                     <span>{link.label}</span>
                     {link.highlight && (
-                      <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse ml-0.5" />
+                      <span className="w-1.5 h-1.5 rounded-full bg-blue-400 animate-pulse ml-0.5" />
                     )}
                   </Link>
 
@@ -323,9 +323,9 @@ export function Navbar() {
           {/* Right side */}
           <div className="hidden lg:flex items-center gap-2">
             <ThemeToggle />
-            <div className="flex items-center gap-1.5 bg-amber-500/10 border border-amber-500/25 px-2.5 py-1 rounded-full">
-              <Zap className="w-3 h-3 text-amber-400" />
-              <span className="text-xs text-amber-400 font-medium">Research</span>
+            <div className="flex items-center gap-1.5 bg-blue-500/10 border border-blue-500/25 px-2.5 py-1 rounded-full">
+              <Zap className="w-3 h-3 text-blue-400" />
+              <span className="text-xs text-blue-400 font-medium">Research</span>
             </div>
           </div>
 
@@ -356,7 +356,7 @@ export function Navbar() {
                   isActive
                     ? "bg-blue-600 border-blue-400 text-white shadow-md"
                     : link.highlight
-                    ? "bg-emerald-950/40 border-emerald-500/50 text-emerald-300 hover:text-white"
+                    ? "bg-blue-950/60 border-blue-500/50 text-blue-300 hover:text-white"
                     : "bg-slate-900/80 border-slate-800 text-slate-200 hover:text-white hover:bg-slate-800"
                 )}
               >
