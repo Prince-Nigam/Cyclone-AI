@@ -129,7 +129,7 @@ export function Navbar() {
       )}
     >
       {/* Sleek top hairline */}
-      <div className="h-px bg-gradient-to-r from-transparent via-blue-500/40 to-transparent" />
+      <div className="h-px bg-gradient-to-r from-transparent via-emerald-500/40 to-transparent" />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-14">
@@ -262,7 +262,7 @@ export function Navbar() {
             </div>
             <div className="hidden sm:flex flex-col leading-none">
               <span className="text-white font-extrabold text-sm tracking-tight">CYCLONE</span>
-              <span className="text-blue-400 font-bold text-xs tracking-widest">AI PLATFORM</span>
+              <span className="text-emerald-400 font-bold text-xs tracking-widest">AI PLATFORM</span>
             </div>
           </Link>
 
@@ -283,7 +283,7 @@ export function Navbar() {
                     className={clsx(
                       "flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold tracking-wide border transition-all duration-150 shadow-sm",
                       isActive
-                        ? "bg-blue-600 border-blue-400 text-white shadow-blue-500/25 shadow-md ring-1 ring-blue-400/40"
+                        ? "bg-emerald-600 border-emerald-400 text-white shadow-emerald-500/25 shadow-md ring-1 ring-emerald-400/40"
                         : link.highlight
                         ? "bg-emerald-950/50 border-emerald-500/50 text-emerald-300 hover:bg-emerald-900/60 hover:border-emerald-400 hover:text-white shadow-sm shadow-emerald-500/15"
                         : "bg-[#0d1829] border-slate-700/80 text-slate-200 hover:text-white hover:bg-slate-800 hover:border-slate-500"
@@ -305,7 +305,7 @@ export function Navbar() {
                       {/* Arrow */}
                       <div className="absolute -top-1.5 left-1/2 -translate-x-1/2 w-3 h-3 bg-slate-900 border-l border-t border-slate-700/80 rotate-45" />
                       <p className="text-xs font-semibold text-white mb-2 flex items-center gap-1.5">
-                        <LinkIcon className="w-3.5 h-3.5 text-blue-400" />
+                        <LinkIcon className="w-3.5 h-3.5 text-emerald-400" />
                         {link.label}
                       </p>
                       <ul className="space-y-1">
@@ -358,9 +358,9 @@ export function Navbar() {
                 className={clsx(
                   "flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-sm font-semibold border transition-all",
                   isActive
-                    ? "bg-blue-600 border-blue-400 text-white shadow-md"
+                    ? "bg-emerald-600 border-emerald-400 text-white shadow-md"
                     : link.highlight
-                    ? "bg-blue-950/60 border-blue-500/50 text-blue-300 hover:text-white"
+                    ? "bg-emerald-950/60 border-emerald-500/50 text-emerald-300 hover:text-white"
                     : "bg-slate-900/80 border-slate-800 text-slate-200 hover:text-white hover:bg-slate-800"
                 )}
               >
