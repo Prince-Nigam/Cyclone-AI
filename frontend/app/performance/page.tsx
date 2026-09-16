@@ -119,59 +119,59 @@ export default function PerformancePage() {
 
       {/* ── Key Stat Cards ─────────────────────────────────── */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        <div className="stat-card bg-gradient-to-br from-blue-500/10 via-blue-500/5 to-transparent border-blue-500/20">
+        <div className="stat-card bg-gradient-to-br from-emerald-500/10 via-emerald-500/5 to-transparent border-emerald-500/30 shadow-sm shadow-emerald-500/10">
           <div className="flex items-center justify-between mb-2">
             <span className="text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider">Detection Accuracy</span>
-            <span className="p-1.5 rounded-lg bg-blue-500/20 text-blue-500">
+            <span className="p-1.5 rounded-lg bg-emerald-500/20 text-emerald-500">
               <Target className="w-4 h-4" />
             </span>
           </div>
           <p className="text-2xl font-black text-slate-900 dark:text-white font-mono">85.4%</p>
           <div className="flex items-center justify-between text-xs text-slate-500 dark:text-slate-400 mt-1">
             <span>EfficientNet-B0</span>
-            <span className="text-blue-600 dark:text-blue-400 font-semibold">F1: 0.851</span>
+            <span className="text-emerald-600 dark:text-emerald-400 font-semibold">F1: 0.851</span>
           </div>
         </div>
 
-        <div className="stat-card bg-gradient-to-br from-blue-600/10 via-blue-600/5 to-transparent border-blue-500/20">
+        <div className="stat-card bg-gradient-to-br from-amber-500/10 via-amber-500/5 to-transparent border-amber-500/30">
           <div className="flex items-center justify-between mb-2">
             <span className="text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider">Pattern Classifier</span>
-            <span className="p-1.5 rounded-lg bg-blue-500/20 text-blue-400">
+            <span className="p-1.5 rounded-lg bg-amber-500/20 text-amber-500">
               <BarChart3 className="w-4 h-4" />
             </span>
           </div>
           <p className="text-2xl font-black text-slate-900 dark:text-white font-mono">76.8%</p>
           <div className="flex items-center justify-between text-xs text-slate-500 dark:text-slate-400 mt-1">
             <span>ResNet50 (5 classes)</span>
-            <span className="text-blue-500 dark:text-blue-300 font-semibold">Avg F1: 0.748</span>
+            <span className="text-amber-600 dark:text-amber-400 font-semibold">Avg F1: 0.748</span>
           </div>
         </div>
 
-        <div className="stat-card bg-gradient-to-br from-blue-700/10 via-blue-700/5 to-transparent border-blue-500/20">
+        <div className="stat-card bg-gradient-to-br from-orange-500/10 via-orange-500/5 to-transparent border-orange-500/30">
           <div className="flex items-center justify-between mb-2">
             <span className="text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider">Intensity MAE</span>
-            <span className="p-1.5 rounded-lg bg-blue-500/20 text-blue-400">
+            <span className="p-1.5 rounded-lg bg-orange-500/20 text-orange-500">
               <TrendingUp className="w-4 h-4" />
             </span>
           </div>
           <p className="text-2xl font-black text-slate-900 dark:text-white font-mono">8.32 kt</p>
           <div className="flex items-center justify-between text-xs text-slate-500 dark:text-slate-400 mt-1">
             <span>CNN + LSTM(128)</span>
-            <span className="text-blue-400 dark:text-blue-300 font-semibold">R² = 0.835</span>
+            <span className="text-orange-600 dark:text-orange-400 font-semibold">R² = 0.835</span>
           </div>
         </div>
 
-        <div className="stat-card bg-gradient-to-br from-blue-800/10 via-blue-800/5 to-transparent border-blue-500/20">
+        <div className="stat-card bg-gradient-to-br from-red-500/10 via-red-500/5 to-transparent border-red-500/30 shadow-sm shadow-red-500/10">
           <div className="flex items-center justify-between mb-2">
             <span className="text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider">Track Position Error</span>
-            <span className="p-1.5 rounded-lg bg-blue-500/20 text-blue-400">
+            <span className="p-1.5 rounded-lg bg-red-500/20 text-red-500">
               <Map className="w-4 h-4" />
             </span>
           </div>
           <p className="text-2xl font-black text-slate-900 dark:text-white font-mono">48.6 km</p>
           <div className="flex items-center justify-between text-xs text-slate-500 dark:text-slate-400 mt-1">
             <span>Seq2Seq LSTM 24h</span>
-            <span className="text-blue-500 dark:text-blue-300 font-semibold">R² = 0.892</span>
+            <span className="text-red-600 dark:text-red-400 font-semibold">R² = 0.892</span>
           </div>
         </div>
       </div>
@@ -213,8 +213,8 @@ export default function PerformancePage() {
                   <span className="font-bold text-slate-900 dark:text-slate-100 text-base capitalize flex items-center gap-1.5">
                     {model.name}
                   </span>
-                  <span className="text-[11px] px-2.5 py-0.5 rounded-full font-bold bg-blue-500/20 text-blue-700 dark:text-blue-300 border border-blue-500/30 flex items-center gap-1">
-                    <span className="w-1.5 h-1.5 rounded-full bg-blue-500 animate-pulse" />
+                  <span className="text-[11px] px-2.5 py-0.5 rounded-full font-bold bg-emerald-500/20 text-emerald-700 dark:text-emerald-300 border border-emerald-500/30 flex items-center gap-1">
+                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
                     ready
                   </span>
                 </div>
@@ -289,12 +289,12 @@ export default function PerformancePage() {
                 </thead>
                 <tbody className="divide-y divide-slate-800">
                   {models.map((m) => (
-                    <tr key={m.id} className="hover:bg-blue-500/10 transition-colors">
+                    <tr key={m.id} className="hover:bg-emerald-500/5 transition-colors">
                       <td className="px-4 py-3 font-bold text-slate-100 capitalize">{m.name}</td>
                       <td className="px-4 py-3 font-mono text-xs text-slate-300">{m.architecture}</td>
-                      <td className="px-4 py-3 font-mono text-xs text-blue-400">{m.version}</td>
+                      <td className="px-4 py-3 font-mono text-xs text-emerald-400">{m.version}</td>
                       <td className="px-4 py-3">
-                        <span className="text-[11px] font-bold px-2 py-0.5 rounded-full bg-blue-500/20 text-blue-300 border border-blue-500/30">
+                        <span className="text-[11px] font-bold px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">
                           {m.status || "loaded"}
                         </span>
                       </td>

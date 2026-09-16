@@ -269,7 +269,7 @@ export default function DetectionPage() {
           <button
             onClick={runAnalysis}
             disabled={!selectedFile || isAnalyzing}
-            className="w-full flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-700 disabled:bg-slate-300 dark:disabled:bg-slate-700 disabled:cursor-not-allowed text-white font-semibold py-3 rounded-xl transition-colors shadow-sm"
+            className="w-full flex items-center justify-center gap-2 bg-emerald-600 hover:bg-emerald-700 disabled:bg-slate-300 dark:disabled:bg-slate-700 disabled:cursor-not-allowed text-white font-semibold py-3 rounded-xl transition-colors shadow-sm shadow-emerald-500/20"
           >
             {isAnalyzing ? (
               <><Loader2 className="w-4 h-4 animate-spin" /> Analyzing...</>
@@ -286,11 +286,11 @@ export default function DetectionPage() {
             ].map(({ title, arch, details }) => (
               <div key={title} className="bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 p-3">
                 <p className="font-semibold text-slate-800 dark:text-slate-200 text-sm">{title}</p>
-                <p className="text-xs text-blue-600 font-mono mb-2">{arch}</p>
+                <p className="text-xs text-emerald-600 dark:text-emerald-400 font-mono mb-2">{arch}</p>
                 <ul className="space-y-0.5">
                   {details.map((d) => (
                     <li key={d} className="text-xs text-slate-500 dark:text-slate-400 flex gap-1">
-                      <span className="text-blue-400">▸</span>{d}
+                      <span className="text-emerald-400">▸</span>{d}
                     </li>
                   ))}
                 </ul>

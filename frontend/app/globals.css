@@ -118,8 +118,13 @@ body::before {
   }
 
   .gradient-text {
-    @apply bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-blue-100;
+    @apply bg-clip-text text-transparent bg-gradient-to-r from-emerald-400 via-sky-300 to-red-400;
   }
+
+  /* Alert glow utilities */
+  .glow-red    { box-shadow: 0 0 22px rgba(239,68,68,0.40); }
+  .glow-green  { box-shadow: 0 0 22px rgba(16,185,129,0.40); }
+  .glow-amber  { box-shadow: 0 0 20px rgba(245,158,11,0.35); }
 }
 
 /* ── Animations ─────────────────────────────────── */

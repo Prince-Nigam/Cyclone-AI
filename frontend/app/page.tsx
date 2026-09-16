@@ -208,11 +208,11 @@ export default function DashboardPage() {
 
       {/* ── Hero ──────────────────────────────────────────── */}
       <section className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-slate-900 via-[#0a152d] to-slate-900 border border-slate-700/60 p-6 sm:p-8 shadow-2xl animate-fade-in-up">
-        {/* Radar dual glow blobs (Red alert vs Emerald safe) */}
-        <div className="pointer-events-none absolute -top-24 -right-24 w-80 h-80 rounded-full bg-red-600/15 blur-3xl" />
-        <div className="pointer-events-none absolute -bottom-16 -left-16 w-64 h-64 rounded-full bg-emerald-600/15 blur-3xl" />
+        {/* Subtle ambient oceanic glow */}
+        <div className="pointer-events-none absolute -top-24 -right-24 w-80 h-80 rounded-full bg-blue-600/15 blur-3xl" />
+        <div className="pointer-events-none absolute -bottom-16 -left-16 w-64 h-64 rounded-full bg-slate-700/20 blur-3xl" />
         {/* Subtle grid overlay */}
-        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_80%_50%_at_50%_-20%,rgba(16,185,129,0.08),transparent)]" />
+        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_80%_50%_at_50%_-20%,rgba(59,130,246,0.10),transparent)]" />
 
         <div className="relative">
           {/* Top header row: Logo + Title + Live badge */}
@@ -345,7 +345,7 @@ export default function DashboardPage() {
               </div>
               <h1 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">
                 Tropical Cyclone{" "}
-                <span className="bg-clip-text text-transparent bg-gradient-to-r from-emerald-400 via-sky-300 to-rose-400">
+                <span className="bg-clip-text text-transparent bg-gradient-to-r from-sky-400 to-blue-200">
                   AI Platform
                 </span>
               </h1>
@@ -368,12 +368,8 @@ export default function DashboardPage() {
 
           {/* Buttons */}
           <div className="flex flex-wrap gap-3">
-            <Link href="/live-satellite" className="btn-primary flex items-center gap-2 shadow-lg shadow-blue-600/30 hover:shadow-emerald-500/30">
-              <span className="relative flex h-2.5 w-2.5">
-                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-                <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-400"></span>
-              </span>
-              <Radio className="w-4 h-4" /> Live Satellite &amp; Storms
+            <Link href="/live-satellite" className="btn-primary flex items-center gap-2">
+              <Radio className="w-4 h-4 animate-pulse text-emerald-300" /> Live Satellite &amp; Storms
             </Link>
             <Link href="/satellite" className="btn-secondary">
               AI Image Analysis <ArrowRight className="w-4 h-4" />

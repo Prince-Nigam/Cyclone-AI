@@ -128,8 +128,8 @@ export function Navbar() {
           : "bg-[#070e1c] border-b border-slate-700/50"
       )}
     >
-      {/* Top radar spectrum accent line (Green safe -> Sky -> Red alert) */}
-      <div className="h-[2px] bg-gradient-to-r from-emerald-500 via-sky-500 to-rose-500 opacity-85 shadow-[0_0_8px_rgba(16,185,129,0.5)]" />
+      {/* Sleek top hairline */}
+      <div className="h-px bg-gradient-to-r from-transparent via-blue-500/40 to-transparent" />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-14">
