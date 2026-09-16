@@ -119,7 +119,7 @@ export default function PerformancePage() {
 
       {/* ── Key Stat Cards ─────────────────────────────────── */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        <div className="stat-card bg-gradient-to-br from-emerald-500/10 via-emerald-500/5 to-transparent border-emerald-500/30 shadow-sm shadow-emerald-500/10">
+        <div className="stat-card bg-gradient-to-br from-emerald-500/10 to-transparent border-emerald-500/30 shadow-sm shadow-emerald-500/10">
           <div className="flex items-center justify-between mb-2">
             <span className="text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider">Detection Accuracy</span>
             <span className="p-1.5 rounded-lg bg-emerald-500/20 text-emerald-500">
@@ -133,35 +133,35 @@ export default function PerformancePage() {
           </div>
         </div>
 
-        <div className="stat-card bg-gradient-to-br from-amber-500/10 via-amber-500/5 to-transparent border-amber-500/30">
+        <div className="stat-card bg-gradient-to-br from-slate-500/10 to-transparent border-slate-300 dark:border-slate-700">
           <div className="flex items-center justify-between mb-2">
             <span className="text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider">Pattern Classifier</span>
-            <span className="p-1.5 rounded-lg bg-amber-500/20 text-amber-500">
+            <span className="p-1.5 rounded-lg bg-slate-500/15 text-slate-500 dark:text-slate-400">
               <BarChart3 className="w-4 h-4" />
             </span>
           </div>
           <p className="text-2xl font-black text-slate-900 dark:text-white font-mono">76.8%</p>
           <div className="flex items-center justify-between text-xs text-slate-500 dark:text-slate-400 mt-1">
             <span>ResNet50 (5 classes)</span>
-            <span className="text-amber-600 dark:text-amber-400 font-semibold">Avg F1: 0.748</span>
+            <span className="text-slate-600 dark:text-slate-300 font-semibold">Avg F1: 0.748</span>
           </div>
         </div>
 
-        <div className="stat-card bg-gradient-to-br from-orange-500/10 via-orange-500/5 to-transparent border-orange-500/30">
+        <div className="stat-card bg-gradient-to-br from-slate-500/10 to-transparent border-slate-300 dark:border-slate-700">
           <div className="flex items-center justify-between mb-2">
             <span className="text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider">Intensity MAE</span>
-            <span className="p-1.5 rounded-lg bg-orange-500/20 text-orange-500">
+            <span className="p-1.5 rounded-lg bg-slate-500/15 text-slate-500 dark:text-slate-400">
               <TrendingUp className="w-4 h-4" />
             </span>
           </div>
           <p className="text-2xl font-black text-slate-900 dark:text-white font-mono">8.32 kt</p>
           <div className="flex items-center justify-between text-xs text-slate-500 dark:text-slate-400 mt-1">
             <span>CNN + LSTM(128)</span>
-            <span className="text-orange-600 dark:text-orange-400 font-semibold">R² = 0.835</span>
+            <span className="text-slate-600 dark:text-slate-300 font-semibold">R² = 0.835</span>
           </div>
         </div>
 
-        <div className="stat-card bg-gradient-to-br from-red-500/10 via-red-500/5 to-transparent border-red-500/30 shadow-sm shadow-red-500/10">
+        <div className="stat-card bg-gradient-to-br from-red-500/10 to-transparent border-red-500/30 shadow-sm shadow-red-500/10">
           <div className="flex items-center justify-between mb-2">
             <span className="text-xs font-bold text-slate-700 dark:text-slate-300 uppercase tracking-wider">Track Position Error</span>
             <span className="p-1.5 rounded-lg bg-red-500/20 text-red-500">
