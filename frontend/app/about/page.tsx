@@ -206,28 +206,6 @@ export default function AboutPage() {
         </a>
       </section>
 
-      {/* ── Disclaimer ──────────────────────────────────────── */}
-      <section>
-        <div className="alert-box alert-warning">
-          <AlertTriangle className="w-5 h-5 flex-shrink-0 mt-0.5" />
-          <div className="space-y-1">
-            <p className="font-bold text-sm">Research Prototype Disclaimer</p>
-            <p className="text-xs leading-relaxed">
-              This platform is a <strong>research prototype</strong> built for Smart India Hackathon 2024
-              under the Ministry of Earth Sciences (MoES) problem statement. It is{" "}
-              <strong>NOT</strong> an official operational meteorological warning or forecast service.
-              All predictions are clearly labeled with their data provenance (PREDICTED / SIMULATED).
-              For official storm advisories, cyclone track forecasts and evacuation orders in India,
-              always consult the{" "}
-              <a href="https://mausam.imd.gov.in" target="_blank" rel="noopener noreferrer"
-                className="underline font-semibold hover:text-amber-600 dark:hover:text-amber-100">
-                India Meteorological Department (IMD)
-              </a>.
-            </p>
-          </div>
-        </div>
-      </section>
-
     </div>
   );
 }

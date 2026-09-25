@@ -660,26 +660,6 @@ export default function DashboardPage() {
         </div>
       </section>
 
-      {/* ── DISCLAIMER ──────────────────────────────────────────── */}
-      <section className="animate-fade-in-up animate-delay-400">
-        <div className="alert-box alert-warning">
-          <AlertTriangle className="w-4 h-4 flex-shrink-0 mt-0.5" />
-          <div>
-            <p className="font-semibold text-sm mb-0.5">Research Prototype — SIH 2024</p>
-            <p className="text-xs leading-relaxed">
-              This platform is a research prototype for Smart India Hackathon under{" "}
-              <strong>Ministry of Earth Sciences (MoES)</strong>. It is{" "}
-              <strong>NOT</strong> an official operational meteorological warning service.
-              For official cyclone alerts in India, refer to the{" "}
-              <a href="https://mausam.imd.gov.in" target="_blank" rel="noopener noreferrer"
-                className="underline font-semibold hover:text-amber-600 dark:hover:text-amber-200">
-                India Meteorological Department (IMD)
-              </a>.
-            </p>
-          </div>
-        </div>
-      </section>
-
     </div>
   );
 }

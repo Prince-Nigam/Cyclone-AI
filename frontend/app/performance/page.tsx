@@ -493,16 +493,6 @@ export default function PerformancePage() {
         </div>
       )}
 
-      {/* ── Disclaimer ───────────────────────────────────────── */}
-      <div className="alert-box alert-warning">
-        <AlertTriangle className="w-4 h-4 flex-shrink-0 mt-0.5" />
-        <p className="text-xs leading-relaxed">
-          All evaluation metrics are computed on held-out test data (HURSAT-B1 + IBTrACS 2014–2015 seasons).
-          This is a <strong>research prototype</strong> for Smart India Hackathon 2024 under Ministry of Earth Sciences.
-          Not for operational meteorological use.
-        </p>
-      </div>
-
     </div>
   );
 }
