@@ -1,13 +1,12 @@
 "use client";
 
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { clsx } from "clsx";
 import {
   Menu, X, LayoutDashboard, Scan, TrendingUp,
-  Map as MapIcon, Radio, History, BarChart3, BookOpen, Info,
-  ChevronDown, Wind, Zap,
+  Map as MapIcon, Radio, History, BarChart3,
 } from "lucide-react";
 import { ThemeToggle } from "@/components/ui/ThemeToggle";
 
@@ -16,84 +15,22 @@ interface NavItem {
   label: string;
   Icon: React.ComponentType<{ className?: string }>;
   badge?: string;
-  badgeColor?: string;
-  description: string;
 }
 
 const NAV_ITEMS: NavItem[] = [
-  {
-    href: "/",
-    label: "Dashboard",
-    Icon: LayoutDashboard,
-    description: "Platform overview & live storm monitor",
-  },
-  {
-    href: "/detection",
-    label: "Detection",
-    Icon: Scan,
-    description: "EfficientNet-B0 binary cyclone detection",
-  },
-  {
-    href: "/satellite",
-    label: "AI Analysis",
-    Icon: Wind,
-    description: "Satellite image analysis with Grad-CAM XAI",
-  },
-  {
-    href: "/prediction",
-    label: "Prediction",
-    Icon: TrendingUp,
-    description: "24h track & intensity forecasting",
-  },
-  {
-    href: "/live-satellite",
-    label: "Live",
-    Icon: Radio,
-    badge: "LIVE",
-    badgeColor: "emerald",
-    description: "Real-time GDACS cyclones & ocean grid",
-  },
-  {
-    href: "/map",
-    label: "Map",
-    Icon: MapIcon,
-    description: "Interactive GIS cyclone track map",
-  },
-  {
-    href: "/historical",
-    label: "Historical",
-    Icon: History,
-    description: "IBTrACS archive 1978–2015",
-  },
-  {
-    href: "/performance",
-    label: "Performance",
-    Icon: BarChart3,
-    description: "Model benchmarks & confusion matrix",
-  },
-];
-
-const MORE_ITEMS: NavItem[] = [
-  {
-    href: "/methodology",
-    label: "Methodology",
-    Icon: BookOpen,
-    description: "ML pipeline & architecture details",
-  },
-  {
-    href: "/about",
-    label: "About",
-    Icon: Info,
-    description: "Project info, team & MoES alignment",
-  },
+  { href: "/",             label: "Dashboard",   Icon: LayoutDashboard },
+  { href: "/detection",    label: "Detection",   Icon: Scan             },
+  { href: "/prediction",   label: "Prediction",  Icon: TrendingUp       },
+  { href: "/live-satellite", label: "Live",      Icon: Radio, badge: "LIVE" },
+  { href: "/map",          label: "Map",         Icon: MapIcon          },
+  { href: "/historical",   label: "Historical",  Icon: History          },
+  { href: "/performance",  label: "Performance", Icon: BarChart3        },
 ];
 
 export function Navbar() {
   const pathname = usePathname();
   const [mobileOpen, setMobileOpen] = useState(false);
-  const [moreOpen, setMoreOpen] = useState(false);
-  const [scrolled, setScrolled] = useState(false);
-  const moreRef = useRef<HTMLDivElement>(null);
+  const [scrolled, setScrolled]     = useState(false);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 6);
@@ -101,24 +38,7 @@ export function Navbar() {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-  // Close "More" dropdown on outside click
-  useEffect(() => {
-    const handler = (e: MouseEvent) => {
-      if (moreRef.current && !moreRef.current.contains(e.target as Node)) {
-        setMoreOpen(false);
-      }
-    };
-    document.addEventListener("mousedown", handler);
-    return () => document.removeEventListener("mousedown", handler);
-  }, []);
-
-  // Close mobile menu on route change
-  useEffect(() => {
-    setMobileOpen(false);
-    setMoreOpen(false);
-  }, [pathname]);
-
-  const isActive = (href: string) => pathname === href;
+  useEffect(() => { setMobileOpen(false); }, [pathname]);
 
   return (
     <header
@@ -129,10 +49,10 @@ export function Navbar() {
           : "bg-[var(--bg-nav)] border-b border-[var(--border-color)]"
       )}
     >
-      {/* ── Top accent line ── */}
+      {/* Top accent line */}
       <div className="h-[2px] bg-gradient-to-r from-blue-600 via-cyan-500 to-blue-600 opacity-80" />
 
-      {/* ── MoES banner strip ── */}
+      {/* MoES banner */}
       <div className="hidden sm:flex items-center justify-center gap-2 bg-blue-700 dark:bg-blue-900/80 py-1 px-4 text-[11px] text-blue-100 font-medium tracking-wide">
         <span className="opacity-80">Ministry of Earth Sciences (MoES) · Smart India Hackathon 2024</span>
         <span className="opacity-40 mx-1">|</span>
@@ -140,12 +60,11 @@ export function Navbar() {
       </div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-14">
+        <div className="flex items-center h-14 gap-3">
 
-          {/* ── Logo ── */}
-          <Link href="/" className="flex items-center gap-3 flex-shrink-0 group">
-            {/* Cyclone SVG logo */}
-            <div className="relative w-9 h-9 flex-shrink-0">
+          {/* ── Logo — fixed width left ── */}
+          <Link href="/" className="flex items-center gap-2.5 flex-shrink-0 group w-44">
+            <div className="w-9 h-9 flex-shrink-0">
               <svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg"
                 className="w-9 h-9 drop-shadow-[0_0_8px_rgba(59,130,246,0.5)] group-hover:drop-shadow-[0_0_14px_rgba(59,130,246,0.8)] transition-all duration-300">
                 <defs>
@@ -195,127 +114,55 @@ export function Navbar() {
                 </circle>
               </svg>
             </div>
-
             <div className="hidden sm:flex flex-col leading-none">
-              <span className="text-slate-900 dark:text-white font-extrabold text-sm tracking-tight">
-                CYCLONE AI
-              </span>
-              <span className="text-blue-600 dark:text-blue-400 font-semibold text-[10px] tracking-widest uppercase">
-                SIH Platform
-              </span>
+              <span className="text-slate-900 dark:text-white font-extrabold text-sm tracking-tight">CYCLONE AI</span>
+              <span className="text-blue-600 dark:text-blue-400 font-semibold text-[10px] tracking-widest uppercase">SIH Platform</span>
             </div>
           </Link>
 
-          {/* ── Desktop nav ── */}
-          <nav className="hidden lg:flex items-center gap-0.5" role="navigation" aria-label="Main navigation">
-            {NAV_ITEMS.map((item) => {
-              const active = isActive(item.href);
-              const LinkIcon = item.Icon;
-              return (
-                <Link
-                  key={item.href}
-                  href={item.href}
-                  title={item.description}
-                  className={clsx(
-                    "relative flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all duration-150",
-                    active
-                      ? "bg-blue-600 text-white shadow-sm shadow-blue-600/30"
-                      : item.badge === "LIVE"
-                      ? "text-emerald-600 dark:text-emerald-400 hover:bg-emerald-50 dark:hover:bg-emerald-900/20"
-                      : "text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800/80"
-                  )}
-                >
-                  <LinkIcon className="w-3.5 h-3.5 flex-shrink-0" />
-                  <span>{item.label}</span>
-                  {item.badge && (
-                    <span className={clsx(
-                      "flex items-center gap-0.5 text-[9px] font-bold px-1.5 py-0.5 rounded-full",
+          {/* ── Desktop nav — centered pill box ── */}
+          <nav className="hidden lg:flex flex-1 items-center justify-center">
+            <div className="flex items-center bg-slate-100 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 rounded-xl px-1.5 py-1 gap-0.5">
+              {NAV_ITEMS.map((item) => {
+                const active = pathname === item.href;
+                const LinkIcon = item.Icon;
+                const isLive = item.badge === "LIVE";
+                return (
+                  <Link
+                    key={item.href}
+                    href={item.href}
+                    className={clsx(
+                      "flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all duration-150 whitespace-nowrap",
                       active
-                        ? "bg-white/20 text-white"
-                        : "bg-emerald-100 dark:bg-emerald-900/40 text-emerald-600 dark:text-emerald-400"
-                    )}>
-                      <span className={clsx(
-                        "w-1.5 h-1.5 rounded-full",
-                        active ? "bg-white animate-pulse" : "bg-emerald-500 animate-pulse"
-                      )} />
-                      {item.badge}
-                    </span>
-                  )}
-                </Link>
-              );
-            })}
-
-            {/* More dropdown */}
-            <div className="relative" ref={moreRef}>
-              <button
-                onClick={() => setMoreOpen(!moreOpen)}
-                className={clsx(
-                  "flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all duration-150",
-                  MORE_ITEMS.some(i => isActive(i.href))
-                    ? "bg-blue-600 text-white"
-                    : "text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800/80"
-                )}
-              >
-                More
-                <ChevronDown className={clsx("w-3 h-3 transition-transform duration-200", moreOpen ? "rotate-180" : "")} />
-              </button>
-
-              {moreOpen && (
-                <div className="absolute top-full right-0 mt-2 w-56 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl shadow-xl shadow-black/15 dark:shadow-black/50 z-50 overflow-hidden animate-fade-in">
-                  {MORE_ITEMS.map((item) => {
-                    const ItemIcon = item.Icon;
-                    const active = isActive(item.href);
-                    return (
-                      <Link
-                        key={item.href}
-                        href={item.href}
-                        className={clsx(
-                          "flex items-start gap-3 px-4 py-3 transition-colors",
-                          active
-                            ? "bg-blue-50 dark:bg-blue-900/30"
-                            : "hover:bg-slate-50 dark:hover:bg-slate-800"
-                        )}
-                      >
-                        <div className={clsx(
-                          "w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0 mt-0.5",
-                          active ? "bg-blue-600 text-white" : "bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400"
-                        )}>
-                          <ItemIcon className="w-4 h-4" />
-                        </div>
-                        <div>
-                          <p className={clsx("text-sm font-semibold", active ? "text-blue-600 dark:text-blue-400" : "text-slate-800 dark:text-slate-200")}>
-                            {item.label}
-                          </p>
-                          <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">{item.description}</p>
-                        </div>
-                      </Link>
-                    );
-                  })}
-                </div>
-              )}
+                        ? "bg-blue-600 text-white shadow-sm shadow-blue-600/30"
+                        : isLive
+                        ? "text-emerald-600 dark:text-emerald-400 hover:bg-emerald-50 dark:hover:bg-emerald-900/20"
+                        : "text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-white dark:hover:bg-slate-700"
+                    )}
+                  >
+                    <LinkIcon className="w-3.5 h-3.5 flex-shrink-0" />
+                    <span>{item.label}</span>
+                    {isLive && (
+                      <span className="relative flex h-2 w-2 ml-0.5 flex-shrink-0">
+                        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
+                        <span className={clsx("relative inline-flex rounded-full h-2 w-2", active ? "bg-white" : "bg-emerald-500")} />
+                      </span>
+                    )}
+                  </Link>
+                );
+              })}
             </div>
           </nav>
 
-          {/* ── Right side controls ── */}
-          <div className="flex items-center gap-2">
+          {/* ── Right controls — fixed width right ── */}
+          <div className="flex items-center gap-2 flex-shrink-0 w-44 justify-end">
             <ThemeToggle />
-
-            {/* Live status pill */}
-            <div className="hidden sm:flex items-center gap-1.5 bg-emerald-50 dark:bg-emerald-900/20 border border-emerald-200 dark:border-emerald-700/50 px-2.5 py-1 rounded-full">
-              <span className="relative flex h-2 w-2">
-                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
-                <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500" />
-              </span>
-              <Zap className="w-3 h-3 text-emerald-600 dark:text-emerald-400" />
-              <span className="text-[11px] text-emerald-700 dark:text-emerald-400 font-semibold">Live</span>
-            </div>
 
             {/* Mobile toggle */}
             <button
               className="lg:hidden text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white p-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
               onClick={() => setMobileOpen(!mobileOpen)}
-              aria-label="Toggle navigation menu"
-              aria-expanded={mobileOpen}
+              aria-label="Toggle menu"
             >
               {mobileOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
             </button>
@@ -326,42 +173,35 @@ export function Navbar() {
       {/* ── Mobile menu ── */}
       {mobileOpen && (
         <div className="lg:hidden bg-white dark:bg-slate-950 border-t border-slate-200 dark:border-slate-800 animate-fade-in">
-          <div className="max-w-7xl mx-auto px-4 py-4 space-y-1">
-            {/* All nav items */}
-            {[...NAV_ITEMS, ...MORE_ITEMS].map((item) => {
-              const active = isActive(item.href);
-              const LinkIcon = item.Icon;
-              return (
-                <Link
-                  key={item.href}
-                  href={item.href}
-                  onClick={() => setMobileOpen(false)}
-                  className={clsx(
-                    "flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-semibold transition-all",
-                    active
-                      ? "bg-blue-600 text-white shadow-sm shadow-blue-600/25"
-                      : item.badge === "LIVE"
-                      ? "bg-emerald-50 dark:bg-emerald-900/20 text-emerald-700 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-700/50"
-                      : "text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800"
-                  )}
-                >
-                  <LinkIcon className={clsx("w-4 h-4 flex-shrink-0", active ? "text-white" : "text-slate-400 dark:text-slate-500")} />
-                  <span className="flex-1">{item.label}</span>
-                  {item.badge && (
-                    <span className="flex items-center gap-1 text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-100 dark:bg-emerald-900/40 text-emerald-600 dark:text-emerald-400">
-                      <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
-                      {item.badge}
-                    </span>
-                  )}
-                </Link>
-              );
-            })}
-
-            {/* MoES info strip */}
-            <div className="mt-4 pt-4 border-t border-slate-200 dark:border-slate-800">
-              <p className="text-xs text-slate-400 dark:text-slate-500 text-center">
-                Ministry of Earth Sciences · Smart India Hackathon 2024
-              </p>
+          <div className="max-w-7xl mx-auto px-4 py-4">
+            <div className="grid grid-cols-2 gap-1.5">
+              {NAV_ITEMS.map((item) => {
+                const active = pathname === item.href;
+                const LinkIcon = item.Icon;
+                const isLive = item.badge === "LIVE";
+                return (
+                  <Link
+                    key={item.href}
+                    href={item.href}
+                    onClick={() => setMobileOpen(false)}
+                    className={clsx(
+                      "flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-sm font-semibold transition-all",
+                      active
+                        ? "bg-blue-600 text-white shadow-sm shadow-blue-600/25"
+                        : isLive
+                        ? "bg-emerald-50 dark:bg-emerald-900/20 text-emerald-700 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-700/50"
+                        : "bg-slate-50 dark:bg-slate-900 text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 border border-slate-200 dark:border-slate-800"
+                    )}
+                  >
+                    <LinkIcon className={clsx("w-4 h-4 flex-shrink-0", active ? "text-white" : "text-slate-400")} />
+                    <span className="flex-1">{item.label}</span>
+                    {isLive && <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse flex-shrink-0" />}
+                  </Link>
+                );
+              })}
+            </div>
+            <div className="mt-4 pt-3 border-t border-slate-200 dark:border-slate-800">
+              <p className="text-xs text-slate-400 text-center">Ministry of Earth Sciences · SIH 2024</p>
             </div>
           </div>
         </div>

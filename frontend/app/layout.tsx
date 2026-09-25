@@ -1,7 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Toaster } from "react-hot-toast";
 import { Navbar } from "@/components/layout/Navbar";
-import { Footer } from "@/components/layout/Footer";
+import { ConditionalFooter } from "@/components/layout/ConditionalFooter";
 import { ThemeProvider } from "@/components/ui/ThemeProvider";
 import "./globals.css";
 
@@ -47,8 +47,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             {children}
           </main>
 
-          {/* Footer */}
-          <Footer />
+          {/* Footer — sirf Dashboard pe */}
+          <ConditionalFooter />
 
           {/* Toast notifications */}
           <Toaster
