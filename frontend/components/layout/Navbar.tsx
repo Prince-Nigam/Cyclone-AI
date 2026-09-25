@@ -1,376 +1,371 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { clsx } from "clsx";
 import {
-  Menu,
-  X,
-  Zap,
-  LayoutDashboard,
-  Scan,
-  TrendingUp,
-  Map as MapIcon,
-  Radio,
-  History,
-  BarChart3,
+  Menu, X, LayoutDashboard, Scan, TrendingUp,
+  Map as MapIcon, Radio, History, BarChart3, BookOpen, Info,
+  ChevronDown, Wind, Zap,
 } from "lucide-react";
 import { ThemeToggle } from "@/components/ui/ThemeToggle";
 
-interface NavLink {
+interface NavItem {
   href: string;
   label: string;
-  highlight?: boolean;
   Icon: React.ComponentType<{ className?: string }>;
-  info: string[];
+  badge?: string;
+  badgeColor?: string;
+  description: string;
 }
 
-const NAV_LINKS: NavLink[] = [
+const NAV_ITEMS: NavItem[] = [
   {
     href: "/",
     label: "Dashboard",
     Icon: LayoutDashboard,
-    info: [
-      "Platform overview & live stats",
-      "Recent Indian Ocean cyclones",
-      "Quick access to all modules",
-      "System architecture summary",
-    ],
+    description: "Platform overview & live storm monitor",
   },
   {
     href: "/detection",
     label: "Detection",
     Icon: Scan,
-    info: [
-      "EfficientNet-B0 binary classifier",
-      "Upload satellite IR image",
-      "Confidence score output",
-      "Grad-CAM explainability heatmap",
-    ],
+    description: "EfficientNet-B0 binary cyclone detection",
+  },
+  {
+    href: "/satellite",
+    label: "AI Analysis",
+    Icon: Wind,
+    description: "Satellite image analysis with Grad-CAM XAI",
   },
   {
     href: "/prediction",
     label: "Prediction",
     Icon: TrendingUp,
-    info: [
-      "CNN+LSTM intensity regression",
-      "Wind speed & pressure forecast",
-      "Seq2Seq track prediction (24h)",
-      "Load from historical cyclones",
-    ],
-  },
-  {
-    href: "/map",
-    label: "Map",
-    Icon: MapIcon,
-    info: [
-      "Interactive Leaflet map",
-      "Historical + predicted tracks",
-      "NASA GIBS satellite layer",
-      "NI basin cyclone selector",
-    ],
+    description: "24h track & intensity forecasting",
   },
   {
     href: "/live-satellite",
     label: "Live",
     Icon: Radio,
-    highlight: true,
-    info: [
-      "Real-time Windy.com weather",
-      "NASA GIBS MODIS/VIIRS tiles",
-      "Wind, rain, temp overlays",
-      "Arabian Sea & Bay of Bengal",
-    ],
+    badge: "LIVE",
+    badgeColor: "emerald",
+    description: "Real-time GDACS cyclones & ocean grid",
+  },
+  {
+    href: "/map",
+    label: "Map",
+    Icon: MapIcon,
+    description: "Interactive GIS cyclone track map",
   },
   {
     href: "/historical",
     label: "Historical",
     Icon: History,
-    info: [
-      "IBTrACS dataset (1978–2015)",
-      "Filter by basin, name, year",
-      "Peak wind & pressure stats",
-      "Track visualization on map",
-    ],
+    description: "IBTrACS archive 1978–2015",
   },
   {
     href: "/performance",
     label: "Performance",
     Icon: BarChart3,
-    info: [
-      "Model accuracy & F1 scores",
-      "Per-class precision & recall",
-      "Registered model registry",
-      "Test set evaluation metrics",
-    ],
+    description: "Model benchmarks & confusion matrix",
+  },
+];
+
+const MORE_ITEMS: NavItem[] = [
+  {
+    href: "/methodology",
+    label: "Methodology",
+    Icon: BookOpen,
+    description: "ML pipeline & architecture details",
+  },
+  {
+    href: "/about",
+    label: "About",
+    Icon: Info,
+    description: "Project info, team & MoES alignment",
   },
 ];
 
 export function Navbar() {
   const pathname = usePathname();
   const [mobileOpen, setMobileOpen] = useState(false);
-  const [hoveredHref, setHoveredHref] = useState<string | null>(null);
+  const [moreOpen, setMoreOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const moreRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 8);
+    const onScroll = () => setScrolled(window.scrollY > 6);
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
+  // Close "More" dropdown on outside click
+  useEffect(() => {
+    const handler = (e: MouseEvent) => {
+      if (moreRef.current && !moreRef.current.contains(e.target as Node)) {
+        setMoreOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handler);
+    return () => document.removeEventListener("mousedown", handler);
+  }, []);
+
+  // Close mobile menu on route change
+  useEffect(() => {
+    setMobileOpen(false);
+    setMoreOpen(false);
+  }, [pathname]);
+
+  const isActive = (href: string) => pathname === href;
+
   return (
-    <nav
+    <header
       className={clsx(
         "sticky top-0 z-50 transition-all duration-300",
         scrolled
-          ? "bg-[#050c1a] border-b border-slate-700/70 shadow-xl shadow-black/40"
-          : "bg-[#070e1c] border-b border-slate-700/50"
+          ? "bg-[var(--bg-nav)] border-b border-[var(--border-color)] shadow-md shadow-black/10 dark:shadow-black/40 backdrop-blur-xl"
+          : "bg-[var(--bg-nav)] border-b border-[var(--border-color)]"
       )}
     >
-      {/* Sleek top hairline */}
-      <div className="h-px bg-gradient-to-r from-transparent via-emerald-500/40 to-transparent" />
+      {/* ── Top accent line ── */}
+      <div className="h-[2px] bg-gradient-to-r from-blue-600 via-cyan-500 to-blue-600 opacity-80" />
+
+      {/* ── MoES banner strip ── */}
+      <div className="hidden sm:flex items-center justify-center gap-2 bg-blue-700 dark:bg-blue-900/80 py-1 px-4 text-[11px] text-blue-100 font-medium tracking-wide">
+        <span className="opacity-80">Ministry of Earth Sciences (MoES) · Smart India Hackathon 2024</span>
+        <span className="opacity-40 mx-1">|</span>
+        <span className="opacity-80">⚠️ Research Prototype — Not an official IMD forecast system</span>
+      </div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-14">
 
-          {/* Logo */}
-          <Link href="/" className="flex items-center gap-2.5 flex-shrink-0 group">
-            {/* Earth Projection + Cyclone Vortex Logo */}
+          {/* ── Logo ── */}
+          <Link href="/" className="flex items-center gap-3 flex-shrink-0 group">
+            {/* Cyclone SVG logo */}
             <div className="relative w-9 h-9 flex-shrink-0">
-              <svg
-                viewBox="0 0 40 40"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-                className="w-9 h-9 drop-shadow-[0_0_10px_rgba(56,189,248,0.45)] group-hover:scale-105 group-hover:drop-shadow-[0_0_14px_rgba(56,189,248,0.7)] transition-all duration-300"
-              >
+              <svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg"
+                className="w-9 h-9 drop-shadow-[0_0_8px_rgba(59,130,246,0.5)] group-hover:drop-shadow-[0_0_14px_rgba(59,130,246,0.8)] transition-all duration-300">
                 <defs>
-                  {/* Globe radial gradient with oceanic illumination */}
-                  <radialGradient id="earthSphere" cx="35%" cy="30%" r="70%">
+                  <radialGradient id="nb-earth" cx="35%" cy="30%" r="70%">
                     <stop offset="0%" stopColor="#1e3a8a" />
-                    <stop offset="45%" stopColor="#0f2452" />
-                    <stop offset="85%" stopColor="#08142c" />
+                    <stop offset="60%" stopColor="#0f2452" />
                     <stop offset="100%" stopColor="#030712" />
                   </radialGradient>
-
-                  {/* Atmosphere rim glow */}
-                  <linearGradient id="atmosGlow" x1="0" y1="0" x2="40" y2="40" gradientUnits="userSpaceOnUse">
+                  <linearGradient id="nb-atmos" x1="0" y1="0" x2="40" y2="40" gradientUnits="userSpaceOnUse">
                     <stop offset="0%" stopColor="#38bdf8" stopOpacity="0.9" />
-                    <stop offset="50%" stopColor="#60a5fa" stopOpacity="0.4" />
                     <stop offset="100%" stopColor="#1d4ed8" stopOpacity="0.8" />
                   </linearGradient>
-
-                  {/* Cyclone outer spiral gradient */}
-                  <linearGradient id="cycloneArm1" x1="8" y1="8" x2="32" y2="32" gradientUnits="userSpaceOnUse">
+                  <linearGradient id="nb-arm1" x1="8" y1="8" x2="32" y2="32" gradientUnits="userSpaceOnUse">
                     <stop offset="0%" stopColor="#ffffff" stopOpacity="0.95" />
-                    <stop offset="40%" stopColor="#7dd3fc" stopOpacity="0.9" />
-                    <stop offset="80%" stopColor="#0284c7" stopOpacity="0.85" />
-                    <stop offset="100%" stopColor="#0369a1" stopOpacity="0.4" />
+                    <stop offset="60%" stopColor="#7dd3fc" stopOpacity="0.9" />
+                    <stop offset="100%" stopColor="#0284c7" stopOpacity="0.6" />
                   </linearGradient>
-
-                  {/* Cyclone inner feeder band gradient */}
-                  <linearGradient id="cycloneArm2" x1="32" y1="32" x2="10" y2="10" gradientUnits="userSpaceOnUse">
+                  <linearGradient id="nb-arm2" x1="32" y1="32" x2="10" y2="10" gradientUnits="userSpaceOnUse">
                     <stop offset="0%" stopColor="#38bdf8" stopOpacity="0.95" />
-                    <stop offset="50%" stopColor="#a5f3fc" stopOpacity="0.9" />
                     <stop offset="100%" stopColor="#ffffff" stopOpacity="0.9" />
                   </linearGradient>
-
-                  {/* Eye thermal core */}
-                  <radialGradient id="eyeCore" cx="50%" cy="50%" r="50%">
+                  <radialGradient id="nb-eye" cx="50%" cy="50%" r="50%">
                     <stop offset="0%" stopColor="#93c5fd" />
-                    <stop offset="60%" stopColor="#3b82f6" />
                     <stop offset="100%" stopColor="#1e3a8a" stopOpacity="0.4" />
                   </radialGradient>
-
-                  <clipPath id="globeClip">
-                    <circle cx="20" cy="20" r="16.5" />
-                  </clipPath>
+                  <clipPath id="nb-clip"><circle cx="20" cy="20" r="16.5" /></clipPath>
                 </defs>
-
-                {/* Outer atmospheric aura */}
-                <circle cx="20" cy="20" r="18.5" stroke="url(#atmosGlow)" strokeWidth="1" opacity="0.4" strokeDasharray="3 2" />
-                <circle cx="20" cy="20" r="17.2" stroke="url(#atmosGlow)" strokeWidth="0.75" opacity="0.8" />
-
-                {/* Earth Sphere Base */}
-                <circle cx="20" cy="20" r="16.5" fill="url(#earthSphere)" />
-
-                {/* Clipped Earth Projection grid & landmass */}
-                <g clipPath="url(#globeClip)">
-                  {/* Subtle stylized continent / landmass contours */}
-                  <path
-                    d="M13 11 C15 13 19 12 21 14 C23 16 22 19 19 22 C17 24 18 27 16 29 C14 26 12 22 11 18 Z"
-                    fill="rgba(96, 165, 250, 0.18)"
-                    stroke="rgba(96, 165, 250, 0.35)"
-                    strokeWidth="0.6"
-                  />
-                  <path
-                    d="M24 10 C27 11 31 15 30 19 C28 21 26 20 25 18 C24 15 25 12 24 10 Z"
-                    fill="rgba(96, 165, 250, 0.14)"
-                    stroke="rgba(96, 165, 250, 0.25)"
-                    strokeWidth="0.5"
-                  />
-
-                  {/* Latitude / Parallels */}
-                  <ellipse cx="20" cy="20" rx="16.5" ry="5.5" stroke="#38bdf8" strokeWidth="0.7" strokeOpacity="0.3" fill="none" />
-                  <ellipse cx="20" cy="13" rx="14.5" ry="4" stroke="#38bdf8" strokeWidth="0.6" strokeOpacity="0.22" fill="none" />
-                  <ellipse cx="20" cy="27" rx="14.5" ry="4" stroke="#38bdf8" strokeWidth="0.6" strokeOpacity="0.22" fill="none" />
-
-                  {/* Longitude / Meridians */}
-                  <ellipse cx="20" cy="20" rx="7.5" ry="16.5" stroke="#38bdf8" strokeWidth="0.7" strokeOpacity="0.3" fill="none" />
-                  <ellipse cx="20" cy="20" rx="13" ry="16.5" stroke="#38bdf8" strokeWidth="0.6" strokeOpacity="0.2" fill="none" />
-                  <line x1="20" y1="3.5" x2="20" y2="36.5" stroke="#38bdf8" strokeWidth="0.75" strokeOpacity="0.35" strokeDasharray="2 2" />
-
-                  {/* Globe specular illumination arc (top-left) */}
-                  <path
-                    d="M6 14 A16.5 16.5 0 0 1 20 3.5"
-                    stroke="white"
-                    strokeWidth="1.2"
-                    strokeOpacity="0.35"
-                    strokeLinecap="round"
-                    fill="none"
-                  />
+                <circle cx="20" cy="20" r="18" stroke="url(#nb-atmos)" strokeWidth="0.8" opacity="0.5" strokeDasharray="3 2" />
+                <circle cx="20" cy="20" r="16.8" stroke="url(#nb-atmos)" strokeWidth="0.7" opacity="0.9" />
+                <circle cx="20" cy="20" r="16.5" fill="url(#nb-earth)" />
+                <g clipPath="url(#nb-clip)">
+                  <path d="M13 11 C15 13 19 12 21 14 C23 16 22 19 19 22 C17 24 18 27 16 29 C14 26 12 22 11 18 Z"
+                    fill="rgba(52,211,153,0.18)" stroke="rgba(52,211,153,0.35)" strokeWidth="0.6" />
+                  <ellipse cx="20" cy="20" rx="16.5" ry="5.5" stroke="#38bdf8" strokeWidth="0.6" strokeOpacity="0.25" fill="none" />
+                  <ellipse cx="20" cy="20" rx="7.5" ry="16.5" stroke="#38bdf8" strokeWidth="0.6" strokeOpacity="0.25" fill="none" />
+                  <line x1="20" y1="3.5" x2="20" y2="36.5" stroke="#38bdf8" strokeWidth="0.6" strokeOpacity="0.3" strokeDasharray="2 2" />
                 </g>
-
-                {/* Cyclone System overlaid across Projection */}
-                {/* Main Outer Inflow Spiral Arm */}
-                <path
-                  d="M23 7 C31 8 36 14 34 22 C32 28 26 33 19 32 C12 31 7 25 8 18 C9 13 14 10 18 11 C22 12 25 15 24 19 C23 22 20 24 18 23"
-                  stroke="url(#cycloneArm1)"
-                  strokeWidth="2.2"
-                  strokeLinecap="round"
-                  fill="none"
-                />
-
-                {/* Secondary Inflow Rainband */}
-                <path
-                  d="M12 27 C7 23 6 15 11 10 C16 5 25 6 30 11 C34 16 32 23 27 26 C23 28 18 26 17 22 C16 19 18 16.5 21 17"
-                  stroke="url(#cycloneArm2)"
-                  strokeWidth="1.5"
-                  strokeLinecap="round"
-                  fill="none"
-                />
-
-                {/* Cyclone Core Eye (Thermal + Central Eye) */}
-                <circle cx="20" cy="19.5" r="3.2" fill="url(#eyeCore)" />
+                <path d="M23 7 C31 8 36 14 34 22 C32 28 26 33 19 32 C12 31 7 25 8 18 C9 13 14 10 18 11 C22 12 25 15 24 19 C23 22 20 24 18 23"
+                  stroke="url(#nb-arm1)" strokeWidth="2.2" strokeLinecap="round" fill="none" />
+                <path d="M12 27 C7 23 6 15 11 10 C16 5 25 6 30 11 C34 16 32 23 27 26 C23 28 18 26 17 22 C16 19 18 16.5 21 17"
+                  stroke="url(#nb-arm2)" strokeWidth="1.5" strokeLinecap="round" fill="none" />
+                <circle cx="20" cy="19.5" r="3.2" fill="url(#nb-eye)" />
                 <circle cx="20" cy="19.5" r="1.5" fill="#020617" stroke="#38bdf8" strokeWidth="0.6" />
                 <circle cx="20" cy="19.5" r="0.6" fill="#ffffff" />
-
-                {/* Orbit Satellite indicator dot */}
-                <circle cx="33.5" cy="11.5" r="1.3" fill="#38bdf8" className="animate-pulse" />
-                <circle cx="33.5" cy="11.5" r="2.8" stroke="#38bdf8" strokeWidth="0.5" opacity="0.6" />
+                <circle cx="33" cy="11" r="1.3" fill="#38bdf8">
+                  <animate attributeName="opacity" values="1;0.2;1" dur="2s" repeatCount="indefinite" />
+                </circle>
               </svg>
             </div>
+
             <div className="hidden sm:flex flex-col leading-none">
-              <span className="text-white font-extrabold text-sm tracking-tight">CYCLONE</span>
-              <span className="text-emerald-400 font-bold text-xs tracking-widest">AI PLATFORM</span>
+              <span className="text-slate-900 dark:text-white font-extrabold text-sm tracking-tight">
+                CYCLONE AI
+              </span>
+              <span className="text-blue-600 dark:text-blue-400 font-semibold text-[10px] tracking-widest uppercase">
+                SIH Platform
+              </span>
             </div>
           </Link>
 
-          {/* Desktop Nav - Each item in its own distinct box with clean alignment */}
-          <div className="hidden md:flex items-center gap-1.5 lg:gap-2">
-            {NAV_LINKS.map((link) => {
-              const isActive = pathname === link.href;
-              const LinkIcon = link.Icon;
+          {/* ── Desktop nav ── */}
+          <nav className="hidden lg:flex items-center gap-0.5" role="navigation" aria-label="Main navigation">
+            {NAV_ITEMS.map((item) => {
+              const active = isActive(item.href);
+              const LinkIcon = item.Icon;
               return (
-                <div
-                  key={link.href}
-                  className="relative"
-                  onMouseEnter={() => setHoveredHref(link.href)}
-                  onMouseLeave={() => setHoveredHref(null)}
-                >
-                  <Link
-                    href={link.href}
-                    className={clsx(
-                      "flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold tracking-wide border transition-all duration-150 shadow-sm",
-                      isActive
-                        ? "bg-emerald-600 border-emerald-400 text-white shadow-emerald-500/25 shadow-md ring-1 ring-emerald-400/40"
-                        : link.highlight
-                        ? "bg-emerald-950/50 border-emerald-500/50 text-emerald-300 hover:bg-emerald-900/60 hover:border-emerald-400 hover:text-white shadow-sm shadow-emerald-500/15"
-                        : "bg-[#0d1829] border-slate-700/80 text-slate-200 hover:text-white hover:bg-slate-800 hover:border-slate-500"
-                    )}
-                  >
-                    <LinkIcon className={clsx("w-3.5 h-3.5 flex-shrink-0", isActive ? "text-white" : link.highlight ? "text-emerald-400" : "text-slate-400 group-hover:text-white")} />
-                    <span>{link.label}</span>
-                    {link.highlight && (
-                      <span className="relative flex h-2 w-2 ml-0.5">
-                        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-                        <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
-                      </span>
-                    )}
-                  </Link>
-
-                  {/* Hover tooltip */}
-                  {hoveredHref === link.href && (
-                    <div className="absolute top-full left-1/2 -translate-x-1/2 mt-2.5 w-56 bg-slate-900/95 backdrop-blur-xl border border-slate-700/80 rounded-xl shadow-2xl shadow-black/50 z-50 p-3.5 pointer-events-none">
-                      {/* Arrow */}
-                      <div className="absolute -top-1.5 left-1/2 -translate-x-1/2 w-3 h-3 bg-slate-900 border-l border-t border-slate-700/80 rotate-45" />
-                      <p className="text-xs font-semibold text-white mb-2 flex items-center gap-1.5">
-                        <LinkIcon className="w-3.5 h-3.5 text-emerald-400" />
-                        {link.label}
-                      </p>
-                      <ul className="space-y-1">
-                        {link.info.map((item, i) => (
-                          <li key={i} className="flex items-start gap-1.5 text-xs text-slate-400">
-                            <span className="text-blue-400 mt-0.5 flex-shrink-0">▸</span>
-                            {item}
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  title={item.description}
+                  className={clsx(
+                    "relative flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all duration-150",
+                    active
+                      ? "bg-blue-600 text-white shadow-sm shadow-blue-600/30"
+                      : item.badge === "LIVE"
+                      ? "text-emerald-600 dark:text-emerald-400 hover:bg-emerald-50 dark:hover:bg-emerald-900/20"
+                      : "text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800/80"
                   )}
-                </div>
+                >
+                  <LinkIcon className="w-3.5 h-3.5 flex-shrink-0" />
+                  <span>{item.label}</span>
+                  {item.badge && (
+                    <span className={clsx(
+                      "flex items-center gap-0.5 text-[9px] font-bold px-1.5 py-0.5 rounded-full",
+                      active
+                        ? "bg-white/20 text-white"
+                        : "bg-emerald-100 dark:bg-emerald-900/40 text-emerald-600 dark:text-emerald-400"
+                    )}>
+                      <span className={clsx(
+                        "w-1.5 h-1.5 rounded-full",
+                        active ? "bg-white animate-pulse" : "bg-emerald-500 animate-pulse"
+                      )} />
+                      {item.badge}
+                    </span>
+                  )}
+                </Link>
               );
             })}
-          </div>
 
-          {/* Right side */}
-          <div className="hidden lg:flex items-center gap-2.5">
-            <ThemeToggle />
-            <div className="flex items-center gap-1.5 bg-emerald-500/10 border border-emerald-500/30 px-2.5 py-1 rounded-full shadow-sm shadow-emerald-500/10">
-              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
-              <Zap className="w-3 h-3 text-emerald-400" />
-              <span className="text-xs text-emerald-400 font-semibold tracking-wide">Live Feed</span>
+            {/* More dropdown */}
+            <div className="relative" ref={moreRef}>
+              <button
+                onClick={() => setMoreOpen(!moreOpen)}
+                className={clsx(
+                  "flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all duration-150",
+                  MORE_ITEMS.some(i => isActive(i.href))
+                    ? "bg-blue-600 text-white"
+                    : "text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800/80"
+                )}
+              >
+                More
+                <ChevronDown className={clsx("w-3 h-3 transition-transform duration-200", moreOpen ? "rotate-180" : "")} />
+              </button>
+
+              {moreOpen && (
+                <div className="absolute top-full right-0 mt-2 w-56 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl shadow-xl shadow-black/15 dark:shadow-black/50 z-50 overflow-hidden animate-fade-in">
+                  {MORE_ITEMS.map((item) => {
+                    const ItemIcon = item.Icon;
+                    const active = isActive(item.href);
+                    return (
+                      <Link
+                        key={item.href}
+                        href={item.href}
+                        className={clsx(
+                          "flex items-start gap-3 px-4 py-3 transition-colors",
+                          active
+                            ? "bg-blue-50 dark:bg-blue-900/30"
+                            : "hover:bg-slate-50 dark:hover:bg-slate-800"
+                        )}
+                      >
+                        <div className={clsx(
+                          "w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0 mt-0.5",
+                          active ? "bg-blue-600 text-white" : "bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400"
+                        )}>
+                          <ItemIcon className="w-4 h-4" />
+                        </div>
+                        <div>
+                          <p className={clsx("text-sm font-semibold", active ? "text-blue-600 dark:text-blue-400" : "text-slate-800 dark:text-slate-200")}>
+                            {item.label}
+                          </p>
+                          <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">{item.description}</p>
+                        </div>
+                      </Link>
+                    );
+                  })}
+                </div>
+              )}
             </div>
-          </div>
+          </nav>
 
-          {/* Mobile menu button */}
-          <button
-            className="md:hidden text-slate-400 hover:text-white p-2 rounded-lg hover:bg-white/10 transition-colors"
-            onClick={() => setMobileOpen(!mobileOpen)}
-            aria-label="Toggle menu"
-          >
-            {mobileOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
-          </button>
+          {/* ── Right side controls ── */}
+          <div className="flex items-center gap-2">
+            <ThemeToggle />
+
+            {/* Live status pill */}
+            <div className="hidden sm:flex items-center gap-1.5 bg-emerald-50 dark:bg-emerald-900/20 border border-emerald-200 dark:border-emerald-700/50 px-2.5 py-1 rounded-full">
+              <span className="relative flex h-2 w-2">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
+                <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500" />
+              </span>
+              <Zap className="w-3 h-3 text-emerald-600 dark:text-emerald-400" />
+              <span className="text-[11px] text-emerald-700 dark:text-emerald-400 font-semibold">Live</span>
+            </div>
+
+            {/* Mobile toggle */}
+            <button
+              className="lg:hidden text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white p-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
+              onClick={() => setMobileOpen(!mobileOpen)}
+              aria-label="Toggle navigation menu"
+              aria-expanded={mobileOpen}
+            >
+              {mobileOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+            </button>
+          </div>
         </div>
       </div>
 
-      {/* Mobile menu */}
+      {/* ── Mobile menu ── */}
       {mobileOpen && (
-        <div className="md:hidden bg-slate-950/95 backdrop-blur-xl border-t border-slate-800/60 px-4 py-3 space-y-1.5">
-          {NAV_LINKS.map((link) => {
-            const isActive = pathname === link.href;
-            const LinkIcon = link.Icon;
-            return (
-              <Link
-                key={link.href}
-                href={link.href}
-                onClick={() => setMobileOpen(false)}
-                className={clsx(
-                  "flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-sm font-semibold border transition-all",
-                  isActive
-                    ? "bg-emerald-600 border-emerald-400 text-white shadow-md"
-                    : link.highlight
-                    ? "bg-emerald-950/60 border-emerald-500/50 text-emerald-300 hover:text-white"
-                    : "bg-slate-900/80 border-slate-800 text-slate-200 hover:text-white hover:bg-slate-800"
-                )}
-              >
-                <LinkIcon className="w-4 h-4 flex-shrink-0 text-slate-400" />
-                <span>{link.label}</span>
-              </Link>
-            );
-          })}
+        <div className="lg:hidden bg-white dark:bg-slate-950 border-t border-slate-200 dark:border-slate-800 animate-fade-in">
+          <div className="max-w-7xl mx-auto px-4 py-4 space-y-1">
+            {/* All nav items */}
+            {[...NAV_ITEMS, ...MORE_ITEMS].map((item) => {
+              const active = isActive(item.href);
+              const LinkIcon = item.Icon;
+              return (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  onClick={() => setMobileOpen(false)}
+                  className={clsx(
+                    "flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-semibold transition-all",
+                    active
+                      ? "bg-blue-600 text-white shadow-sm shadow-blue-600/25"
+                      : item.badge === "LIVE"
+                      ? "bg-emerald-50 dark:bg-emerald-900/20 text-emerald-700 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-700/50"
+                      : "text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800"
+                  )}
+                >
+                  <LinkIcon className={clsx("w-4 h-4 flex-shrink-0", active ? "text-white" : "text-slate-400 dark:text-slate-500")} />
+                  <span className="flex-1">{item.label}</span>
+                  {item.badge && (
+                    <span className="flex items-center gap-1 text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-100 dark:bg-emerald-900/40 text-emerald-600 dark:text-emerald-400">
+                      <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                      {item.badge}
+                    </span>
+                  )}
+                </Link>
+              );
+            })}
+
+            {/* MoES info strip */}
+            <div className="mt-4 pt-4 border-t border-slate-200 dark:border-slate-800">
+              <p className="text-xs text-slate-400 dark:text-slate-500 text-center">
+                Ministry of Earth Sciences · Smart India Hackathon 2024
+              </p>
+            </div>
+          </div>
         </div>
       )}
-    </nav>
+    </header>
   );
 }

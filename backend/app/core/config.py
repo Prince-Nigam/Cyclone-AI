@@ -36,7 +36,7 @@ class Settings(BaseSettings):
     SECRET_KEY: str = "change-this-in-production-use-a-long-random-string"
 
     # ── Database ──────────────────────────────────────────────────────────────
-    DATABASE_URL: str = "postgresql://cyclone_user:cyclone_pass@localhost:5432/cyclone_db"
+    DATABASE_URL: str = "sqlite:///./cyclone_demo.db"
     DATABASE_POOL_SIZE: int = 5
     DATABASE_MAX_OVERFLOW: int = 10
 

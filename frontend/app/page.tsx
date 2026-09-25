@@ -1,577 +1,546 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import Link from "next/link";
 import {
   Wind, Search, Map, Satellite, Clock,
   AlertTriangle, Loader2, ArrowRight, TrendingUp, Database,
-  Activity, Globe2, Cpu, Layers, ShieldAlert, Radio, ExternalLink, RefreshCw,
+  Activity, Globe2, Cpu, Layers, ShieldAlert, Radio,
+  ExternalLink, RefreshCw, BookOpen, BarChart3, Zap, Eye,
+  CheckCircle2, Info,
 } from "lucide-react";
 import { DataTypeBadge } from "@/components/ui/DataTypeBadge";
 import { IntensityBadge } from "@/components/ui/IntensityBadge";
 import { LiveTickerBar } from "@/components/ui/LiveTickerBar";
 import { getCyclones } from "@/services/cycloneService";
 import { getRealtimeCyclones } from "@/services/realtimeService";
-import type { Cyclone, IntensityClass, RealtimeCyclone } from "@/types";
+import type { Cyclone, RealtimeCyclone } from "@/types";
 
-/* ── Feature cards ─────────────────────────────────────────── */
+/* ─────────────────────────────────────────────────────────────
+   FEATURE CARDS
+   ───────────────────────────────────────────────────────────── */
 const FEATURE_CARDS = [
   {
     icon: Search,
     title: "Cyclone Detection",
-    desc: "EfficientNet-B0 binary detection from satellite IR imagery",
+    desc: "EfficientNet-B0 binary detection from satellite IR imagery with confidence scoring.",
     href: "/detection",
-    color: "blue",
-    tag: "~85% acc.",
+    accent: "blue",
+    tag: "~85% Accuracy",
+    tagColor: "blue",
   },
   {
     icon: Wind,
     title: "Pattern Classification",
-    desc: "ResNet50 intensity classification: TD / TS / CAT1-3+",
+    desc: "ResNet50 5-class intensity classification: TD / TS / CAT1 / CAT2 / CAT3+ (Saffir-Simpson).",
     href: "/satellite",
-    color: "purple",
-    tag: "5 classes",
+    accent: "purple",
+    tag: "5 Classes",
+    tagColor: "purple",
   },
   {
     icon: TrendingUp,
     title: "Intensity Prediction",
-    desc: "CNN+LSTM regression for wind speed and central pressure",
+    desc: "CNN+LSTM regression for wind speed (kt) and central pressure (hPa) estimation.",
     href: "/prediction",
-    color: "orange",
+    accent: "amber",
     tag: "MAE ≈ 8 kt",
+    tagColor: "amber",
   },
   {
     icon: Map,
     title: "Track Prediction",
-    desc: "Seq2Seq LSTM 24h future cyclone path prediction",
+    desc: "Seq2Seq LSTM 24-hour future cyclone path in 3-hour timesteps.",
     href: "/prediction",
-    color: "red",
-    tag: "24h horizon",
+    accent: "red",
+    tag: "24h Horizon",
+    tagColor: "red",
   },
   {
-    icon: Satellite,
-    title: "Satellite Viewer",
-    desc: "Upload and analyze satellite images with Grad-CAM XAI",
+    icon: Eye,
+    title: "Grad-CAM XAI",
+    desc: "Explainable AI heatmaps showing where the model focuses — eye wall, spiral bands.",
     href: "/satellite",
-    color: "cyan",
-    tag: "Grad-CAM",
+    accent: "emerald",
+    tag: "XAI",
+    tagColor: "emerald",
   },
   {
     icon: Clock,
-    title: "Historical Analysis",
-    desc: "Browse and explore IBTrACS historical cyclone records",
+    title: "Historical Archive",
+    desc: "Browse IBTrACS best-track records across all ocean basins from 1978 to 2015.",
     href: "/historical",
-    color: "slate",
+    accent: "slate",
     tag: "1978–2015",
+    tagColor: "slate",
   },
 ];
 
-const COLOR_MAP: Record<string, { bg: string; icon: string; tag: string }> = {
-  blue:   { bg: "bg-blue-100 dark:bg-blue-500/15",       icon: "text-blue-600 dark:text-blue-400",       tag: "bg-blue-100 dark:bg-blue-500/20 text-blue-700 dark:text-blue-300" },
-  purple: { bg: "bg-purple-100 dark:bg-purple-900/30",   icon: "text-purple-600 dark:text-purple-400",   tag: "bg-purple-100 dark:bg-purple-900/40 text-purple-700 dark:text-purple-300" },
-  orange: { bg: "bg-amber-100 dark:bg-amber-950/40",     icon: "text-amber-600 dark:text-amber-400",     tag: "bg-amber-100 dark:bg-amber-950/50 text-amber-700 dark:text-amber-300" },
-  red:    { bg: "bg-red-100 dark:bg-red-950/40",         icon: "text-red-600 dark:text-red-400",         tag: "bg-red-100 dark:bg-red-950/50 text-red-700 dark:text-red-300 border border-red-500/30" },
-  cyan:   { bg: "bg-emerald-100 dark:bg-emerald-950/30", icon: "text-emerald-600 dark:text-emerald-400", tag: "bg-emerald-100 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-300 border border-emerald-500/30" },
-  slate:  { bg: "bg-slate-100 dark:bg-slate-500/15",     icon: "text-slate-600 dark:text-slate-400",     tag: "bg-slate-100 dark:bg-slate-500/20 text-slate-700 dark:text-slate-300" },
+const ACCENT_MAP: Record<string, { border: string; iconBg: string; icon: string; tag: string }> = {
+  blue:    { border: "group-hover:border-blue-400/50",   iconBg: "bg-blue-100 dark:bg-blue-500/15",     icon: "text-blue-600 dark:text-blue-400",     tag: "bg-blue-100 dark:bg-blue-500/20 text-blue-700 dark:text-blue-300" },
+  purple:  { border: "group-hover:border-purple-400/50", iconBg: "bg-purple-100 dark:bg-purple-900/30", icon: "text-purple-600 dark:text-purple-400", tag: "bg-purple-100 dark:bg-purple-900/40 text-purple-700 dark:text-purple-300" },
+  amber:   { border: "group-hover:border-amber-400/50",  iconBg: "bg-amber-100 dark:bg-amber-950/40",   icon: "text-amber-600 dark:text-amber-400",   tag: "bg-amber-100 dark:bg-amber-950/50 text-amber-700 dark:text-amber-300" },
+  red:     { border: "group-hover:border-red-400/50",    iconBg: "bg-red-100 dark:bg-red-950/40",       icon: "text-red-600 dark:text-red-400",       tag: "bg-red-100 dark:bg-red-950/50 text-red-700 dark:text-red-300" },
+  emerald: { border: "group-hover:border-emerald-400/50",iconBg: "bg-emerald-100 dark:bg-emerald-950/30",icon:"text-emerald-600 dark:text-emerald-400",tag:"bg-emerald-100 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-300" },
+  slate:   { border: "group-hover:border-slate-400/50",  iconBg: "bg-slate-100 dark:bg-slate-500/15",   icon: "text-slate-600 dark:text-slate-400",   tag: "bg-slate-100 dark:bg-slate-500/20 text-slate-700 dark:text-slate-300" },
 };
 
-const STAT_THEMES: Record<string, {
-  border: string;
-  iconBg: string;
-  iconColor: string;
-  gradient: string;
-}> = {
-  red: {
-    border: "border-red-300 dark:border-red-500/50 shadow-sm shadow-red-500/10",
-    iconBg: "bg-red-100 dark:bg-red-500/20",
-    iconColor: "text-red-600 dark:text-red-400",
-    gradient: "from-red-500/15 to-transparent",
-  },
-  blue: {
-    border: "border-blue-200 dark:border-blue-500/30",
-    iconBg: "bg-blue-100 dark:bg-blue-500/20",
-    iconColor: "text-blue-600 dark:text-blue-400",
-    gradient: "from-blue-500/10 dark:from-blue-500/15 to-transparent",
-  },
-  green: {
-    border: "border-emerald-300 dark:border-emerald-500/50 shadow-sm shadow-emerald-500/10",
-    iconBg: "bg-emerald-100 dark:bg-emerald-500/20",
-    iconColor: "text-emerald-600 dark:text-emerald-400",
-    gradient: "from-emerald-500/15 to-transparent",
-  },
-  purple: {
-    border: "border-purple-300 dark:border-purple-600/30",
-    iconBg: "bg-purple-100 dark:bg-purple-600/20",
-    iconColor: "text-purple-600 dark:text-purple-400",
-    gradient: "from-purple-700/10 dark:from-purple-700/15 to-transparent",
-  },
-};
-
-/* ── Architecture items ─────────────────────────────────────── */
+/* ─────────────────────────────────────────────────────────────
+   ARCHITECTURE PILLARS
+   ───────────────────────────────────────────────────────────── */
 const ARCH = [
-  { icon: Database, label: "Data",     items: ["GDACS Live", "IBTrACS", "Open-Meteo", "NASA GIBS"] },
-  { icon: Cpu,      label: "AI Models",items: ["EfficientNet-B0", "ResNet50", "LSTM/GRU", "Grad-CAM"] },
-  { icon: Radio,    label: "Backend",  items: ["FastAPI", "PostgreSQL/SQLite", "Real-Time Service"] },
-  { icon: Layers,   label: "Frontend", items: ["Next.js 14", "Tailwind CSS", "Leaflet Maps"] },
+  {
+    icon: Database,
+    label: "Data Ingestion",
+    color: "blue",
+    items: ["GDACS Live RSS", "IBTrACS Tracks", "Open-Meteo Marine", "NASA GIBS Tiles"],
+  },
+  {
+    icon: Cpu,
+    label: "AI Pipeline",
+    color: "purple",
+    items: ["EfficientNet-B0", "ResNet50", "CNN + LSTM", "Seq2Seq LSTM"],
+  },
+  {
+    icon: Layers,
+    label: "Backend",
+    color: "amber",
+    items: ["FastAPI", "SQLite / PostgreSQL", "Model Manager", "Real-Time Cache"],
+  },
+  {
+    icon: Globe2,
+    label: "Frontend",
+    color: "emerald",
+    items: ["Next.js 14", "Tailwind CSS", "Leaflet GIS", "Recharts"],
+  },
 ];
 
-/* ═══════════════════════════════════════════════════════════════ */
+const ARCH_COLOR: Record<string, string> = {
+  blue:    "border-blue-200 dark:border-blue-700/50 bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400",
+  purple:  "border-purple-200 dark:border-purple-700/50 bg-purple-50 dark:bg-purple-900/20 text-purple-600 dark:text-purple-400",
+  amber:   "border-amber-200 dark:border-amber-700/50 bg-amber-50 dark:bg-amber-900/20 text-amber-600 dark:text-amber-400",
+  emerald: "border-emerald-200 dark:border-emerald-700/50 bg-emerald-50 dark:bg-emerald-900/20 text-emerald-600 dark:text-emerald-400",
+};
+
+/* ─────────────────────────────────────────────────────────────
+   ALERT BADGE COLORS
+   ───────────────────────────────────────────────────────────── */
+function alertBadgeClass(alert: string) {
+  switch (alert?.toUpperCase()) {
+    case "RED":    return "bg-red-500/15 text-red-600 dark:text-red-300 border-red-400/40 font-bold";
+    case "ORANGE": return "bg-amber-500/15 text-amber-700 dark:text-amber-300 border-amber-400/40 font-bold";
+    default:       return "bg-emerald-500/15 text-emerald-700 dark:text-emerald-300 border-emerald-400/40 font-bold";
+  }
+}
+
+/* ═════════════════════════════════════════════════════════════
+   DASHBOARD PAGE
+   ═════════════════════════════════════════════════════════════ */
 export default function DashboardPage() {
   const [activeTab, setActiveTab] = useState<"LIVE" | "HISTORICAL">("LIVE");
 
-  // Historical Cyclones State
-  const [recentCyclones, setRecentCyclones] = useState<Cyclone[]>([]);
-  const [historicalLoading, setHistoricalLoading] = useState(true);
+  const [recentCyclones, setRecentCyclones]         = useState<Cyclone[]>([]);
+  const [historicalLoading, setHistoricalLoading]   = useState(true);
 
-  // Live Real-Time Cyclones State
-  const [liveCyclones, setLiveCyclones] = useState<RealtimeCyclone[]>([]);
-  const [liveLoading, setLiveLoading] = useState(true);
-  const [liveError, setLiveError] = useState<string | null>(null);
+  const [liveCyclones, setLiveCyclones]             = useState<RealtimeCyclone[]>([]);
+  const [liveLoading, setLiveLoading]               = useState(true);
+  const [liveError, setLiveError]                   = useState<string | null>(null);
+  const [lastRefreshed, setLastRefreshed]           = useState("");
 
-  const fetchLiveCyclones = () => {
+  const fetchLiveCyclones = useCallback(() => {
     setLiveLoading(true);
     setLiveError(null);
     getRealtimeCyclones(false)
-      .then((res) => setLiveCyclones(res.cyclones || []))
+      .then((res) => {
+        setLiveCyclones(res.cyclones || []);
+        setLastRefreshed(new Date().toLocaleTimeString());
+      })
       .catch((err) => {
         setLiveError(err?.message || "Failed to fetch live cyclone alerts");
         setLiveCyclones([]);
       })
       .finally(() => setLiveLoading(false));
-  };
+  }, []);
 
   useEffect(() => {
-    // 1. Fetch live active cyclones
     fetchLiveCyclones();
-
-    // 2. Fetch historical cyclones
-    getCyclones({ basin: "NI", limit: 5 })
+    getCyclones({ basin: "NI", limit: 6 })
       .then((res) => setRecentCyclones(res.cyclones))
       .catch(() => setRecentCyclones([]))
       .finally(() => setHistoricalLoading(false));
 
-    // Auto-refresh every 5 minutes (300 seconds)
-    const interval = setInterval(() => {
-      fetchLiveCyclones();
-    }, 5 * 60 * 1000);
-
+    const interval = setInterval(fetchLiveCyclones, 5 * 60 * 1000);
     return () => clearInterval(interval);
-  }, []);
+  }, [fetchLiveCyclones]);
 
-  const getAlertBadgeClass = (alert: string) => {
-    switch (alert?.toUpperCase()) {
-      case "RED":
-        return "bg-red-500/20 text-red-300 border-red-500/50 shadow-sm shadow-red-500/20 font-bold";
-      case "ORANGE":
-        return "bg-amber-500/20 text-amber-300 border-amber-500/40 font-bold";
-      case "GREEN":
-      default:
-        return "bg-emerald-500/20 text-emerald-300 border-emerald-500/40 font-bold";
-    }
-  };
-
-  const indianOceanLiveCount = liveCyclones.filter(c => c.basin === "NI" || c.basin === "SI").length;
+  const indianOceanLiveCount = liveCyclones.filter(
+    (c) => c.basin === "NI" || c.basin === "SI"
+  ).length;
 
   const STATS = [
     {
       icon: ShieldAlert,
-      label: "Live Active Cyclones",
-      value: liveLoading ? "..." : `${liveCyclones.length}`,
+      label: "Active Cyclones",
+      value: liveLoading ? "…" : `${liveCyclones.length}`,
       sub: `${indianOceanLiveCount} in Indian Ocean`,
-      color: "red"
+      theme: "red",
     },
     {
       icon: Database,
       label: "IBTrACS Records",
       value: "3,000+",
       sub: "Historical cyclone archive",
-      color: "blue"
+      theme: "blue",
     },
     {
       icon: Activity,
-      label: "Model Accuracy",
+      label: "Detection Accuracy",
       value: "~85%",
-      sub: "Detection (EfficientNet)",
-      color: "green"
+      sub: "EfficientNet-B0 on HURSAT-B1",
+      theme: "green",
     },
     {
       icon: Globe2,
-      label: "Basin Focus",
-      value: "NI / Global",
-      sub: "North Indian + World",
-      color: "purple"
+      label: "Basin Coverage",
+      value: "NI + Global",
+      sub: "Arabian Sea & Bay of Bengal",
+      theme: "purple",
     },
   ];
 
+  const STAT_THEME: Record<string, { border: string; iconBg: string; icon: string; grad: string }> = {
+    red:    { border: "border-red-200 dark:border-red-700/40",       iconBg: "bg-red-100 dark:bg-red-900/30",       icon: "text-red-600 dark:text-red-400",       grad: "from-red-500/8 to-transparent" },
+    blue:   { border: "border-blue-200 dark:border-blue-700/40",     iconBg: "bg-blue-100 dark:bg-blue-900/30",     icon: "text-blue-600 dark:text-blue-400",     grad: "from-blue-500/8 to-transparent" },
+    green:  { border: "border-emerald-200 dark:border-emerald-700/40",iconBg: "bg-emerald-100 dark:bg-emerald-900/30",icon:"text-emerald-600 dark:text-emerald-400", grad: "from-emerald-500/8 to-transparent" },
+    purple: { border: "border-purple-200 dark:border-purple-700/40", iconBg: "bg-purple-100 dark:bg-purple-900/30", icon: "text-purple-600 dark:text-purple-400", grad: "from-purple-500/8 to-transparent" },
+  };
+
   return (
-    <div className="space-y-10">
+    <div className="space-y-10 page-transition">
 
-      {/* ── Hero ──────────────────────────────────────────── */}
-      <section className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-slate-900 via-[#0a152d] to-slate-900 border border-slate-700/60 p-6 sm:p-8 shadow-2xl animate-fade-in-up">
-        {/* Subtle ambient oceanic glow */}
-        <div className="pointer-events-none absolute -top-24 -right-24 w-80 h-80 rounded-full bg-blue-600/15 blur-3xl" />
-        <div className="pointer-events-none absolute -bottom-16 -left-16 w-64 h-64 rounded-full bg-slate-700/20 blur-3xl" />
-        {/* Subtle grid overlay */}
-        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_80%_50%_at_50%_-20%,rgba(59,130,246,0.10),transparent)]" />
+      {/* ── HERO ──────────────────────────────────────────────────── */}
+      <section className="relative overflow-hidden rounded-2xl border border-slate-700/60 shadow-2xl bg-gradient-to-br from-[#06101e] via-[#0a1a35] to-[#07101d]">
+        {/* Ambient glows */}
+        <div className="pointer-events-none absolute -top-32 -right-32 w-96 h-96 rounded-full bg-blue-600/10 blur-3xl" />
+        <div className="pointer-events-none absolute -bottom-24 -left-24 w-80 h-80 rounded-full bg-cyan-500/8 blur-3xl" />
+        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_70%_40%_at_50%_0%,rgba(59,130,246,0.08),transparent)]" />
 
-        <div className="relative">
-          {/* Top header row: Logo + Title + Live badge */}
-          <div className="flex flex-col sm:flex-row sm:items-center gap-4 mb-4">
-            <div className="w-14 h-14 flex-shrink-0 drop-shadow-[0_0_16px_rgba(56,189,248,0.5)] hover:scale-105 transition-all duration-300">
-              <svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-14 h-14">
-                <defs>
-                  {/* Globe radial gradient */}
-                  <radialGradient id="heroEarthSphere" cx="35%" cy="30%" r="70%">
-                    <stop offset="0%" stopColor="#1e3a8a" />
-                    <stop offset="45%" stopColor="#0f2452" />
-                    <stop offset="85%" stopColor="#08142c" />
-                    <stop offset="100%" stopColor="#030712" />
-                  </radialGradient>
+        {/* Top accent line */}
+        <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-blue-500/60 to-transparent" />
 
-                  {/* Atmosphere rim glow */}
-                  <linearGradient id="heroAtmosGlow" x1="0" y1="0" x2="64" y2="64" gradientUnits="userSpaceOnUse">
-                    <stop offset="0%" stopColor="#38bdf8" stopOpacity="0.9" />
-                    <stop offset="50%" stopColor="#60a5fa" stopOpacity="0.4" />
-                    <stop offset="100%" stopColor="#1d4ed8" stopOpacity="0.8" />
-                  </linearGradient>
+        <div className="relative px-6 sm:px-10 py-10 sm:py-12">
+          {/* MoES tag */}
+          <div className="flex items-center gap-2 mb-5">
+            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-blue-600/20 text-blue-300 text-xs font-bold border border-blue-500/30 tracking-wide">
+              <span className="w-1.5 h-1.5 rounded-full bg-blue-400" />
+              Ministry of Earth Sciences · SIH 2024
+            </span>
+            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-500/15 text-emerald-300 text-xs font-bold border border-emerald-500/30">
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+              Live Telemetry Active
+            </span>
+          </div>
 
-                  {/* Cyclone outer spiral gradient */}
-                  <linearGradient id="heroCycloneArm1" x1="12" y1="12" x2="52" y2="52" gradientUnits="userSpaceOnUse">
-                    <stop offset="0%" stopColor="#ffffff" stopOpacity="0.95" />
-                    <stop offset="40%" stopColor="#7dd3fc" stopOpacity="0.9" />
-                    <stop offset="80%" stopColor="#0284c7" stopOpacity="0.85" />
-                    <stop offset="100%" stopColor="#0369a1" stopOpacity="0.4" />
-                  </linearGradient>
-
-                  {/* Cyclone inner feeder band gradient */}
-                  <linearGradient id="heroCycloneArm2" x1="52" y1="52" x2="16" y2="16" gradientUnits="userSpaceOnUse">
-                    <stop offset="0%" stopColor="#38bdf8" stopOpacity="0.95" />
-                    <stop offset="50%" stopColor="#a5f3fc" stopOpacity="0.9" />
-                    <stop offset="100%" stopColor="#ffffff" stopOpacity="0.9" />
-                  </linearGradient>
-
-                  {/* Eye thermal core */}
-                  <radialGradient id="heroEyeCore" cx="50%" cy="50%" r="50%">
-                    <stop offset="0%" stopColor="#f59e0b" />
-                    <stop offset="60%" stopColor="#ef4444" />
-                    <stop offset="100%" stopColor="#7f1d1d" stopOpacity="0.2" />
-                  </radialGradient>
-
-                  <clipPath id="heroGlobeClip">
-                    <circle cx="32" cy="32" r="26.5" />
-                  </clipPath>
-                </defs>
-
-                {/* Outer atmospheric aura */}
-                <circle cx="32" cy="32" r="29.5" stroke="url(#heroAtmosGlow)" strokeWidth="1.2" opacity="0.4" strokeDasharray="4 3" />
-                <circle cx="32" cy="32" r="27.5" stroke="url(#heroAtmosGlow)" strokeWidth="1" opacity="0.8" />
-
-                {/* Earth Sphere Base */}
-                <circle cx="32" cy="32" r="26.5" fill="url(#heroEarthSphere)" />
-
-                {/* Clipped Earth Projection grid & landmass */}
-                <g clipPath="url(#heroGlobeClip)">
-                  {/* Stylized continent / landmass contours */}
-                  <path
-                    d="M21 17 C24 20 30 19 33 22 C37 25 35 30 30 35 C27 38 29 43 25 46 C22 41 19 35 17 28 Z"
-                    fill="rgba(52, 211, 153, 0.18)"
-                    stroke="rgba(52, 211, 153, 0.35)"
-                    strokeWidth="0.9"
-                  />
-                  <path
-                    d="M38 16 C43 17 49 24 48 30 C45 33 41 32 40 28 C38 24 40 19 38 16 Z"
-                    fill="rgba(52, 211, 153, 0.14)"
-                    stroke="rgba(52, 211, 153, 0.25)"
-                    strokeWidth="0.8"
-                  />
-
-                  {/* Latitude / Parallels */}
-                  <ellipse cx="32" cy="32" rx="26.5" ry="9" stroke="#38bdf8" strokeWidth="1" strokeOpacity="0.3" fill="none" />
-                  <ellipse cx="32" cy="21" rx="23" ry="6.5" stroke="#38bdf8" strokeWidth="0.85" strokeOpacity="0.22" fill="none" />
-                  <ellipse cx="32" cy="43" rx="23" ry="6.5" stroke="#38bdf8" strokeWidth="0.85" strokeOpacity="0.22" fill="none" />
-
-                  {/* Longitude / Meridians */}
-                  <ellipse cx="32" cy="32" rx="12" ry="26.5" stroke="#38bdf8" strokeWidth="1" strokeOpacity="0.3" fill="none" />
-                  <ellipse cx="32" cy="32" rx="21" ry="26.5" stroke="#38bdf8" strokeWidth="0.85" strokeOpacity="0.2" fill="none" />
-                  <line x1="32" y1="5.5" x2="32" y2="58.5" stroke="#38bdf8" strokeWidth="1" strokeOpacity="0.35" strokeDasharray="3 3" />
-
-                  {/* Globe specular illumination arc (top-left) */}
-                  <path
-                    d="M10 22 A26.5 26.5 0 0 1 32 5.5"
-                    stroke="white"
-                    strokeWidth="1.8"
-                    strokeOpacity="0.35"
-                    strokeLinecap="round"
-                    fill="none"
-                  />
-                </g>
-
-                {/* Cyclone System overlaid across Projection */}
-                {/* Main Outer Inflow Spiral Arm */}
-                <path
-                  d="M37 11 C49 13 57 22 54 35 C51 45 41 53 30 51 C19 50 11 40 13 29 C14 21 22 16 29 17 C35 19 40 24 38 30 C37 35 32 38 29 37"
-                  stroke="url(#heroCycloneArm1)"
-                  strokeWidth="3.4"
-                  strokeLinecap="round"
-                  fill="none"
-                />
-
-                {/* Secondary Inflow Rainband */}
-                <path
-                  d="M19 43 C11 37 10 24 18 16 C26 8 40 10 48 18 C54 26 51 37 43 42 C37 45 29 42 27 35 C25 30 29 26 33 27"
-                  stroke="url(#heroCycloneArm2)"
-                  strokeWidth="2.4"
-                  strokeLinecap="round"
-                  fill="none"
-                />
-
-                {/* Cyclone Core Eye (Thermal + Central Eye) */}
-                <circle cx="32" cy="31" r="5.2" fill="url(#heroEyeCore)" />
-                <circle cx="32" cy="31" r="2.4" fill="#020617" stroke="#38bdf8" strokeWidth="1" />
-                <circle cx="32" cy="31" r="1" fill="#ffffff" />
-
-                {/* Orbit Satellite indicator dot */}
-                <circle cx="53.5" cy="18.5" r="2" fill="#38bdf8" className="animate-pulse" />
-                <circle cx="53.5" cy="18.5" r="4.5" stroke="#38bdf8" strokeWidth="0.8" opacity="0.6" />
-              </svg>
-            </div>
-
-            <div>
-              <div className="flex items-center gap-2 mb-1">
-                <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 text-xs font-semibold border border-emerald-500/40 shadow-sm shadow-emerald-500/10">
-                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
-                  Live Telemetry Active
-                </span>
-              </div>
-              <h1 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">
+          <div className="flex flex-col lg:flex-row lg:items-center gap-8">
+            {/* Text */}
+            <div className="flex-1 space-y-4">
+              <h1 className="text-3xl sm:text-4xl font-extrabold text-white tracking-tight leading-tight">
                 Tropical Cyclone{" "}
-                <span className="bg-clip-text text-transparent bg-gradient-to-r from-sky-400 to-blue-200">
+                <span className="bg-clip-text text-transparent bg-gradient-to-r from-sky-400 via-blue-300 to-cyan-300">
                   AI Platform
                 </span>
               </h1>
-              <p className="text-slate-400 text-xs sm:text-sm mt-0.5">Real-Time Cyclone Tracking &amp; AI-Powered Forecast Hub</p>
+              <p className="text-slate-300 text-sm sm:text-base max-w-xl leading-relaxed">
+                Multi-source satellite data fusion — real-time GDACS alerts, Open-Meteo marine
+                telemetry and NASA GIBS imagery — combined with deep learning for identification,
+                classification and 24-hour forecasting.
+              </p>
+
+              {/* Data provenance legend */}
+              <div className="flex flex-wrap gap-2 pt-1">
+                <DataTypeBadge type="OBSERVED"   />
+                <DataTypeBadge type="HISTORICAL" />
+                <DataTypeBadge type="PREDICTED"  />
+                <DataTypeBadge type="SIMULATED"  />
+              </div>
+
+              {/* CTA buttons */}
+              <div className="flex flex-wrap gap-3 pt-2">
+                <Link href="/live-satellite" className="btn-primary">
+                  <Radio className="w-4 h-4 text-emerald-300" />
+                  Live Storm Feed
+                </Link>
+                <Link href="/satellite" className="btn-secondary">
+                  AI Satellite Analysis
+                  <ArrowRight className="w-4 h-4" />
+                </Link>
+                <Link href="/detection" className="btn-secondary">
+                  Cyclone Detection
+                  <ArrowRight className="w-4 h-4" />
+                </Link>
+              </div>
             </div>
-          </div>
 
-          {/* Description */}
-          <p className="text-slate-300 text-xs sm:text-sm max-w-2xl leading-relaxed mb-4">
-            Multi-source satellite data fusion connecting real-time GDACS alerts, Open-Meteo marine telemetry, and NASA GIBS satellite feeds with EfficientNet, ResNet50, and LSTM neural forecasting.
-          </p>
-
-          {/* Provenance Badges */}
-          <div className="flex flex-wrap gap-2 mb-5">
-            <DataTypeBadge type="OBSERVED" />
-            <DataTypeBadge type="HISTORICAL" />
-            <DataTypeBadge type="PREDICTED" />
-            <DataTypeBadge type="SIMULATED" />
-          </div>
-
-          {/* Buttons */}
-          <div className="flex flex-wrap gap-3">
-            <Link href="/live-satellite" className="btn-primary flex items-center gap-2">
-              <Radio className="w-4 h-4 animate-pulse text-emerald-300" /> Live Satellite &amp; Storms
-            </Link>
-            <Link href="/satellite" className="btn-secondary">
-              AI Image Analysis <ArrowRight className="w-4 h-4" />
-            </Link>
+            {/* Stats summary box */}
+            <div className="lg:w-72 bg-white/5 border border-white/10 rounded-2xl p-5 space-y-3 backdrop-blur-sm flex-shrink-0">
+              <p className="text-xs font-bold text-slate-400 uppercase tracking-widest">Problem Statement</p>
+              <p className="text-xs text-slate-300 leading-relaxed">
+                "To develop an AI/ML-based system for identification, classification, and
+                prediction of tropical cyclone patterns using multi-source satellite data."
+              </p>
+              <div className="border-t border-white/10 pt-3 space-y-2">
+                {[
+                  { label: "Detection",      model: "EfficientNet-B0", metric: "85.4% acc." },
+                  { label: "Classification", model: "ResNet50",        metric: "76.8% acc." },
+                  { label: "Track",          model: "Seq2Seq LSTM",    metric: "MAE 48 km" },
+                  { label: "Intensity",      model: "CNN + LSTM",      metric: "MAE 8 kt" },
+                  { label: "XAI",            model: "Grad-CAM",        metric: "Visual" },
+                ].map(({ label, model, metric }) => (
+                  <div key={label} className="flex items-center justify-between text-[11px]">
+                    <span className="text-slate-400">{label}</span>
+                    <span className="text-slate-300 font-medium">{model}</span>
+                    <span className="text-blue-400 font-mono font-semibold">{metric}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
           </div>
         </div>
       </section>
 
-      {/* ── Stat cards ────────────────────────────────────── */}
+      {/* ── LIVE TELEMETRY TICKER ─────────────────────────────────── */}
+      <section className="animate-fade-in-up animate-delay-50">
+        <LiveTickerBar />
+      </section>
+
+      {/* ── STAT CARDS ───────────────────────────────────────────── */}
       <section className="grid grid-cols-2 lg:grid-cols-4 gap-4 animate-fade-in-up animate-delay-100">
-        {STATS.map(({ icon: Icon, label, value, sub, color }) => {
-          const theme = STAT_THEMES[color] || STAT_THEMES.blue;
+        {STATS.map(({ icon: Icon, label, value, sub, theme }) => {
+          const t = STAT_THEME[theme];
           return (
             <div
               key={label}
-              className={`stat-card bg-gradient-to-br border ${theme.border} ${theme.gradient}`}
+              className={`stat-card border ${t.border} bg-gradient-to-br ${t.grad}`}
             >
-              <div className={`w-10 h-10 rounded-xl ${theme.iconBg} flex items-center justify-center mb-3`}>
-                <Icon className={`w-5 h-5 ${theme.iconColor}`} />
+              <div className={`w-10 h-10 rounded-xl ${t.iconBg} flex items-center justify-center mb-3 flex-shrink-0`}>
+                <Icon className={`w-5 h-5 ${t.icon}`} />
               </div>
-              <p className="text-2xl font-black text-slate-900 dark:text-white tracking-tight font-mono">{value}</p>
-              <p className="text-xs font-bold text-slate-700 dark:text-slate-200 mt-1">{label}</p>
+              <p className="text-2xl font-black text-slate-900 dark:text-white tracking-tight font-mono leading-none">
+                {value}
+              </p>
+              <p className="text-xs font-bold text-slate-700 dark:text-slate-200 mt-1.5">{label}</p>
               <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">{sub}</p>
             </div>
           );
         })}
       </section>
 
-      {/* ── Active & Recent Cyclones Section ─────────────────── */}
+      {/* ── FEATURE CARDS ────────────────────────────────────────── */}
+      <section className="animate-fade-in-up animate-delay-150">
+        <div className="flex items-center justify-between mb-5">
+          <div>
+            <h2 className="section-title">Platform Modules</h2>
+            <p className="section-subtitle">End-to-end AI pipeline for cyclone analysis</p>
+          </div>
+          <Link href="/performance" className="btn-outline text-xs">
+            <BarChart3 className="w-3.5 h-3.5" />
+            View Benchmarks
+          </Link>
+        </div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          {FEATURE_CARDS.map(({ icon: Icon, title, desc, href, accent, tag }) => {
+            const ac = ACCENT_MAP[accent] || ACCENT_MAP.slate;
+            return (
+              <Link
+                key={title}
+                href={href}
+                className={`feature-card border border-[var(--border-color)] ${ac.border} transition-all duration-200`}
+              >
+                <div className="flex items-start gap-4">
+                  <div className={`w-10 h-10 rounded-xl ${ac.iconBg} flex items-center justify-center flex-shrink-0`}>
+                    <Icon className={`w-5 h-5 ${ac.icon}`} />
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-start justify-between gap-2 mb-1.5">
+                      <h3 className="text-sm font-bold text-slate-900 dark:text-slate-100">{title}</h3>
+                      <span className={`text-[10px] px-2 py-0.5 rounded-full font-semibold flex-shrink-0 ${ac.tag}`}>
+                        {tag}
+                      </span>
+                    </div>
+                    <p className="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">{desc}</p>
+                  </div>
+                </div>
+                <div className="mt-4 flex items-center gap-1 text-xs font-semibold text-blue-600 dark:text-blue-400 group-hover:gap-2 transition-all">
+                  Open module <ArrowRight className="w-3.5 h-3.5" />
+                </div>
+              </Link>
+            );
+          })}
+        </div>
+      </section>
+
+      {/* ── CYCLONE MONITOR ──────────────────────────────────────── */}
       <section className="animate-fade-in-up animate-delay-200">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4">
-          <div className="flex items-center gap-3">
+        {/* Header */}
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-5">
+          <div>
             <h2 className="section-title flex items-center gap-2">
-              <Activity className="w-5 h-5 text-blue-400" />
+              <Activity className="w-5 h-5 text-blue-500" />
               Tropical Cyclone Monitor
             </h2>
+            <p className="section-subtitle">Live GDACS alerts · IBTrACS historical archive</p>
+          </div>
 
-            {/* Tab switch */}
-            <div className="flex rounded-xl bg-slate-100 dark:bg-slate-800/80 p-1 text-xs border border-slate-200 dark:border-slate-700">
+          <div className="flex items-center gap-2">
+            {/* Tab toggle */}
+            <div className="flex items-center gap-1 bg-slate-100 dark:bg-slate-800 rounded-xl p-1 border border-slate-200 dark:border-slate-700">
               <button
                 onClick={() => setActiveTab("LIVE")}
-                className={`flex items-center gap-1.5 py-1 px-3 rounded-lg font-semibold transition-all ${
-                  activeTab === "LIVE"
-                    ? "bg-slate-900 dark:bg-slate-700 text-white shadow-sm border border-slate-700"
-                    : "text-slate-500 hover:text-slate-800 dark:hover:text-slate-200"
-                }`}
+                className={`tab-pill flex items-center gap-1.5 ${activeTab === "LIVE" ? "tab-pill-active" : "tab-pill-inactive"}`}
               >
-                <span className={`w-2 h-2 rounded-full ${liveCyclones.length > 0 ? "bg-red-500 animate-ping" : "bg-emerald-400 animate-pulse"}`} />
-                Active Storms (Live)
-                <span className={`ml-1 text-[10px] px-1.5 py-0.2 rounded-full font-bold ${
-                  liveCyclones.length > 0
-                    ? "bg-red-500/30 text-red-200 border border-red-500/50"
-                    : "bg-emerald-500/30 text-emerald-200 border border-emerald-500/50"
-                }`}>
+                <span className={`w-1.5 h-1.5 rounded-full ${liveCyclones.length > 0 ? "bg-red-500 animate-ping" : "bg-emerald-400 animate-pulse"}`} />
+                Active Storms
+                <span className={`text-[10px] px-1.5 rounded-full font-bold ${activeTab === "LIVE" ? "bg-white/20" : "bg-slate-200 dark:bg-slate-700 text-slate-600 dark:text-slate-300"}`}>
                   {liveCyclones.length}
                 </span>
               </button>
               <button
                 onClick={() => setActiveTab("HISTORICAL")}
-                className={`py-1 px-3 rounded-lg font-semibold transition-all ${
-                  activeTab === "HISTORICAL"
-                    ? "bg-blue-600 text-white shadow-sm"
-                    : "text-slate-500 hover:text-slate-800 dark:hover:text-slate-200"
-                }`}
+                className={`tab-pill ${activeTab === "HISTORICAL" ? "tab-pill-active" : "tab-pill-inactive"}`}
               >
-                Historical Archive
+                Historical
               </button>
             </div>
-          </div>
 
-          <div className="flex items-center gap-2">
             {activeTab === "LIVE" ? (
               <>
                 <button
                   onClick={fetchLiveCyclones}
                   disabled={liveLoading}
-                  className="p-1.5 rounded-lg border border-slate-200 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-300 transition-all text-xs flex items-center gap-1"
+                  className="btn-outline text-xs py-1.5"
                 >
                   <RefreshCw className={`w-3.5 h-3.5 ${liveLoading ? "animate-spin text-blue-500" : ""}`} />
                   Refresh
                 </button>
-                <Link
-                  href="/live-satellite"
-                  className="text-xs text-blue-500 hover:text-blue-400 flex items-center gap-1 transition-colors font-medium"
-                >
-                  Full Real-Time Map <ArrowRight className="w-3 h-3" />
+                <Link href="/live-satellite" className="btn-outline text-xs py-1.5">
+                  Full Map <ArrowRight className="w-3 h-3" />
                 </Link>
               </>
             ) : (
-              <Link
-                href="/historical"
-                className="text-xs text-blue-500 hover:text-blue-400 flex items-center gap-1 transition-colors font-medium"
-              >
-                Browse Full Catalog <ArrowRight className="w-3 h-3" />
+              <Link href="/historical" className="btn-outline text-xs py-1.5">
+                Full Catalog <ArrowRight className="w-3 h-3" />
               </Link>
             )}
           </div>
         </div>
 
-        {/* ── Tab Content: LIVE ACTIVE CYCLONES ── */}
-        {activeTab === "LIVE" ? (
+        {/* Last refreshed */}
+        {lastRefreshed && activeTab === "LIVE" && (
+          <p className="text-xs text-slate-400 dark:text-slate-500 mb-3 flex items-center gap-1.5">
+            <CheckCircle2 className="w-3.5 h-3.5 text-emerald-500" />
+            Last synced: {lastRefreshed} · Auto-refresh every 5 min
+          </p>
+        )}
+
+        {/* ── LIVE TAB ── */}
+        {activeTab === "LIVE" && (
           liveLoading ? (
-            <div className="glass-card rounded-2xl p-8 flex items-center justify-center gap-2 text-slate-400">
-              <Loader2 className="w-5 h-5 animate-spin text-blue-500" />
-              <span className="text-sm">Fetching active storm coordinates from GDACS...</span>
+            <div className="card p-12 flex flex-col items-center justify-center gap-3 text-slate-400">
+              <Loader2 className="w-8 h-8 animate-spin text-blue-500" />
+              <p className="text-sm font-medium">Fetching active storm data from GDACS…</p>
+              <p className="text-xs text-slate-400">This may take a moment</p>
             </div>
           ) : liveError ? (
-            <div className="glass-card rounded-2xl p-8 text-center border-red-500/30">
-              <AlertTriangle className="w-8 h-8 mx-auto mb-2 text-red-500" />
-              <p className="text-sm text-red-400">{liveError}</p>
+            <div className="card p-10 text-center border-red-200 dark:border-red-800/40">
+              <AlertTriangle className="w-10 h-10 mx-auto mb-3 text-red-500" />
+              <p className="text-sm font-semibold text-red-600 dark:text-red-400">GDACS Feed Unavailable</p>
+              <p className="text-xs text-slate-500 mt-1">{liveError}</p>
+              <button onClick={fetchLiveCyclones} className="btn-outline mt-4 mx-auto text-xs">
+                <RefreshCw className="w-3.5 h-3.5" /> Retry
+              </button>
             </div>
           ) : liveCyclones.length === 0 ? (
-            <div className="glass-card rounded-2xl p-8 text-center">
-              <Activity className="w-8 h-8 mx-auto mb-2 text-blue-500" />
-              <p className="text-sm font-semibold text-slate-700 dark:text-slate-200">No Active Tropical Cyclones Detected</p>
-              <p className="text-xs text-slate-400 mt-1">All ocean basins currently tranquil according to GDACS alert feeds.</p>
+            <div className="card p-12 text-center">
+              <div className="w-14 h-14 mx-auto mb-4 rounded-full bg-emerald-50 dark:bg-emerald-900/30 flex items-center justify-center">
+                <Activity className="w-7 h-7 text-emerald-500" />
+              </div>
+              <p className="text-sm font-bold text-slate-700 dark:text-slate-200">No Active Tropical Cyclones</p>
+              <p className="text-xs text-slate-400 mt-1 max-w-xs mx-auto">
+                All ocean basins currently tranquil according to GDACS alert feeds.
+              </p>
+              <DataTypeBadge type="OBSERVED" className="mt-4" />
             </div>
           ) : (
-            <div className="glass-card rounded-2xl overflow-hidden shadow-lg border border-slate-200 dark:border-slate-800">
-              <div className="overflow-x-auto overflow-y-auto max-h-[350px] custom-scrollbar">
-                <table className="w-full text-sm">
-                  <thead className="sticky top-0 z-10 bg-slate-100/95 dark:bg-slate-900/95 backdrop-blur-sm border-b border-slate-200 dark:border-slate-800 shadow-sm">
+            <div className="card overflow-hidden">
+              <div className="overflow-x-auto overflow-y-auto max-h-[400px] custom-scrollbar">
+                <table className="data-table">
+                  <thead>
                     <tr>
-                      {["Active Storm", "Basin", "Alert Level", "Intensity", "Wind Speed", "Location", "Source", "Action"].map((h) => (
-                        <th key={h} className="text-left px-3.5 py-2.5 text-xs font-bold text-slate-600 dark:text-slate-300 uppercase tracking-wider whitespace-nowrap">
-                          {h}
-                        </th>
+                      {["Active Storm", "Basin", "Alert", "Category", "Wind Speed", "Location", "Type", "Action"].map((h) => (
+                        <th key={h}>{h}</th>
                       ))}
                     </tr>
                   </thead>
-                  <tbody className="divide-y divide-slate-100/70 dark:divide-slate-800/50">
+                  <tbody>
                     {liveCyclones.map((c) => (
-                      <tr key={c.id} className="hover:bg-slate-50 dark:hover:bg-slate-800/60 transition-colors group">
-                        <td className="px-3.5 py-2">
-                          <div className="flex items-center gap-2">
-                            <span className="w-2 h-2 rounded-full bg-red-500 animate-pulse flex-shrink-0 shadow-[0_0_6px_rgba(239,68,68,0.8)]" />
-                            <div className="max-w-[200px] truncate">
-                              <p className="font-bold text-slate-900 dark:text-slate-100 text-xs truncate">
-                                {c.name !== "UNNAMED" ? c.name : c.title.slice(0, 30)}
+                      <tr key={c.id}>
+                        {/* Name */}
+                        <td>
+                          <div className="flex items-center gap-2 min-w-[160px]">
+                            <span className="w-2 h-2 rounded-full bg-red-500 animate-pulse flex-shrink-0 shadow-[0_0_6px_rgba(239,68,68,0.7)]" />
+                            <div className="max-w-[190px]">
+                              <p className="text-xs font-bold text-slate-900 dark:text-slate-100 truncate">
+                                {c.name !== "UNNAMED" ? c.name : c.title.slice(0, 28)}
                               </p>
                               <p className="text-[10px] text-slate-400 truncate">{c.title}</p>
                             </div>
                           </div>
                         </td>
-
-                        <td className="px-3.5 py-2 text-xs font-mono font-bold text-slate-700 dark:text-slate-300">
-                          <span className="px-1.5 py-0.5 rounded bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-[11px]">
+                        {/* Basin */}
+                        <td>
+                          <span className="font-mono text-xs font-bold bg-slate-100 dark:bg-slate-800 px-2 py-0.5 rounded border border-slate-200 dark:border-slate-700">
                             {c.basin}
                           </span>
                         </td>
-
-                        <td className="px-3.5 py-2">
-                          <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full border ${getAlertBadgeClass(c.alert_level)}`}>
+                        {/* Alert */}
+                        <td>
+                          <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full border ${alertBadgeClass(c.alert_level)}`}>
                             {c.alert_level}
                           </span>
                         </td>
-
-                        <td className="px-3.5 py-2">
-                          <IntensityBadge intensity={c.intensity_class} />
-                        </td>
-
-                        <td className="px-3.5 py-2 font-mono text-xs text-slate-800 dark:text-slate-200 whitespace-nowrap">
+                        {/* Intensity */}
+                        <td><IntensityBadge intensity={c.intensity_class} /></td>
+                        {/* Wind */}
+                        <td className="whitespace-nowrap">
                           {c.wind_kt ? (
-                            <span className={`flex items-center gap-1 font-semibold ${
-                              c.wind_kt >= 34 ? "text-red-600 dark:text-red-400 font-bold" : "text-emerald-600 dark:text-emerald-400"
-                            }`}>
-                              <Wind className="w-3 h-3 flex-shrink-0" />
-                              {c.wind_kt} kt <span className="text-[10px] text-slate-400 font-normal">({c.wind_kmh ? Math.round(c.wind_kmh) : Math.round(c.wind_kt * 1.852)} km/h)</span>
+                            <span className={`flex items-center gap-1 font-mono text-xs font-semibold ${c.wind_kt >= 34 ? "text-red-600 dark:text-red-400" : "text-emerald-600 dark:text-emerald-400"}`}>
+                              <Wind className="w-3 h-3" />
+                              {c.wind_kt} kt
+                              <span className="text-[10px] text-slate-400 font-normal">
+                                ({c.wind_kmh ? Math.round(c.wind_kmh) : Math.round(c.wind_kt * 1.852)} km/h)
+                              </span>
                             </span>
-                          ) : (
-                            <span className="text-slate-400">—</span>
-                          )}
+                          ) : <span className="text-slate-400">—</span>}
                         </td>
-
-                        <td className="px-3.5 py-2 font-mono text-xs text-slate-500 dark:text-slate-400 whitespace-nowrap">
-                          {c.lat !== null && c.lon !== null ? (
-                            `${c.lat.toFixed(1)}°, ${c.lon.toFixed(1)}°`
-                          ) : (
-                            "—"
-                          )}
+                        {/* Location */}
+                        <td className="font-mono text-xs text-slate-500 dark:text-slate-400 whitespace-nowrap">
+                          {c.lat != null && c.lon != null
+                            ? `${c.lat.toFixed(1)}°, ${c.lon.toFixed(1)}°`
+                            : "—"}
                         </td>
-
-                        <td className="px-3.5 py-2">
-                          <DataTypeBadge type="OBSERVED" />
-                        </td>
-
-                        <td className="px-3.5 py-2 whitespace-nowrap">
+                        {/* Type */}
+                        <td><DataTypeBadge type="OBSERVED" /></td>
+                        {/* Actions */}
+                        <td className="whitespace-nowrap">
                           <div className="flex items-center gap-1.5">
-                            <Link
-                              href="/live-satellite"
-                              className="text-[11px] px-2 py-0.5 rounded-md bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 hover:bg-blue-100 dark:hover:bg-blue-800/40 font-semibold transition-all inline-flex items-center gap-1"
-                            >
+                            <Link href="/live-satellite"
+                              className="text-[11px] px-2 py-0.5 rounded bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 hover:bg-blue-100 dark:hover:bg-blue-800/40 font-semibold transition-all">
                               Live →
                             </Link>
                             {c.url && (
-                              <a
-                                href={c.url}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="text-slate-400 hover:text-slate-200 p-0.5"
-                                title="Open GDACS alert report"
-                              >
+                              <a href={c.url} target="_blank" rel="noopener noreferrer"
+                                className="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 p-0.5 transition-colors" title="Open GDACS report">
                                 <ExternalLink className="w-3 h-3" />
                               </a>
                             )}
@@ -584,52 +553,56 @@ export default function DashboardPage() {
               </div>
             </div>
           )
-        ) : (
-          /* ── Tab Content: HISTORICAL ARCHIVE ── */
+        )}
+
+        {/* ── HISTORICAL TAB ── */}
+        {activeTab === "HISTORICAL" && (
           historicalLoading ? (
-            <div className="glass-card rounded-2xl p-8 flex items-center justify-center gap-2 text-slate-400">
-              <Loader2 className="w-5 h-5 animate-spin text-blue-500" />
-              <span className="text-sm">Loading historical cyclone archive...</span>
+            <div className="card p-12 flex items-center justify-center gap-3 text-slate-400">
+              <Loader2 className="w-6 h-6 animate-spin text-blue-500" />
+              <span className="text-sm">Loading IBTrACS archive…</span>
             </div>
           ) : recentCyclones.length === 0 ? (
-            <div className="glass-card rounded-2xl p-8 text-center">
-              <AlertTriangle className="w-8 h-8 mx-auto mb-2 text-slate-500" />
-              <p className="text-sm text-slate-400">No historical cyclone records found in database.</p>
+            <div className="card p-12 text-center">
+              <Database className="w-10 h-10 mx-auto mb-3 text-slate-400" />
+              <p className="text-sm font-semibold text-slate-600 dark:text-slate-300">Historical Archive Empty</p>
+              <p className="text-xs text-slate-400 mt-1">Run the database seeder to load IBTrACS cyclone records.</p>
             </div>
           ) : (
-            <div className="glass-card rounded-2xl overflow-hidden shadow-lg border border-slate-200 dark:border-slate-800">
-              <div className="overflow-x-auto overflow-y-auto max-h-[350px] custom-scrollbar">
-                <table className="w-full text-sm">
-                  <thead className="sticky top-0 z-10 bg-slate-100/95 dark:bg-slate-900/95 backdrop-blur-sm border-b border-slate-200 dark:border-slate-800 shadow-sm">
+            <div className="card overflow-hidden">
+              <div className="overflow-x-auto overflow-y-auto max-h-[400px] custom-scrollbar">
+                <table className="data-table">
+                  <thead>
                     <tr>
-                      {["Name", "Year", "Basin", "Peak Intensity", "Peak Wind", "Type", ""].map((h) => (
-                        <th key={h} className="text-left px-3.5 py-2.5 text-xs font-bold text-slate-600 dark:text-slate-300 uppercase tracking-wider whitespace-nowrap">
-                          {h}
-                        </th>
+                      {["Name", "Year", "Basin", "Peak Category", "Peak Wind", "Type", ""].map((h) => (
+                        <th key={h}>{h}</th>
                       ))}
                     </tr>
                   </thead>
-                  <tbody className="divide-y divide-slate-100/70 dark:divide-slate-800/50">
+                  <tbody>
                     {recentCyclones.map((c) => (
-                      <tr key={c.id} className="hover:bg-blue-50 dark:hover:bg-blue-500/10 transition-colors group">
-                        <td className="px-3.5 py-2 font-semibold text-slate-800 dark:text-slate-100 text-xs">{c.name || "UNNAMED"}</td>
-                        <td className="px-3.5 py-2 text-slate-600 dark:text-slate-400 text-xs">{c.season}</td>
-                        <td className="px-3.5 py-2 text-slate-600 dark:text-slate-400 font-mono font-bold text-xs">{c.basin}</td>
-                        <td className="px-3.5 py-2">
-                          <IntensityBadge intensity={(c.peak_intensity || "UNKNOWN") as IntensityClass} />
+                      <tr key={c.id}>
+                        <td className="font-semibold text-slate-900 dark:text-slate-100 text-xs">{c.name || "UNNAMED"}</td>
+                        <td className="font-mono text-xs text-slate-500">{c.season || "—"}</td>
+                        <td>
+                          <span className="font-mono text-xs font-bold bg-slate-100 dark:bg-slate-800 px-2 py-0.5 rounded border border-slate-200 dark:border-slate-700">
+                            {c.basin || "—"}
+                          </span>
                         </td>
-                        <td className="px-3.5 py-2 font-mono text-slate-700 dark:text-slate-300 text-xs whitespace-nowrap">
-                          {c.peak_wind_kt ? `${c.peak_wind_kt} kt` : "—"}
+                        <td>{c.peak_intensity ? <IntensityBadge intensity={c.peak_intensity} /> : "—"}</td>
+                        <td className="font-mono text-xs whitespace-nowrap">
+                          {c.peak_wind_kt ? (
+                            <span className="flex items-center gap-1 text-slate-700 dark:text-slate-300">
+                              <Wind className="w-3 h-3 text-slate-400" />
+                              {c.peak_wind_kt} kt
+                            </span>
+                          ) : "—"}
                         </td>
-                        <td className="px-3.5 py-2">
-                          <DataTypeBadge type={c.data_type || "HISTORICAL"} />
-                        </td>
-                        <td className="px-3.5 py-2 whitespace-nowrap">
-                          <Link
-                            href={`/historical?id=${c.id}`}
-                            className="text-xs text-blue-500 hover:text-blue-400 opacity-0 group-hover:opacity-100 transition-all font-semibold"
-                          >
-                            Track View →
+                        <td><DataTypeBadge type="HISTORICAL" /></td>
+                        <td>
+                          <Link href={`/historical`}
+                            className="text-[11px] px-2 py-0.5 rounded bg-slate-50 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-blue-50 dark:hover:bg-blue-900/20 hover:text-blue-600 font-semibold transition-all">
+                            Details →
                           </Link>
                         </td>
                       </tr>
@@ -642,68 +615,69 @@ export default function DashboardPage() {
         )}
       </section>
 
-      {/* ── Platform Modules ──────────────────────────────── */}
+      {/* ── ARCHITECTURE ────────────────────────────────────────── */}
       <section className="animate-fade-in-up animate-delay-300">
-        <div className="flex items-center justify-between mb-5">
-          <h2 className="section-title flex items-center gap-2">
-            <Layers className="w-5 h-5 text-blue-400" />
-            Platform AI Modules
-          </h2>
+        <div className="mb-5">
+          <h2 className="section-title">System Architecture</h2>
+          <p className="section-subtitle">Multi-source data ingestion → AI inference → Real-time visualization</p>
         </div>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-          {FEATURE_CARDS.map(({ icon: Icon, title, desc, href, color, tag }) => {
-            const c = COLOR_MAP[color];
-            return (
-              <Link
-                key={title}
-                href={href}
-                className="glass-card rounded-2xl p-5 group block"
-              >
-                <div className="flex items-start justify-between mb-4">
-                  <div className={`w-10 h-10 rounded-xl ${c.bg} flex items-center justify-center`}>
-                    <Icon className={`w-5 h-5 ${c.icon}`} />
-                  </div>
-                  <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${c.tag}`}>
-                    {tag}
-                  </span>
-                </div>
-                <h3 className="font-bold text-slate-800 dark:text-slate-100 text-sm mb-1.5">{title}</h3>
-                <p className="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">{desc}</p>
-                <div className={`flex items-center gap-1 mt-4 text-xs font-medium ${c.icon} opacity-0 group-hover:opacity-100 transition-opacity`}>
-                  Open module <ArrowRight className="w-3 h-3" />
-                </div>
-              </Link>
-            );
-          })}
-        </div>
-      </section>
 
-      {/* ── Architecture ──────────────────────────────────── */}
-      <section className="rounded-3xl overflow-hidden border border-slate-700/60 bg-gradient-to-br from-slate-900 to-slate-800">
-        <div className="px-6 py-4 border-b border-slate-700/60 flex items-center gap-2">
-          <Cpu className="w-4 h-4 text-blue-400" />
-          <h2 className="font-bold text-white text-sm">System Architecture &amp; Data Pipeline</h2>
-        </div>
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-px bg-slate-700/40">
-          {ARCH.map(({ icon: Icon, label, items }) => (
-            <div key={label} className="bg-slate-900/60 p-5 text-center flex flex-col items-center">
-              <div className="w-10 h-10 rounded-xl bg-blue-500/10 border border-blue-500/20 flex items-center justify-center mb-3 text-blue-400">
-                <Icon className="w-5 h-5" />
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          {ARCH.map(({ icon: Icon, label, color, items }, idx) => (
+            <div key={label} className={`card p-5 border ${ARCH_COLOR[color]}`}>
+              <div className="flex items-center gap-3 mb-4">
+                <div className={`w-9 h-9 rounded-xl flex items-center justify-center ${ARCH_COLOR[color]}`}>
+                  <Icon className="w-4.5 h-4.5" />
+                </div>
+                <div>
+                  <p className="text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest">
+                    Step {idx + 1}
+                  </p>
+                  <p className="text-sm font-bold text-slate-900 dark:text-slate-100">{label}</p>
+                </div>
               </div>
-              <p className="text-xs font-bold text-slate-300 uppercase tracking-widest mb-3">{label}</p>
-              <div className="space-y-1.5 w-full">
+              <ul className="space-y-2">
                 {items.map((item) => (
-                  <p key={item} className="text-xs text-slate-400 bg-slate-800/60 rounded-lg px-2 py-1">{item}</p>
+                  <li key={item} className="flex items-center gap-2 text-xs text-slate-600 dark:text-slate-400">
+                    <span className={`w-1.5 h-1.5 rounded-full flex-shrink-0 ${ARCH_COLOR[color].includes("blue") ? "bg-blue-400" : ARCH_COLOR[color].includes("purple") ? "bg-purple-400" : ARCH_COLOR[color].includes("amber") ? "bg-amber-400" : "bg-emerald-400"}`} />
+                    {item}
+                  </li>
                 ))}
-              </div>
+              </ul>
             </div>
           ))}
         </div>
+
+        {/* Flow arrow (hidden on mobile) */}
+        <div className="hidden lg:flex items-center justify-center gap-2 mt-4 text-xs text-slate-400 dark:text-slate-500 font-medium">
+          <span className="px-3 py-1 rounded-full bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700">Raw Satellite Data</span>
+          <ArrowRight className="w-3.5 h-3.5 text-slate-300 dark:text-slate-600" />
+          <span className="px-3 py-1 rounded-full bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700">AI Preprocessing</span>
+          <ArrowRight className="w-3.5 h-3.5 text-slate-300 dark:text-slate-600" />
+          <span className="px-3 py-1 rounded-full bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700">Model Inference</span>
+          <ArrowRight className="w-3.5 h-3.5 text-slate-300 dark:text-slate-600" />
+          <span className="px-3 py-1 rounded-full bg-blue-100 dark:bg-blue-900/30 border border-blue-200 dark:border-blue-700/50 text-blue-700 dark:text-blue-300 font-semibold">Prediction + XAI Output</span>
+        </div>
       </section>
 
-      {/* ── Real-Time 1s Telemetry Stream Bar (Bottom Status Bar) ── */}
-      <section className="pt-2">
-        <LiveTickerBar />
+      {/* ── DISCLAIMER ──────────────────────────────────────────── */}
+      <section className="animate-fade-in-up animate-delay-400">
+        <div className="alert-box alert-warning">
+          <AlertTriangle className="w-4 h-4 flex-shrink-0 mt-0.5" />
+          <div>
+            <p className="font-semibold text-sm mb-0.5">Research Prototype — SIH 2024</p>
+            <p className="text-xs leading-relaxed">
+              This platform is a research prototype for Smart India Hackathon under{" "}
+              <strong>Ministry of Earth Sciences (MoES)</strong>. It is{" "}
+              <strong>NOT</strong> an official operational meteorological warning service.
+              For official cyclone alerts in India, refer to the{" "}
+              <a href="https://mausam.imd.gov.in" target="_blank" rel="noopener noreferrer"
+                className="underline font-semibold hover:text-amber-600 dark:hover:text-amber-200">
+                India Meteorological Department (IMD)
+              </a>.
+            </p>
+          </div>
+        </div>
       </section>
 
     </div>

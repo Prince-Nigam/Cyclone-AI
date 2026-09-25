@@ -1,15 +1,35 @@
 "use client";
 
 import React, { useCallback, useRef, useState, useEffect } from "react";
-import { Upload, X, Satellite, AlertTriangle, Cpu, FolderArchive } from "lucide-react";
+import { Upload, X, Satellite, AlertTriangle, Cpu, FolderArchive, Sparkles, Info, Loader2 } from "lucide-react";
 import toast from "react-hot-toast";
 import { AnalysisPanel } from "@/components/analysis/AnalysisPanel";
 import { analyzeImage } from "@/services/cycloneService";
 import { validateImageFileForCyclone } from "@/lib/cycloneDetector";
 import type { AnalysisResult } from "@/types";
+import { DataTypeBadge } from "@/components/ui/DataTypeBadge";
 
 const SUPPORTED_FORMATS = ".png,.jpg,.jpeg,.tif,.tiff,.nc,.h5,.hdf5";
 const MAX_SIZE_MB = 50;
+
+/* ── Sample images ── */
+const SAMPLE_IMAGES = [
+  {
+    label: "Typhoon Megi",
+    url: "https://upload.wikimedia.org/wikipedia/commons/thumb/6/6e/Typhoon_Megi_%282016%29_Oct_26.jpg/640px-Typhoon_Megi_%282016%29_Oct_26.jpg",
+    hint: "Super Typhoon Megi 2016 — MODIS visible",
+  },
+  {
+    label: "Hurricane Isabel",
+    url: "https://upload.wikimedia.org/wikipedia/commons/thumb/1/10/Hurricane_Isabel_from_ISS.jpg/640px-Hurricane_Isabel_from_ISS.jpg",
+    hint: "Hurricane Isabel — ISS photograph",
+  },
+  {
+    label: "Cyclone Gafilo",
+    url: "https://upload.wikimedia.org/wikipedia/commons/thumb/5/50/Cyclone_Gafilo.jpg/640px-Cyclone_Gafilo.jpg",
+    hint: "Intense Tropical Cyclone Gafilo — MODIS Terra",
+  },
+];
 
 export default function SatellitePage() {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
@@ -18,6 +38,7 @@ export default function SatellitePage() {
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [result, setResult] = useState<AnalysisResult | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [loadingSample, setLoadingSample] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleFileSelect = useCallback((file: File) => {
@@ -37,6 +58,25 @@ export default function SatellitePage() {
       setPreview(null);
     }
   }, []);
+
+  /* ── Load sample image from URL ── */
+  const loadSampleImage = useCallback(async (url: string, label: string) => {
+    setLoadingSample(true);
+    setResult(null);
+    setError(null);
+    try {
+      const resp = await fetch(url);
+      const blob = await resp.blob();
+      const ext  = url.split(".").pop()?.split("?")[0] || "jpg";
+      const file = new File([blob], `sample-${label.replace(/\s+/g, "-").toLowerCase()}.${ext}`, { type: blob.type || "image/jpeg" });
+      handleFileSelect(file);
+      toast.success(`Sample loaded: ${label}`);
+    } catch {
+      toast.error("Could not load sample image.");
+    } finally {
+      setLoadingSample(false);
+    }
+  }, [handleFileSelect]);
 
   useEffect(() => {
     const handlePaste = (e: ClipboardEvent) => {
@@ -102,11 +142,53 @@ export default function SatellitePage() {
   };
 
   return (
-    <div className="space-y-6">
-      <div>
-        <h1 className="text-2xl font-bold text-slate-900 dark:text-slate-100">Satellite Image Analysis</h1>
-        <p className="text-slate-500 dark:text-slate-400 text-sm mt-1">
-          Upload a satellite image to run AI cyclone detection, classification, and Grad-CAM explainability.
+    <div className="space-y-6 page-transition">
+      {/* ── Page hero ── */}
+      <div className="page-hero">
+        <div className="pointer-events-none absolute -top-16 -right-16 w-56 h-56 rounded-full bg-purple-600/10 blur-3xl" />
+        <div className="relative">
+          <div className="flex items-center gap-2 mb-3">
+            <span className="badge badge-blue text-[11px]">EfficientNet-B0 + ResNet50</span>
+            <span className="badge badge-green text-[11px]">Grad-CAM XAI</span>
+          </div>
+          <h1 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">
+            Satellite Image Analysis
+          </h1>
+          <p className="text-slate-400 text-sm mt-2 max-w-xl">
+            Upload a satellite image to run the full AI pipeline — detection, classification,
+            intensity estimation, track forecast, and Grad-CAM explainability heatmap.
+          </p>
+        </div>
+      </div>
+
+      {/* ── Sample images strip ── */}
+      <div className="card p-4">
+        <div className="flex items-center gap-2 mb-3">
+          <Sparkles className="w-4 h-4 text-amber-500" />
+          <p className="text-sm font-semibold text-slate-800 dark:text-slate-200">Try with a sample cyclone image</p>
+          <span className="ml-auto badge badge-amber text-[10px]">Demo</span>
+        </div>
+        <div className="flex flex-wrap gap-2">
+          {SAMPLE_IMAGES.map((sample) => (
+            <button
+              key={sample.label}
+              onClick={() => loadSampleImage(sample.url, sample.label)}
+              disabled={loadingSample || isAnalyzing}
+              className="flex items-center gap-2 px-3 py-2 rounded-lg border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 hover:border-blue-400 hover:bg-blue-50 dark:hover:bg-blue-900/20 disabled:opacity-50 disabled:cursor-not-allowed transition-all text-xs font-medium text-slate-700 dark:text-slate-300"
+              title={sample.hint}
+            >
+              {loadingSample ? (
+                <Loader2 className="w-3.5 h-3.5 animate-spin text-blue-500 flex-shrink-0" />
+              ) : (
+                <Satellite className="w-3.5 h-3.5 text-blue-500 flex-shrink-0" />
+              )}
+              {sample.label}
+            </button>
+          ))}
+        </div>
+        <p className="mt-2 text-[11px] text-slate-400 flex items-center gap-1.5">
+          <Info className="w-3 h-3" />
+          Public domain satellite imagery. For real analysis, upload HURSAT-B1 IR images.
         </p>
       </div>
 
