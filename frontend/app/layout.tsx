@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Toaster } from "react-hot-toast";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
@@ -20,15 +20,18 @@ export const metadata: Metadata = {
     "Indian Ocean", "IBTrACS", "Smart India Hackathon",
   ],
   authors: [{ name: "SIH Team — MoES Problem Statement" }],
-  themeColor: [
-    { media: "(prefers-color-scheme: dark)",  color: "#060d1b" },
-    { media: "(prefers-color-scheme: light)", color: "#f0f4f8" },
-  ],
   openGraph: {
     title: "Cyclone AI Platform — SIH 2024",
     description: "Real-time AI cyclone tracking & forecasting for Ministry of Earth Sciences.",
     type: "website",
   },
+};
+
+export const viewport: Viewport = {
+  themeColor: [
+    { media: "(prefers-color-scheme: dark)",  color: "#060d1b" },
+    { media: "(prefers-color-scheme: light)", color: "#f0f4f8" },
+  ],
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

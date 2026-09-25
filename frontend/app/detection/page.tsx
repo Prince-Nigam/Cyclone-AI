@@ -1,9 +1,8 @@
 "use client";
 
 import React, { useRef, useState, useEffect, useCallback } from "react";
-import dynamic from "next/dynamic";
 import toast from "react-hot-toast";
-import { Satellite, Upload, X, ArrowRight, Loader2, Sparkles, Info } from "lucide-react";
+import { Satellite, Upload, X, Loader2, Sparkles, Info } from "lucide-react";
 import { DataTypeBadge } from "@/components/ui/DataTypeBadge";
 import { analyzeImage } from "@/services/cycloneService";
 import { validateImageFileForCyclone } from "@/lib/cycloneDetector";
@@ -18,7 +17,7 @@ const SAMPLE_IMAGES = [
   {
     label: "Typhoon (CAT3+)",
     url: "https://upload.wikimedia.org/wikipedia/commons/thumb/6/6e/Typhoon_Megi_%282016%29_Oct_26.jpg/640px-Typhoon_Megi_%282016%29_Oct_26.jpg",
-    hint: "Super Typhoon Megi — MODIS visible satellite",
+    hint: "Super Typhoon Megi 2016 — MODIS visible satellite",
   },
   {
     label: "Hurricane Eye Wall",
@@ -34,33 +33,15 @@ const SAMPLE_IMAGES = [
 
 export default function DetectionPage() {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
-  const [preview, setPreview] = useState<string | null>(null);
-  const [dragOver, setDragOver] = useState(false);
-  const [isAnalyzing, setIsAnalyzing] = useState(false);
-  const [result, setResult] = useState<AnalysisResult | null>(null);
-  const [error, setError] = useState<string | null>(null);
+  const [preview, setPreview]           = useState<string | null>(null);
+  const [dragOver, setDragOver]         = useState(false);
+  const [isAnalyzing, setIsAnalyzing]   = useState(false);
+  const [result, setResult]             = useState<AnalysisResult | null>(null);
+  const [error, setError]               = useState<string | null>(null);
   const [loadingSample, setLoadingSample] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  /* ── Load a sample image from URL ── */
-  const loadSampleImage = useCallback(async (url: string, label: string) => {
-    setLoadingSample(true);
-    setResult(null);
-    setError(null);
-    try {
-      const resp = await fetch(url);
-      const blob = await resp.blob();
-      const ext  = url.split(".").pop()?.split("?")[0] || "jpg";
-      const file = new File([blob], `sample-${label.replace(/\s+/g, "-").toLowerCase()}.${ext}`, { type: blob.type || "image/jpeg" });
-      handleFileSelect(file);
-      toast.success(`Sample loaded: ${label}`);
-    } catch {
-      toast.error("Could not load sample image. Check your internet connection.");
-    } finally {
-      setLoadingSample(false);
-    }
-  }, [handleFileSelect]);
-
+  /* ── 1. handleFileSelect — MUST come before loadSampleImage ── */
   const handleFileSelect = useCallback((file: File) => {
     if (file.size > MAX_SIZE_MB * 1024 * 1024) {
       toast.error(`File too large. Max ${MAX_SIZE_MB}MB.`);
@@ -79,7 +60,7 @@ export default function DetectionPage() {
     }
   }, []);
 
-  /* ── Load a sample image from URL ── */
+  /* ── 2. loadSampleImage — uses handleFileSelect ── */
   const loadSampleImage = useCallback(async (url: string, label: string) => {
     setLoadingSample(true);
     setResult(null);
@@ -88,7 +69,11 @@ export default function DetectionPage() {
       const resp = await fetch(url);
       const blob = await resp.blob();
       const ext  = url.split(".").pop()?.split("?")[0] || "jpg";
-      const file = new File([blob], `sample-${label.replace(/\s+/g, "-").toLowerCase()}.${ext}`, { type: blob.type || "image/jpeg" });
+      const file = new File(
+        [blob],
+        `sample-${label.replace(/\s+/g, "-").toLowerCase()}.${ext}`,
+        { type: blob.type || "image/jpeg" }
+      );
       handleFileSelect(file);
       toast.success(`Sample loaded: ${label}`);
     } catch {
@@ -98,6 +83,7 @@ export default function DetectionPage() {
     }
   }, [handleFileSelect]);
 
+  /* ── Clipboard paste support ── */
   useEffect(() => {
     const handlePaste = (e: ClipboardEvent) => {
       const items = e.clipboardData?.items;
@@ -117,24 +103,23 @@ export default function DetectionPage() {
     return () => window.removeEventListener("paste", handlePaste);
   }, [handleFileSelect]);
 
-  const handleDrop = (e: React.DragEvent) => {
+  const handleDrop = useCallback((e: React.DragEvent) => {
     e.preventDefault();
     setDragOver(false);
     const f = e.dataTransfer.files[0];
     if (f) handleFileSelect(f);
-  };
+  }, [handleFileSelect]);
 
+  /* ── Run AI analysis ── */
   const runAnalysis = async () => {
     if (!selectedFile) return;
     setIsAnalyzing(true);
     setError(null);
     setResult(null);
 
-    // ── Client-side Cyclone Validation ─────────────────────────────────
     const validation = await validateImageFileForCyclone(selectedFile);
     if (!validation.isCyclone) {
-      const reasonMsg = validation.reason || "Image does not match a tropical cyclone satellite structure.";
-      setError(`No cyclone detected — ${reasonMsg}`);
+      setError(`No cyclone detected — ${validation.reason || "Image does not match a tropical cyclone satellite structure."}`);
       toast.error("No cyclone detected in this image.");
       setIsAnalyzing(false);
       return;
@@ -142,20 +127,17 @@ export default function DetectionPage() {
 
     try {
       const res = await analyzeImage(selectedFile, undefined, undefined, true);
-
-      // If detection ran but no cyclone was found — show error, never fake results
       if (!res || !res.detection || res.detection.detected === false) {
-        const disclaimer = res?.detection?.disclaimer || "No cyclone detected in this image. Please upload a satellite IR image containing an active tropical cyclone.";
+        const disclaimer = res?.detection?.disclaimer
+          || "No cyclone detected. Please upload a satellite IR image of an active tropical cyclone.";
         setError(disclaimer);
         toast.error("No cyclone detected in this image.");
         return;
       }
-
       setResult(res);
       toast.success("Cyclone detected — analysis complete!");
     } catch (err: any) {
       const msg = err.message || "Analysis failed";
-
       setError(msg);
       toast.error(msg);
     } finally {
@@ -163,9 +145,11 @@ export default function DetectionPage() {
     }
   };
 
+  /* ════════════════════════════════════════════════════════════ */
   return (
     <div className="space-y-6 page-transition">
-      {/* ── Page header ── */}
+
+      {/* ── Page hero ── */}
       <div className="page-hero">
         <div className="pointer-events-none absolute -top-16 -right-16 w-56 h-56 rounded-full bg-blue-600/10 blur-3xl" />
         <div className="relative">
@@ -175,7 +159,7 @@ export default function DetectionPage() {
             <span className="badge badge-green text-[11px]">Grad-CAM XAI</span>
           </div>
           <h1 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">
-            Cyclone Detection & Classification
+            Cyclone Detection &amp; Classification
           </h1>
           <p className="text-slate-400 text-sm mt-2 max-w-xl">
             Upload a satellite IR image — the AI pipeline runs detection, intensity
@@ -197,8 +181,8 @@ export default function DetectionPage() {
               key={sample.label}
               onClick={() => loadSampleImage(sample.url, sample.label)}
               disabled={loadingSample || isAnalyzing}
-              className="flex items-center gap-2 px-3 py-2 rounded-lg border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 hover:border-blue-400 hover:bg-blue-50 dark:hover:bg-blue-900/20 disabled:opacity-50 disabled:cursor-not-allowed transition-all text-xs font-medium text-slate-700 dark:text-slate-300"
               title={sample.hint}
+              className="flex items-center gap-2 px-3 py-2 rounded-lg border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 hover:border-blue-400 hover:bg-blue-50 dark:hover:bg-blue-900/20 disabled:opacity-50 disabled:cursor-not-allowed transition-all text-xs font-medium text-slate-700 dark:text-slate-300"
             >
               {loadingSample ? (
                 <Loader2 className="w-3.5 h-3.5 animate-spin text-blue-500 flex-shrink-0" />
@@ -211,12 +195,14 @@ export default function DetectionPage() {
         </div>
         <p className="mt-2 text-[11px] text-slate-400 flex items-center gap-1.5">
           <Info className="w-3 h-3" />
-          Sample images are public domain satellite photographs. For best results, use HURSAT-B1 or INSAT IR imagery.
+          Public domain satellite imagery. For real analysis, use HURSAT-B1 or INSAT IR images.
         </p>
       </div>
 
+      {/* ── Main grid ── */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {/* Upload Box */}
+
+        {/* Upload panel */}
         <div className="space-y-4">
           <input
             ref={fileInputRef}
@@ -226,28 +212,28 @@ export default function DetectionPage() {
             onChange={(e) => {
               const f = e.target.files?.[0];
               if (f) handleFileSelect(f);
-              // Reset input value so re-selecting same file works
               e.target.value = "";
             }}
           />
 
           {!selectedFile ? (
-            /* Empty Dropzone */
+            /* Empty dropzone */
             <div
-              className={`border-2 border-dashed rounded-xl p-8 text-center cursor-pointer transition-all min-h-[240px] flex flex-col items-center justify-center
-                ${dragOver
-                  ? "border-blue-500 bg-blue-50/50 dark:bg-blue-950/30 ring-4 ring-blue-500/10"
-                  : "border-slate-300 dark:border-slate-700 hover:border-blue-400 dark:hover:border-blue-500 hover:bg-slate-50 dark:hover:bg-slate-800/60"}`}
+              onClick={() => fileInputRef.current?.click()}
               onDragOver={(e) => { e.preventDefault(); setDragOver(true); }}
               onDragLeave={() => setDragOver(false)}
               onDrop={handleDrop}
-              onClick={() => fileInputRef.current?.click()}
+              className={`border-2 border-dashed rounded-xl p-8 text-center cursor-pointer transition-all min-h-[240px] flex flex-col items-center justify-center ${
+                dragOver
+                  ? "border-blue-500 bg-blue-50/50 dark:bg-blue-950/30 ring-4 ring-blue-500/10"
+                  : "border-slate-300 dark:border-slate-700 hover:border-blue-400 dark:hover:border-blue-500 hover:bg-slate-50 dark:hover:bg-slate-800/60"
+              }`}
             >
               <div className="w-14 h-14 rounded-2xl bg-blue-50 dark:bg-blue-950/60 border border-blue-100 dark:border-blue-800/50 flex items-center justify-center mb-3 text-blue-600 dark:text-blue-400 shadow-sm">
                 <Satellite className="w-7 h-7" />
               </div>
               <p className="text-sm font-semibold text-slate-800 dark:text-slate-200">
-                Click to choose or drag & drop image
+                Click to choose or drag &amp; drop image
               </p>
               <p className="text-xs text-slate-500 dark:text-slate-400 mt-1 max-w-sm">
                 PNG, JPG, TIFF, NetCDF (.nc), HDF5 (.h5) · Max {MAX_SIZE_MB}MB
@@ -256,16 +242,17 @@ export default function DetectionPage() {
                 Ctrl+V / Paste supported
               </span>
             </div>
+
           ) : preview ? (
-            /* Selected Image Preview directly inside the box */
+            /* Image preview box */
             <div
-              className={`relative rounded-xl overflow-hidden border-2 border-slate-300 dark:border-slate-700 bg-slate-950 shadow-inner group transition-all
-                ${dragOver ? "border-blue-500 ring-4 ring-blue-500/10" : ""}`}
               onDragOver={(e) => { e.preventDefault(); setDragOver(true); }}
               onDragLeave={() => setDragOver(false)}
               onDrop={handleDrop}
+              className={`relative rounded-xl overflow-hidden border-2 bg-slate-950 shadow-inner transition-all ${
+                dragOver ? "border-blue-500 ring-4 ring-blue-500/10" : "border-slate-700"
+              }`}
             >
-              {/* Image */}
               <div className="flex items-center justify-center min-h-[240px] max-h-[320px] p-2 bg-slate-950/80">
                 <img
                   src={preview}
@@ -273,8 +260,7 @@ export default function DetectionPage() {
                   className="max-h-[290px] w-full object-contain rounded-lg"
                 />
               </div>
-
-              {/* Top Bar with file details and action buttons */}
+              {/* Overlay bar */}
               <div className="absolute top-0 inset-x-0 p-2.5 bg-gradient-to-b from-black/80 via-black/40 to-transparent flex items-center justify-between gap-2">
                 <div className="flex items-center gap-2 min-w-0 bg-black/60 backdrop-blur-md px-2.5 py-1 rounded-lg border border-white/10 text-white">
                   <Satellite className="w-3.5 h-3.5 text-blue-400 flex-shrink-0" />
@@ -282,48 +268,37 @@ export default function DetectionPage() {
                     {selectedFile.name}
                   </span>
                   <span className="text-[10px] text-slate-300 font-mono flex-shrink-0">
-                    ({(selectedFile.size / (1024 * 1024)).toFixed(2)} MB)
+                    ({(selectedFile.size / 1024 / 1024).toFixed(2)} MB)
                   </span>
                 </div>
-
                 <div className="flex items-center gap-1.5 flex-shrink-0">
                   <button
                     type="button"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      fileInputRef.current?.click();
-                    }}
+                    onClick={(e) => { e.stopPropagation(); fileInputRef.current?.click(); }}
                     className="text-xs bg-black/60 hover:bg-white/20 text-white border border-white/15 px-2.5 py-1 rounded-lg backdrop-blur-md font-medium transition-colors flex items-center gap-1"
-                    title="Change Photo"
                   >
-                    <Upload className="w-3 h-3" />
-                    Change
+                    <Upload className="w-3 h-3" /> Change
                   </button>
                   <button
                     type="button"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      setSelectedFile(null);
-                      setPreview(null);
-                      setResult(null);
-                      setError(null);
-                    }}
+                    onClick={(e) => { e.stopPropagation(); setSelectedFile(null); setPreview(null); setResult(null); setError(null); }}
                     className="bg-black/60 hover:bg-red-600/80 text-white border border-white/15 p-1 rounded-lg backdrop-blur-md transition-colors"
-                    title="Remove Photo"
                   >
                     <X className="w-3.5 h-3.5" />
                   </button>
                 </div>
               </div>
             </div>
+
           ) : (
-            /* Selected Non-Image file (NetCDF / HDF5) */
+            /* Non-image file (NetCDF / HDF5) */
             <div
-              className={`rounded-xl p-5 border-2 border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/80 transition-all
-                ${dragOver ? "border-blue-500 ring-4 ring-blue-500/10" : ""}`}
               onDragOver={(e) => { e.preventDefault(); setDragOver(true); }}
               onDragLeave={() => setDragOver(false)}
               onDrop={handleDrop}
+              className={`rounded-xl p-5 border-2 bg-slate-50 dark:bg-slate-800/80 transition-all ${
+                dragOver ? "border-blue-500 ring-4 ring-blue-500/10" : "border-slate-300 dark:border-slate-700"
+              }`}
             >
               <div className="flex items-center justify-between gap-3">
                 <div className="flex items-center gap-3 min-w-0">
@@ -339,7 +314,6 @@ export default function DetectionPage() {
                     </p>
                   </div>
                 </div>
-
                 <div className="flex items-center gap-2 flex-shrink-0">
                   <button
                     type="button"
@@ -350,13 +324,8 @@ export default function DetectionPage() {
                   </button>
                   <button
                     type="button"
-                    onClick={() => {
-                      setSelectedFile(null);
-                      setResult(null);
-                      setError(null);
-                    }}
+                    onClick={() => { setSelectedFile(null); setResult(null); setError(null); }}
                     className="text-slate-400 hover:text-red-500 dark:hover:text-red-400 p-1.5 transition-colors"
-                    title="Remove"
                   >
                     <X className="w-4 h-4" />
                   </button>
@@ -365,31 +334,32 @@ export default function DetectionPage() {
             </div>
           )}
 
+          {/* Analyze button */}
           <button
             onClick={runAnalysis}
             disabled={!selectedFile || isAnalyzing}
             className="w-full flex items-center justify-center gap-2 bg-emerald-600 hover:bg-emerald-700 disabled:bg-slate-300 dark:disabled:bg-slate-700 disabled:cursor-not-allowed text-white font-semibold py-3 rounded-xl transition-colors shadow-sm shadow-emerald-500/20"
           >
             {isAnalyzing ? (
-              <><Loader2 className="w-4 h-4 animate-spin" /> Analyzing...</>
+              <><Loader2 className="w-4 h-4 animate-spin" /> Analyzing…</>
             ) : (
               <><Satellite className="w-4 h-4" /> {selectedFile ? "Run AI Analysis" : "Select an Image to Analyze"}</>
             )}
           </button>
 
-          {/* Model info */}
+          {/* Model info cards */}
           <div className="grid grid-cols-2 gap-3">
             {[
-              { title: "Detection", arch: "EfficientNet-B0", details: ["Binary: cyclone / no cyclone", "Confidence score", "224×224 IR input"] },
-              { title: "Classification", arch: "ResNet50", details: ["5 classes: TD/TS/CAT1-3+", "Per-class probability", "Saffir-Simpson scale"] },
+              { title: "Detection",       arch: "EfficientNet-B0", details: ["Binary: cyclone / no cyclone", "Confidence score output", "224×224 IR input"] },
+              { title: "Classification",  arch: "ResNet50",        details: ["5 classes: TD/TS/CAT1–3+", "Per-class probability", "Saffir-Simpson scale"] },
             ].map(({ title, arch, details }) => (
-              <div key={title} className="bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 p-3">
+              <div key={title} className="card p-3">
                 <p className="font-semibold text-slate-800 dark:text-slate-200 text-sm">{title}</p>
                 <p className="text-xs text-emerald-600 dark:text-emerald-400 font-mono mb-2">{arch}</p>
                 <ul className="space-y-0.5">
                   {details.map((d) => (
-                    <li key={d} className="text-xs text-slate-500 dark:text-slate-400 flex gap-1">
-                      <span className="text-emerald-400">▸</span>{d}
+                    <li key={d} className="text-xs text-slate-500 dark:text-slate-400 flex gap-1.5">
+                      <span className="text-emerald-400 flex-shrink-0">▸</span>{d}
                     </li>
                   ))}
                 </ul>
@@ -398,7 +368,7 @@ export default function DetectionPage() {
           </div>
         </div>
 
-        {/* Results */}
+        {/* Results panel */}
         <div className="card p-5">
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-sm font-bold text-slate-700 dark:text-slate-200">Analysis Results</h2>
@@ -407,6 +377,7 @@ export default function DetectionPage() {
           <AnalysisPanel result={result} isLoading={isAnalyzing} error={error} />
         </div>
       </div>
+
     </div>
   );
 }
