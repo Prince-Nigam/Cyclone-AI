@@ -228,9 +228,9 @@ export default function DashboardPage() {
         {/* Top accent line */}
         <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-blue-500/60 to-transparent" />
 
-        <div className="relative px-6 sm:px-10 py-10 sm:py-12">
+        <div className="relative px-6 sm:px-8 py-7 sm:py-9">
           {/* MoES tag */}
-          <div className="flex items-center gap-2 mb-5">
+          <div className="flex items-center gap-2 mb-4">
             <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-blue-600/20 text-blue-300 text-xs font-bold border border-blue-500/30 tracking-wide">
               <span className="w-1.5 h-1.5 rounded-full bg-blue-400" />
               Ministry of Earth Sciences · SIH 2024
@@ -241,68 +241,43 @@ export default function DashboardPage() {
             </span>
           </div>
 
-          <div className="flex flex-col lg:flex-row lg:items-center gap-8">
-            {/* Text */}
-            <div className="flex-1 space-y-4">
-              <h1 className="text-3xl sm:text-4xl font-extrabold text-white tracking-tight leading-tight">
-                Tropical Cyclone{" "}
-                <span className="bg-clip-text text-transparent bg-gradient-to-r from-sky-400 via-blue-300 to-cyan-300">
-                  AI Platform
-                </span>
-              </h1>
-              <p className="text-slate-300 text-sm sm:text-base max-w-xl leading-relaxed">
-                Multi-source satellite data fusion — real-time GDACS alerts, Open-Meteo marine
-                telemetry and NASA GIBS imagery — combined with deep learning for identification,
-                classification and 24-hour forecasting.
-              </p>
+          <div className="flex flex-col space-y-4">
+            {/* Title */}
+            <h1 className="text-3xl sm:text-4xl font-extrabold text-white tracking-tight leading-tight">
+              Tropical Cyclone{" "}
+              <span className="bg-clip-text text-transparent bg-gradient-to-r from-sky-400 via-blue-300 to-cyan-300">
+                AI Platform
+              </span>
+            </h1>
 
-              {/* Data provenance legend */}
-              <div className="flex flex-wrap gap-2 pt-1">
-                <DataTypeBadge type="OBSERVED"   />
-                <DataTypeBadge type="HISTORICAL" />
-                <DataTypeBadge type="PREDICTED"  />
-                <DataTypeBadge type="SIMULATED"  />
-              </div>
+            <p className="text-slate-300 text-sm max-w-2xl leading-relaxed">
+              Multi-source satellite data fusion — real-time GDACS alerts, Open-Meteo marine
+              telemetry and NASA GIBS imagery — combined with deep learning for identification,
+              classification and 24-hour forecasting.
+            </p>
 
-              {/* CTA buttons */}
-              <div className="flex flex-wrap gap-3 pt-2">
-                <Link href="/live-satellite" className="btn-primary">
-                  <Radio className="w-4 h-4 text-emerald-300" />
-                  Live Storm Feed
-                </Link>
-                <Link href="/satellite" className="btn-secondary">
-                  AI Satellite Analysis
-                  <ArrowRight className="w-4 h-4" />
-                </Link>
-                <Link href="/detection" className="btn-secondary">
-                  Cyclone Detection
-                  <ArrowRight className="w-4 h-4" />
-                </Link>
-              </div>
+            {/* Data provenance legend */}
+            <div className="flex flex-wrap gap-2">
+              <DataTypeBadge type="OBSERVED"   />
+              <DataTypeBadge type="HISTORICAL" />
+              <DataTypeBadge type="PREDICTED"  />
+              <DataTypeBadge type="SIMULATED"  />
             </div>
 
-            {/* Stats summary box */}
-            <div className="lg:w-72 bg-white/5 border border-white/10 rounded-2xl p-5 space-y-3 backdrop-blur-sm flex-shrink-0">
-              <p className="text-xs font-bold text-slate-400 uppercase tracking-widest">Problem Statement</p>
-              <p className="text-xs text-slate-300 leading-relaxed">
-                "To develop an AI/ML-based system for identification, classification, and
-                prediction of tropical cyclone patterns using multi-source satellite data."
-              </p>
-              <div className="border-t border-white/10 pt-3 space-y-2">
-                {[
-                  { label: "Detection",      model: "EfficientNet-B0", metric: "85.4% acc." },
-                  { label: "Classification", model: "ResNet50",        metric: "76.8% acc." },
-                  { label: "Track",          model: "Seq2Seq LSTM",    metric: "MAE 48 km" },
-                  { label: "Intensity",      model: "CNN + LSTM",      metric: "MAE 8 kt" },
-                  { label: "XAI",            model: "Grad-CAM",        metric: "Visual" },
-                ].map(({ label, model, metric }) => (
-                  <div key={label} className="flex items-center justify-between text-[11px]">
-                    <span className="text-slate-400">{label}</span>
-                    <span className="text-slate-300 font-medium">{model}</span>
-                    <span className="text-blue-400 font-mono font-semibold">{metric}</span>
-                  </div>
-                ))}
-              </div>
+            {/* CTA buttons */}
+            <div className="flex flex-wrap gap-2.5 pt-1">
+              <Link href="/live-satellite" className="btn-primary">
+                <Radio className="w-4 h-4 text-emerald-300" />
+                Live Storm Feed
+              </Link>
+              <Link href="/satellite" className="btn-secondary">
+                AI Satellite Analysis
+                <ArrowRight className="w-4 h-4" />
+              </Link>
+              <Link href="/detection" className="btn-secondary">
+                Cyclone Detection
+                <ArrowRight className="w-4 h-4" />
+              </Link>
             </div>
           </div>
         </div>
