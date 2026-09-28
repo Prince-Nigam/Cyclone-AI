@@ -161,7 +161,7 @@ export default function MethodologyPage() {
         <div className="relative">
           <div className="flex items-center gap-2 mb-3">
             <span className="badge badge-blue text-[11px]">AI/ML Pipeline</span>
-            <span className="badge badge-purple text-[11px]">MoES · SIH 2024</span>
+            <span className="badge badge-purple text-[11px]">MoES · SIH 2026</span>
           </div>
           <h1 className="text-3xl font-extrabold text-white tracking-tight">ML Methodology</h1>
           <p className="text-slate-400 text-sm mt-2 max-w-xl">

@@ -7,7 +7,7 @@ import "./globals.css";
 
 export const metadata: Metadata = {
   title: {
-    default: "Cyclone AI Platform — SIH 2024 | MoES",
+    default: "Cyclone AI Platform — SIH 2026 | MoES",
     template: "%s | Cyclone AI — SIH",
   },
   description:

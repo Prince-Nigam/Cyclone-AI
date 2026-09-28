@@ -229,18 +229,6 @@ export default function DashboardPage() {
         <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-blue-500/60 to-transparent" />
 
         <div className="relative px-6 sm:px-8 py-7 sm:py-9">
-          {/* MoES tag */}
-          <div className="flex items-center gap-2 mb-4">
-            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-blue-600/20 text-blue-300 text-xs font-bold border border-blue-500/30 tracking-wide">
-              <span className="w-1.5 h-1.5 rounded-full bg-blue-400" />
-              Ministry of Earth Sciences · SIH 2024
-            </span>
-            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-500/15 text-emerald-300 text-xs font-bold border border-emerald-500/30">
-              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
-              Live Telemetry Active
-            </span>
-          </div>
-
           <div className="flex flex-col space-y-4">
             {/* Title */}
             <h1 className="text-3xl sm:text-4xl font-extrabold text-white tracking-tight leading-tight">

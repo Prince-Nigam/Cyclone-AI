@@ -47,12 +47,12 @@ export default function AboutPage() {
         <div className="relative">
           <div className="flex items-center gap-2 mb-3">
             <span className="badge badge-blue text-[11px] tracking-wider">Ministry of Earth Sciences · MoES</span>
-            <span className="badge badge-green text-[11px]">SIH 2024</span>
+            <span className="badge badge-green text-[11px]">SIH 2026</span>
           </div>
           <h1 className="text-3xl font-extrabold text-white tracking-tight">About This Project</h1>
           <p className="text-slate-400 text-sm mt-2 max-w-lg">
             AI/ML Tropical Cyclone Identification, Classification and Prediction Platform —
-            Smart India Hackathon 2024.
+            Smart India Hackathon 2026.
           </p>
         </div>
       </div>

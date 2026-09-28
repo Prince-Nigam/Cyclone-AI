@@ -43,7 +43,7 @@ export function Footer() {
               </div>
               <div>
                 <p className="text-sm font-extrabold text-slate-900 dark:text-white tracking-tight">Cyclone AI Platform</p>
-                <p className="text-xs text-blue-600 dark:text-blue-400 font-semibold">SIH 2024</p>
+                <p className="text-xs text-blue-600 dark:text-blue-400 font-semibold">SIH 2026</p>
               </div>
             </div>
 
@@ -149,7 +149,7 @@ export function Footer() {
           <div className="flex items-start gap-3 bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-800/50 rounded-xl p-4 mb-6">
             <AlertTriangle className="w-4 h-4 text-amber-600 dark:text-amber-400 flex-shrink-0 mt-0.5" />
             <p className="text-xs text-amber-800 dark:text-amber-300 leading-relaxed">
-              <strong>Research Prototype Disclaimer:</strong> This platform is developed as an AI/ML research prototype for Smart India Hackathon 2024.
+              <strong>Research Prototype Disclaimer:</strong> This platform is developed as an AI/ML research prototype for Smart India Hackathon 2026.
               It is <strong>NOT</strong> an official operational meteorological warning service.
               For official storm advisories and emergency alerts in India, always consult the{" "}
               <a href="https://mausam.imd.gov.in" target="_blank" rel="noopener noreferrer"

@@ -54,7 +54,7 @@ export function Navbar() {
 
       {/* MoES banner */}
       <div className="hidden sm:flex items-center justify-center gap-2 bg-blue-700 dark:bg-blue-900/80 py-1 px-4 text-[11px] text-blue-100 font-medium tracking-wide">
-        <span className="opacity-80">Ministry of Earth Sciences (MoES) · Smart India Hackathon 2024</span>
+        <span className="opacity-80">Ministry of Earth Sciences (MoES) · Smart India Hackathon 2026</span>
         <span className="opacity-40 mx-1">|</span>
         <span className="opacity-80">⚠️ Research Prototype — Not an official IMD forecast system</span>
       </div>
@@ -201,7 +201,7 @@ export function Navbar() {
               })}
             </div>
             <div className="mt-4 pt-3 border-t border-slate-200 dark:border-slate-800">
-              <p className="text-xs text-slate-400 text-center">Ministry of Earth Sciences · SIH 2024</p>
+              <p className="text-xs text-slate-400 text-center">Ministry of Earth Sciences · SIH 2026</p>
             </div>
           </div>
         </div>
