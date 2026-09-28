@@ -298,51 +298,6 @@ export default function DashboardPage() {
         })}
       </section>
 
-      {/* ── FEATURE CARDS ────────────────────────────────────────── */}
-      <section className="animate-fade-in-up animate-delay-150">
-        <div className="flex items-center justify-between mb-5">
-          <div>
-            <h2 className="section-title">Platform Modules</h2>
-            <p className="section-subtitle">End-to-end AI pipeline for cyclone analysis</p>
-          </div>
-          <Link href="/performance" className="btn-outline text-xs">
-            <BarChart3 className="w-3.5 h-3.5" />
-            View Benchmarks
-          </Link>
-        </div>
-
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-          {FEATURE_CARDS.map(({ icon: Icon, title, desc, href, accent, tag }) => {
-            const ac = ACCENT_MAP[accent] || ACCENT_MAP.slate;
-            return (
-              <Link
-                key={title}
-                href={href}
-                className={`feature-card border border-[var(--border-color)] ${ac.border} transition-all duration-200`}
-              >
-                <div className="flex items-start gap-4">
-                  <div className={`w-10 h-10 rounded-xl ${ac.iconBg} flex items-center justify-center flex-shrink-0`}>
-                    <Icon className={`w-5 h-5 ${ac.icon}`} />
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <div className="flex items-start justify-between gap-2 mb-1.5">
-                      <h3 className="text-sm font-bold text-slate-900 dark:text-slate-100">{title}</h3>
-                      <span className={`text-[10px] px-2 py-0.5 rounded-full font-semibold flex-shrink-0 ${ac.tag}`}>
-                        {tag}
-                      </span>
-                    </div>
-                    <p className="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">{desc}</p>
-                  </div>
-                </div>
-                <div className="mt-4 flex items-center gap-1 text-xs font-semibold text-blue-600 dark:text-blue-400 group-hover:gap-2 transition-all">
-                  Open module <ArrowRight className="w-3.5 h-3.5" />
-                </div>
-              </Link>
-            );
-          })}
-        </div>
-      </section>
-
       {/* ── CYCLONE MONITOR ──────────────────────────────────────── */}
       <section className="animate-fade-in-up animate-delay-200">
         {/* Header */}
