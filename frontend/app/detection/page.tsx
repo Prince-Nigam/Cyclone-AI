@@ -3,7 +3,6 @@
 import React, { useRef, useState, useEffect, useCallback } from "react";
 import toast from "react-hot-toast";
 import { Satellite, Upload, X, Loader2, Sparkles, Info } from "lucide-react";
-import { DataTypeBadge } from "@/components/ui/DataTypeBadge";
 import { analyzeImage } from "@/services/cycloneService";
 import { validateImageFileForCyclone } from "@/lib/cycloneDetector";
 import type { AnalysisResult } from "@/types";
@@ -370,10 +369,6 @@ export default function DetectionPage() {
 
         {/* Results panel */}
         <div className="card p-5">
-          <div className="flex items-center justify-between mb-4">
-            <h2 className="text-sm font-bold text-slate-700 dark:text-slate-200">Analysis Results</h2>
-            <DataTypeBadge type={result?.metadata?.data_type ?? "PREDICTED"} />
-          </div>
           <AnalysisPanel result={result} isLoading={isAnalyzing} error={error} />
         </div>
       </div>
