@@ -2,7 +2,7 @@
 
 <div align="center">
 
-[![Next.js](https://img.shields.io/badge/Frontend-Next.js%2016-black?style=for-the-badge&logo=next.js)](https://nextjs.org/)
+[![Next.js](https://img.shields.io/badge/Frontend-Next.js%2014-black?style=for-the-badge&logo=next.js)](https://nextjs.org/)
 [![FastAPI](https://img.shields.io/badge/Backend-FastAPI-009688?style=for-the-badge&logo=fastapi)](https://fastapi.tiangolo.com/)
 [![PyTorch](https://img.shields.io/badge/AI%2FML-PyTorch%202.1-EE4C2C?style=for-the-badge&logo=pytorch)](https://pytorch.org/)
 [![TypeScript](https://img.shields.io/badge/Language-TypeScript-3178C6?style=for-the-badge&logo=typescript)](https://www.typescriptlang.org/)
@@ -10,10 +10,13 @@
 [![Docker](https://img.shields.io/badge/Deployment-Docker%20Compose-2496ED?style=for-the-badge&logo=docker)](https://www.docker.com/)
 [![License](https://img.shields.io/badge/License-MIT-green?style=for-the-badge)](LICENSE)
 
-**Smart India Hackathon (SIH) Project**  
-*AI/ML-Powered Tropical Cyclone Identification, Saffir-Simpson Pattern Classification, 24h Track & Intensity Forecasting, and Real-Time Multi-Source Satellite Telemetry Hub.*
+**Smart India Hackathon (SIH) 2026**
+**Organization: Ministry of Earth Sciences (MoES) · Theme: Disaster Management**
 
-[🌐 Live Web Demo](https://cyclone-ai-sih.vercel.app) • [📖 Technical Docs](docs/)
+*AI/ML-Powered Tropical Cyclone Identification, Saffir-Simpson Pattern Classification,
+24-Hour Track & Intensity Forecasting, and Real-Time Multi-Source Satellite Telemetry Hub.*
+
+[🌐 Live Demo](https://cyclone-ai-sih.vercel.app) · [📖 API Docs](http://localhost:8000/docs) · [👤 Author](https://github.com/Prince-Nigam)
 
 </div>
 
@@ -21,216 +24,220 @@
 
 ## 📌 Problem Statement
 
+> **Organization:** Ministry of Earth Sciences (MoES), Government of India
+> **Category:** Software · **Technology Bucket:** Disaster Management
+
 > *"To develop an Artificial Intelligence (AI) / Machine Learning (ML) based system for identification, classification, and prediction of different tropical cyclone patterns using multi-source satellite data."*
 
-Cyclones in the North Indian Ocean (Arabian Sea and Bay of Bengal) pose severe humanitarian and economic threats. Conventional numerical weather prediction (NWP) models require massive supercomputing clusters and often face latency delays. The **Tropical Cyclone AI Platform** leverages deep neural networks trained on decades of satellite and track records to provide **sub-second inference**, **explainable visual heatmaps (Grad-CAM)**, and **real-time global telemetry fusion**.
+Cyclones in the North Indian Ocean (Arabian Sea and Bay of Bengal) pose severe humanitarian and economic threats. Conventional numerical weather prediction (NWP) models require massive supercomputing infrastructure and often face latency delays. This platform leverages deep neural networks trained on decades of satellite and best-track records to provide **sub-second inference**, **explainable visual heatmaps (Grad-CAM)**, and **real-time global telemetry fusion**.
 
 ---
 
-## ⚠️ Important Disclaimer & Data Provenance
+## ⚠️ Important Disclaimer
 
-> [!WARNING]
-> **Research Prototype Notice**: This system is developed as an AI/ML research prototype for the Smart India Hackathon. It is **NOT** an official operational meteorological warning service. For official emergency alerts, storm advisories, and evacuations in India, always consult the **[India Meteorological Department (IMD)](https://mausam.imd.gov.in)**.
+> **Research Prototype:** This system is developed as an AI/ML research prototype for Smart India Hackathon 2026. It is **NOT** an official operational meteorological warning service. For official emergency alerts, storm advisories, and evacuations in India, always consult the **[India Meteorological Department (IMD)](https://mausam.imd.gov.in)**.
 
-Every metric, visualization, and prediction across the platform is explicitly labeled with its data provenance:
-- 🟢 **OBSERVED** — Live real-world observational telemetry (GDACS active RSS alerts, Open-Meteo ocean grid, NASA GIBS satellite feeds).
-- 🔵 **HISTORICAL** — Curated best-track climatological archives (IBTrACS 1978–2015, HURSAT-B1).
-- 🔴 **PREDICTED** — Neural network model inference outputs (EfficientNet, ResNet50, CNN+LSTM, Seq2Seq).
-- 🟡 **SIMULATED** — Synthetic evaluation runs when offline or running in mock demonstration mode.
-
----
-
-## 🎯 Key Features & Platform Modules
-
-| Module | Route | Capabilities & Models Used | Status |
-| :--- | :--- | :--- | :---: |
-| 🏠 **Dashboard** | `/` | Real-time global storm summary, Earth Projection Cyclone Hero, 1-second live telemetry stream, key statistics, and system architecture. | 🟢 Active |
-| 🔍 **Detection** | `/detection` | Binary cyclone detection (`Cyclone` vs `No Cyclone`) from satellite IR imagery with in-box preview, paste support (Ctrl+V), and confidence score. | 🟢 Active |
-| 🛰️ **Satellite Viewer** | `/satellite` | Unified multi-format image analysis (`PNG`, `JPG`, `TIFF`, `NetCDF .nc`, `HDF5 .h5`) with **Grad-CAM XAI explainability heatmaps**. | 🟢 Active |
-| 📈 **Track & Intensity** | `/prediction` | **Seq2Seq LSTM** 24-hour future trajectory forecasting (3h steps) & **CNN+LSTM** numerical wind speed (kt) and central pressure (hPa) regression. | 🟢 Active |
-| 🌐 **Live Satellite Hub** | `/live-satellite` | Real-time **GDACS** active global cyclone tracker, **NASA GIBS** true-color satellite tiles, **Windy.com** streamlines, and 12-station Indian Ocean marine grid. | 🟢 Active |
-| 🗺️ **Interactive GIS Map** | `/map` | Fullscreen Leaflet map displaying historical best-tracks, real-time storm coordinates, wind radii, and satellite layer toggles. | 🟢 Active |
-| 📂 **Historical Catalog** | `/historical` | Searchable **IBTrACS** database (1978–2015) filtered by basin (`NI`, `SI`, `WP`, `NA`, etc.), storm name, year, and peak intensity metrics. | 🟢 Active |
-| 📊 **Performance Portal** | `/performance` | ML Model Registry, per-class Precision/Recall, $5\times5$ Confusion Matrix, ROC/PR Curves, and Training Convergence loss plots. | 🟢 Active |
-| 📖 **Methodology & About**| `/methodology` • `/about` | Technical mathematical formulations, multi-source feature fusion strategies, temporal validation splits, and platform details. | 🟢 Active |
+Every data point across the platform is labeled with its provenance:
+- 🟢 **OBSERVED** — Live real-world data (GDACS active alerts, Open-Meteo ocean grid, NASA GIBS satellite tiles)
+- 🔵 **HISTORICAL** — Curated climatological archives (IBTrACS 1978–2015, HURSAT-B1)
+- 🔴 **PREDICTED** — Neural network model inference outputs
+- 🟡 **SIMULATED** — Synthetic evaluation runs (demo/offline mode when model weights are absent)
 
 ---
 
-## 🤖 Deep Learning Model Registry & Benchmarks
+## 🎯 Platform Modules
 
-The AI pipeline is evaluated on held-out test splits from the **HURSAT-B1** and **IBTrACS** datasets:
-
-```
-┌─────────────────────────┬───────────────────────────────┬───────────────────────────────┬───────────────────────────┐
-│ Task                    │ Architecture                  │ Primary Metric                │ Loss & Optimization       │
-├─────────────────────────┼───────────────────────────────┼───────────────────────────────┼───────────────────────────┤
-│ 1. Binary Detection     │ EfficientNet-B0 (1-ch IR)     │ Accuracy: 85.4% | F1: 0.851   │ BCE with Logits (AdamW)   │
-│ 2. Pattern Classification│ ResNet50 (5 Classes)          │ Accuracy: 76.8% | F1: 0.748   │ Focal Loss (γ=2.0)        │
-│ 3. Intensity Regression │ CNN + LSTM(128)               │ MAE: 8.32 kt  | R²: 0.835     │ Smooth L1 / Huber Loss    │
-│ 4. Track Forecast (24h) │ Seq2Seq LSTM(256) (Encoder-Dec)│ MAE: 48.60 km | R²: 0.892     │ MSE Loss on (Δlat, Δlon) │
-│ 5. Explainable AI (XAI) │ Grad-CAM (Target Conv Layer)  │ Class Activation Heatmaps     │ Base64 Alpha Overlay      │
-│ 6. Multi-Source Fusion  │ Multi-Branch MLP (256-dim)    │ Late Fusion Classification    │ Cross-Entropy             │
-└─────────────────────────┴───────────────────────────────┴───────────────────────────────┴───────────────────────────┘
-```
-
-### Intensity Classification Categories (Saffir-Simpson Scale)
-- **TD** — Tropical Depression ($< 34\text{ kt}$)
-- **TS** — Tropical Storm ($34 - 63\text{ kt}$)
-- **CAT1** — Category 1 Cyclone ($64 - 82\text{ kt}$)
-- **CAT2** — Category 2 Cyclone ($83 - 95\text{ kt}$)
-- **CAT3+** — Category 3+ Major Cyclone ($\ge 96\text{ kt}$)
+| Module | Route | Description |
+|:---|:---|:---|
+| 🏠 **Dashboard** | `/` | Live storm monitor (GDACS), stat cards, tabbed cyclone table (live + IBTrACS), system architecture overview |
+| 🔍 **Detection** | `/detection` | EfficientNet-B0 binary cyclone detection — upload/paste satellite IR image, returns confidence score |
+| 🛰️ **Satellite Analysis** | `/satellite` | Unified multi-format analysis (PNG/JPG/TIFF/NetCDF/HDF5) with ResNet50 classification + Grad-CAM XAI heatmap |
+| 📈 **Prediction** | `/prediction` | CNN+LSTM intensity regression (wind/pressure) + Seq2Seq LSTM 24h track forecast (8 × 3h waypoints) |
+| 📡 **Live Feed** | `/live-satellite` | Real-time GDACS cyclone alerts, NASA GIBS tiles, Windy.com streamlines, 12-station Indian Ocean marine grid |
+| 🗺️ **Map** | `/map` | Interactive Leaflet GIS map — historical best-tracks, live storm markers, wind radii, satellite layer toggles |
+| 📂 **Historical** | `/historical` | IBTrACS archive 1978–2015 — searchable by basin, storm name, year, peak intensity |
+| 📊 **Performance** | `/performance` | Model Registry, per-class Precision/Recall/F1, 5×5 confusion matrix, training convergence plots (Recharts) |
+| 📖 **Methodology** | `/methodology` | ML pipeline details — model architectures, loss functions, training splits, multi-source fusion strategy |
+| ℹ️ **About** | `/about` | Project info, MoES alignment, data source attribution, disclaimer |
 
 ---
 
-## 🏗️ System Architecture & Data Flow
+## 🤖 AI Model Registry
 
-```
-                      ┌────────────────────────────────────────────────────────┐
-                      │              MULTI-SOURCE DATA INGESTION               │
-                      ├──────────────────────────┬─────────────────────────────┤
-                      │  Live Telemetry Streams  │   Climatological Archives   │
-                      │  • GDACS Live RSS Feeds  │   • IBTrACS Global Tracks   │
-                      │  • Open-Meteo 12-Buoy Grid│   • HURSAT-B1 Satellite IR │
-                      │  • NASA GIBS Satellite   │   • INSAT-3D & Kalpana-1    │
-                      └────────────┬─────────────┴──────────────┬──────────────┘
-                                   │                            │
-                                   ▼                            ▼
-                      ┌────────────────────────────────────────────────────────┐
-                      │              FASTAPI BACKEND & AI PIPELINE             │
-                      ├────────────────────────────────────────────────────────┤
-                      │ • Image Normalization (224×224 IR, Multi-Format Loader)│
-                      │ • PyTorch Model Manager & Inference Pipeline           │
-                      │    ├── EfficientNet-B0 ──> Binary Cyclone Detector     │
-                      │    ├── ResNet50 ─────────> 5-Class Intensity Pattern   │
-                      │    ├── CNN + LSTM ───────> Wind Speed (kt) & Pressure  │
-                      │    ├── Seq2Seq LSTM ─────> 24h Future Path (3h Steps)  │
-                      │    └── Grad-CAM Engine ──> Visual Explainability Map   │
-                      │ • 1-Second Live Stream Engine & Caching Service        │
-                      │ • SQLAlchemy 2.0 ORM (PostgreSQL / SQLite Database)    │
-                      └────────────────────────────┬───────────────────────────┘
-                                                   │
-                                                   ▼
-                      ┌────────────────────────────────────────────────────────┐
-                      │            NEXT.JS 16 FRONTEND (APP ROUTER)            │
-                      ├────────────────────────────────────────────────────────┤
-                      │ • Responsive Glassmorphism Design & Dark/Light Themes  │
-                      │ • Interactive In-Box Satellite Upload & Direct Paste   │
-                      │ • Leaflet Interactive GIS Mapping & Satellite Tiles    │
-                      │ • Live 1-Second Telemetry Ticker & Real-Time Alerts    │
-                      │ • Comprehensive Model Registry & Confusion Matrix      │
-                      └────────────────────────────────────────────────────────┘
-```
+| # | Task | Architecture | Input | Primary Metric | Loss |
+|:---|:---|:---|:---|:---|:---|
+| 1 | Binary Detection | EfficientNet-B0 (1-ch IR) | 224×224 IR image | Acc: **85.4%** · F1: 0.851 | BCE with Logits (AdamW) |
+| 2 | Pattern Classification | ResNet50 (5 classes) | 224×224 IR image | Acc: **76.8%** · F1: 0.748 | Focal Loss (γ=2.0) |
+| 3 | Intensity Regression | CNN + LSTM (128 hidden) | Track history sequence | MAE: **8.32 kt** · R²: 0.835 | Smooth L1 / Huber |
+| 4 | Track Forecast (24h) | Seq2Seq LSTM (256 hidden) | 8 × 3h history points | MAE: **48.60 km** · R²: 0.892 | MSE on (Δlat, Δlon) |
+| 5 | Multi-Source Fusion | Late Fusion MLP (256-dim) | CNN feats + LSTM feats + metadata | Classification improvement ~3% | Cross-Entropy |
+| 6 | Explainability (XAI) | Grad-CAM (last conv layer) | Any inference image | Visual heatmap overlay | — (post-hoc) |
+
+### Intensity Categories (Saffir-Simpson Scale)
+| Class | Label | Wind Speed |
+|:---|:---|:---|
+| TD | Tropical Depression | < 34 kt |
+| TS | Tropical Storm | 34–63 kt |
+| CAT1 | Category 1 Hurricane | 64–82 kt |
+| CAT2 | Category 2 Hurricane | 83–95 kt |
+| CAT3+ | Major Cyclone (3/4/5) | ≥ 96 kt |
 
 ---
 
-## 🗂️ Project Directory Structure
+## 🏗️ System Architecture
 
 ```
-Cyclone-AI/
-├── ai/                              # PyTorch Models, Training & Evaluation
-│   ├── datasets/                    # HURSAT-B1, IBTrACS & synthetic data loaders
-│   ├── evaluation/                  # Metric computation (Accuracy, F1, MAE, ROC)
-│   ├── inference/
-│   │   └── predictor.py             # Unified end-to-end CyclonePredictor
-│   ├── models/                      # Neural network architecture definitions
-│   │   ├── detection_model.py       # EfficientNet-B0 Binary Classifier
-│   │   ├── classification_model.py  # ResNet50 Saffir-Simpson Classifier
-│   │   ├── intensity_model.py       # CNN+LSTM Wind/Pressure Regressor
-│   │   ├── track_model.py           # Seq2Seq LSTM Path Forecaster
-│   │   └── fusion_model.py          # Multi-Source Late Fusion MLP
-│   ├── preprocessing/               # Image normalization & augmentation scripts
-│   ├── xai/
-│   │   └── gradcam.py               # Grad-CAM explainability heatmap visualizer
-│   └── requirements.txt
-├── backend/                         # FastAPI High-Performance Backend
-│   ├── app/
-│   │   ├── api/v1/                  # REST API Endpoints
-│   │   │   ├── analyze.py           # Unified Pipeline (Detection + Class + Track + XAI)
-│   │   │   ├── detection.py         # Binary detection endpoint
-│   │   │   ├── classification.py    # Pattern classification endpoint
-│   │   │   ├── prediction.py        # Intensity & track prediction endpoint
-│   │   │   ├── realtime.py          # GDACS RSS, 12-buoy ocean grid & 1s stream
-│   │   │   ├── cyclones.py          # Historical IBTrACS archive & tracks
-│   │   │   ├── models.py            # Model registry & benchmark metrics
-│   │   │   └── satellite.py         # Satellite image upload & metadata
-│   │   ├── core/                    # App configuration, logging & security
-│   │   ├── database/                # SQLAlchemy database connection & seeders
-│   │   ├── models/                  # SQLAlchemy ORM database models
-│   │   ├── schemas/                 # Pydantic v2 request/response schemas
-│   │   └── services/                # Background live fetchers & caching
-│   ├── main.py                      # FastAPI app entry point & lifespans
-│   └── requirements.txt
-├── frontend/                        # Next.js 16 Web Application (App Router)
-│   ├── app/                         # App Router Pages
-│   │   ├── detection/page.tsx       # Cyclone detection with in-box preview
-│   │   ├── satellite/page.tsx       # Unified multi-format satellite analysis
-│   │   ├── prediction/page.tsx      # Trajectory & intensity forecasting
-│   │   ├── live-satellite/page.tsx  # Live storm feeds, Windy & Ocean Grid
-│   │   ├── map/page.tsx             # Interactive Leaflet GIS map
-│   │   ├── historical/page.tsx      # IBTrACS historical storm catalog
-│   │   ├── performance/page.tsx     # Model benchmarks, confusion matrix & curves
-│   │   ├── methodology/page.tsx     # Scientific methodology documentation
-│   │   ├── about/page.tsx           # Platform info & provenance disclaimer
-│   │   ├── page.tsx                 # Dashboard with Earth Projection Hero
-│   │   └── layout.tsx               # Root layout, Navbar & research banner
-│   ├── components/                  # Reusable UI & Layout Components
-│   │   ├── analysis/                # Analysis panels, meters & CAM visualizers
-│   │   ├── layout/                  # Navbar, Footer & Navigation
-│   │   ├── map/                     # Leaflet map wrapper & satellite layers
-│   │   └── ui/                      # Badges, LiveTicker, Charts & Buttons
-│   ├── services/                    # Axios API client services
-│   ├── types/                       # TypeScript interfaces & type definitions
-│   └── package.json
-├── docs/                            # In-Depth Technical Documentation
-│   ├── API.md                       # Full REST API specification
-│   ├── ARCHITECTURE.md              # System design & component interaction
-│   ├── DATA_SOURCES.md              # Ingested datasets & live feeds
-│   ├── LIMITATIONS.md               # Scientific constraints & operational bounds
-│   ├── ML_METHODOLOGY.md            # Deep learning architectures & loss functions
-│   └── MULTI_SOURCE_FUSION.md       # Multi-sensor late fusion strategy
-├── docker-compose.yml               # Multi-container orchestration
-├── render.yaml                      # Render deployment specification
-└── README.md                        # Master Project Documentation
+┌─────────────────────────────────────────────────────────────────────┐
+│                    MULTI-SOURCE DATA INGESTION                      │
+├──────────────────────────────┬──────────────────────────────────────┤
+│     Live Telemetry           │      Climatological Archives         │
+│  • GDACS RSS Feeds           │  • IBTrACS Best-Track (1978–2015)   │
+│  • Open-Meteo 12-Point Grid  │  • HURSAT-B1 Satellite IR           │
+│  • NASA GIBS Satellite Tiles │  • INSAT-3D / Kalpana-1             │
+│  • Windy.com Streamlines     │                                      │
+└──────────────┬───────────────┴──────────────────┬───────────────────┘
+               │                                  │
+               ▼                                  ▼
+┌─────────────────────────────────────────────────────────────────────┐
+│               FASTAPI BACKEND  ·  PORT 8000                         │
+├─────────────────────────────────────────────────────────────────────┤
+│  Image Preprocessing (224×224 IR, multi-format loader)              │
+│  PyTorch Model Manager & Inference Pipeline                         │
+│    ├── EfficientNet-B0  ──► Binary Cyclone Detection                │
+│    ├── ResNet50         ──► 5-Class Intensity Pattern               │
+│    ├── CNN + LSTM       ──► Wind Speed (kt) & Pressure (hPa)        │
+│    ├── Seq2Seq LSTM     ──► 24h Future Path (8 × 3h steps)         │
+│    ├── Fusion MLP       ──► Multi-Source Late Fusion                │
+│    └── Grad-CAM Engine  ──► Visual Explainability Heatmap           │
+│  GDACS/Open-Meteo Real-Time Fetchers  ·  15-min Cache               │
+│  SQLAlchemy 2.0 ORM  ·  SQLite (dev) / PostgreSQL (prod)            │
+└───────────────────────────────┬─────────────────────────────────────┘
+                                │  REST API  /api/v1/*
+                                ▼
+┌─────────────────────────────────────────────────────────────────────┐
+│            NEXT.JS 14 FRONTEND  ·  PORT 3000                        │
+├─────────────────────────────────────────────────────────────────────┤
+│  7 Navigation Routes  ·  Dark/Light Theme  ·  MoES Branding         │
+│  Leaflet Interactive GIS Maps  ·  NASA GIBS WMTS Tiles              │
+│  Recharts (Perf. Benchmarks)  ·  react-hot-toast Notifications      │
+│  1-Second Live Telemetry Ticker  ·  GDACS Auto-Refresh (5 min)      │
+│  Data Provenance Badges (OBSERVED / HISTORICAL / PREDICTED)         │
+└─────────────────────────────────────────────────────────────────────┘
 ```
 
 ---
 
 ## 📡 REST API Reference
 
-The FastAPI backend automatically generates interactive Swagger OpenAPI documentation available at **`/docs`** (or ReDoc at **`/redoc`**).
+Swagger UI: **`http://localhost:8000/docs`** · ReDoc: **`http://localhost:8000/redoc`**
+
+### AI Inference Endpoints
+```
+POST /api/v1/analyze              — Unified pipeline (Detection + Classification + Intensity + Track + Grad-CAM)
+POST /api/v1/detection/predict    — EfficientNet-B0 binary detection only
+POST /api/v1/classification/predict — ResNet50 5-class classification only
+POST /api/v1/intensity/predict    — CNN+LSTM wind speed & pressure regression
+POST /api/v1/track/predict        — Seq2Seq LSTM 24h trajectory forecast
+```
 
 ### Real-Time Telemetry Endpoints
-- `GET /api/v1/realtime/cyclones` — Fetch active global cyclones from GDACS RSS feed (supports `?indian_ocean_only=true`).
-- `GET /api/v1/realtime/weather?lat=15.5&lon=72.0` — Surface weather, sea temperature, and wind at specific coordinates.
-- `GET /api/v1/realtime/ocean-grid` — Real-time telemetry for 12 marine stations across Arabian Sea & Bay of Bengal.
-- `GET /api/v1/realtime/live-feed` — High-frequency 1-second telemetry stream with instant gust calculations.
-- `GET /api/v1/realtime/status` — Data source health, cache age, and connectivity status.
+```
+GET  /api/v1/realtime/cyclones    — Active global cyclones from GDACS RSS (?indian_ocean_only=true)
+GET  /api/v1/realtime/weather     — Surface weather at any lat/lon (Open-Meteo)
+GET  /api/v1/realtime/ocean-grid  — 12-station Indian Ocean marine snapshot
+GET  /api/v1/realtime/live-feed   — 1-second high-frequency telemetry stream
+GET  /api/v1/realtime/status      — Cache age & data source health
+```
 
-### AI Inference & Forecasting Endpoints
-- `POST /api/v1/analyze` — **Unified AI Pipeline**: Upload image $\rightarrow$ Detection $\rightarrow$ Classification $\rightarrow$ Intensity $\rightarrow$ Track $\rightarrow$ Grad-CAM.
-- `POST /api/v1/detection/predict` — EfficientNet-B0 binary cyclone classification.
-- `POST /api/v1/classification/predict` — ResNet50 5-class intensity pattern classification.
-- `POST /api/v1/intensity/predict` — CNN+LSTM numerical wind speed and pressure estimation.
-- `POST /api/v1/track/predict` — Seq2Seq LSTM 24-hour future track trajectory forecast.
-- `GET /api/v1/models` — Registered model registry, status (`loaded`), and benchmark metrics.
-
-### Historical Climatology Endpoints
-- `GET /api/v1/cyclones` — Query historical IBTrACS storms by basin (`NI`, `SI`, `WP`, `NA`), name, year, or intensity.
-- `GET /api/v1/cyclones/{id}` — Retrieve complete track trajectory, peak wind speed, pressure, and timestamps.
-- `POST /api/v1/satellite/upload` — Ingest satellite imagery for processing and database storage.
+### Historical & Registry Endpoints
+```
+GET  /api/v1/cyclones             — IBTrACS storm list (filter: basin, year, intensity, name)
+GET  /api/v1/cyclones/{id}        — Full track + metrics for one cyclone
+GET  /api/v1/models               — ML model registry with benchmark metrics
+POST /api/v1/satellite/upload     — Ingest & store a satellite image
+GET  /health                      — Component health (DB + model status)
+```
 
 ---
 
-## ⚡ Quickstart & Local Installation
+## 🗂️ Project Structure
+
+```
+SIH-Project/
+├── ai/                          # PyTorch Models, Training & XAI
+│   ├── models/
+│   │   ├── detection_model.py   # EfficientNet-B0 Binary Classifier
+│   │   ├── classification_model.py # ResNet50 5-Class Classifier
+│   │   ├── intensity_model.py   # CNN+LSTM Wind/Pressure Regressor
+│   │   ├── track_model.py       # Seq2Seq LSTM Path Forecaster
+│   │   └── fusion_model.py      # Late Fusion MLP
+│   ├── inference/predictor.py   # Unified CyclonePredictor entry point
+│   ├── preprocessing/           # Image normalization & augmentation
+│   ├── datasets/                # HURSAT-B1 & IBTrACS data loaders
+│   ├── xai/gradcam.py           # Grad-CAM heatmap engine
+│   └── requirements.txt
+│
+├── backend/                     # FastAPI Application
+│   ├── app/
+│   │   ├── api/v1/              # REST API Endpoints
+│   │   │   ├── analyze.py       # Unified pipeline endpoint
+│   │   │   ├── detection.py     # Binary detection
+│   │   │   ├── classification.py # Pattern classification
+│   │   │   ├── prediction.py    # Intensity & track
+│   │   │   ├── realtime.py      # GDACS + Open-Meteo live feeds
+│   │   │   ├── cyclones.py      # IBTrACS historical API
+│   │   │   ├── satellite.py     # Satellite image upload & metadata
+│   │   │   ├── models.py        # Model registry
+│   │   │   └── health.py        # Health check
+│   │   ├── core/config.py       # Pydantic settings (env-driven)
+│   │   ├── database/            # SQLAlchemy ORM + seeders
+│   │   ├── models/cyclone.py    # ORM models
+│   │   ├── schemas/cyclone.py   # Pydantic request/response schemas
+│   │   ├── services/realtime_service.py # GDACS/Open-Meteo fetchers + cache
+│   │   ├── ml/model_manager.py  # Singleton model loader
+│   │   └── main.py              # FastAPI app entry point
+│   └── requirements.txt
+│
+├── frontend/                    # Next.js 14 Web Application
+│   ├── app/                     # App Router pages
+│   │   ├── page.tsx             # Dashboard
+│   │   ├── detection/           # Cyclone detection UI
+│   │   ├── satellite/           # AI satellite analysis + Grad-CAM
+│   │   ├── prediction/          # Track & intensity forecasting
+│   │   ├── live-satellite/      # Live storm feed hub
+│   │   ├── map/                 # Interactive Leaflet GIS map
+│   │   ├── historical/          # IBTrACS catalog
+│   │   ├── performance/         # Model benchmarks & charts
+│   │   ├── methodology/         # ML methodology docs
+│   │   └── about/               # Project info & disclaimer
+│   ├── components/
+│   │   ├── layout/Navbar.tsx    # Sticky navbar with MoES banner
+│   │   ├── layout/Footer.tsx    # Footer (Dashboard only)
+│   │   ├── ui/DataTypeBadge.tsx # OBSERVED/HISTORICAL/PREDICTED badges
+│   │   ├── ui/LiveTickerBar.tsx # 1-second telemetry ticker
+│   │   └── map/CycloneMap.tsx   # Leaflet map wrapper
+│   ├── services/                # Axios API client services
+│   ├── types/index.ts           # TypeScript type definitions
+│   └── package.json
+│
+├── data/                        # Raw / processed data directory
+├── models/                      # Trained .pth weight files (gitignored)
+├── docs/                        # Technical documentation
+├── docker-compose.yml           # 4-service orchestration
+├── render.yaml                  # Render cloud deployment
+└── README.md
+```
+
+---
+
+## ⚡ Quick Start
 
 ### Prerequisites
-- **Python**: 3.10 or higher
-- **Node.js**: 18.x or higher (`npm` or `yarn`)
-- **Git**
+- Python 3.10+
+- Node.js 18+
+- Git
 
----
-
-### Option 1: Manual Local Setup
+### Option 1: Manual Setup
 
 #### 1. Clone the Repository
 ```bash
@@ -241,104 +248,145 @@ cd Cyclone-AI
 #### 2. Backend Setup
 ```bash
 cd backend
-
-# Create and activate virtual environment
 python -m venv venv
 
-# On Windows:
+# Windows
 venv\Scripts\activate
-# On Linux/macOS:
+# Linux / macOS
 source venv/bin/activate
 
-# Install Python dependencies
 pip install -r requirements.txt
 
-# Initialize & Seed Database (Sample Cyclones + Model Benchmarks)
-python -m app.database.init_db
-
-# Run FastAPI backend server
+# Start backend (auto-seeds DB with sample cyclones)
 uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
 ```
-*Backend will be running at [http://localhost:8000](http://localhost:8000) (Swagger Docs at `/docs`).*
+Backend runs at **http://localhost:8000** · Swagger docs at **http://localhost:8000/docs**
 
 #### 3. Frontend Setup
-In a new terminal window:
 ```bash
 cd frontend
-
-# Install Node dependencies
 npm install
-
-# Start Next.js development server
 npm run dev
 ```
-*Frontend will be running at [http://localhost:3000](http://localhost:3000).*
+Frontend runs at **http://localhost:3000**
 
 ---
 
-### Option 2: Run with Docker Compose
-
-Run the entire full-stack platform (FastAPI + Next.js) with a single command:
+### Option 2: Docker Compose (Full Stack)
 ```bash
 docker-compose up --build
 ```
-- **Web App**: [http://localhost:3000](http://localhost:3000)
-- **API Server & Swagger**: [http://localhost:8000/docs](http://localhost:8000/docs)
+- **Frontend:** http://localhost:3000
+- **Backend + Swagger:** http://localhost:8000/docs
+- **PostgreSQL:** localhost:5432
+- **Redis:** localhost:6379
 
 ---
 
-## ⚙️ Environment Variables Configuration
+## ⚙️ Environment Variables
 
-Create a `.env` file in the root or `backend/` directory (see `.env.example`):
+Create a `.env` file in the project root (see `.env.example`):
 
 ```env
-# Application Settings
-PROJECT_NAME="Tropical Cyclone AI Platform"
-ENVIRONMENT="development"
+# Application
+APP_ENV=development
 DEBUG=True
-API_V1_STR="/api/v1"
 
-# Database Configuration (SQLite by default; PostgreSQL for production)
-DATABASE_URL="sqlite:///./cyclone_ai.db"
-# DATABASE_URL="postgresql://user:password@localhost:5432/cyclone_db"
+# Database (SQLite for dev, PostgreSQL for prod)
+DATABASE_URL=sqlite:///./cyclone_demo.db
+# DATABASE_URL=postgresql://user:password@localhost:5432/cyclone_db
 
-# CORS Allowed Origins
-CORS_ORIGINS=["http://localhost:3000","https://cyclone-ai-sih.vercel.app"]
+# Backend
+BACKEND_HOST=0.0.0.0
+BACKEND_PORT=8000
+ALLOWED_ORIGINS=http://localhost:3000,http://127.0.0.1:3000
 
-# AI / ML Model Settings
-MODELS_DIR="./models"
-USE_MOCK_MODELS=False
-DEVICE="cpu" # or "cuda"
+# ML Models (optional — demo mode runs without weights)
+MODEL_BASE_PATH=./models
+INFERENCE_DEVICE=cpu
 
-# External Data Feeds
-GDACS_RSS_URL="https://www.gdacs.org/xml/rss.xml"
-OPEN_METEO_BASE_URL="https://marine-api.open-meteo.com/v1/marine"
-NASA_GIBS_WMTS_URL="https://gibs.earthdata.nasa.gov/wmts/epsg3857/best/wmts.cgi"
+# File Upload
+MAX_UPLOAD_SIZE_MB=50
+UPLOAD_DIR=./data/uploads
+
+# Redis (optional)
+REDIS_URL=redis://localhost:6379/0
+```
+
+**Frontend** (`.env.local` in `frontend/`):
+```env
+NEXT_PUBLIC_API_URL=http://localhost:8000
+NEXT_PUBLIC_APP_NAME=Cyclone AI — SIH
 ```
 
 ---
 
-## 📖 In-Depth Technical Documentation
+## 📊 Data Sources
 
-For comprehensive research methodologies, model architectures, and design documentation, explore the `docs/` folder:
-
-- [📘 REST API Specification](docs/API.md) — Complete endpoint schemas, request parameters, and response bodies.
-- [🏛️ System Architecture](docs/ARCHITECTURE.md) — Detailed microservice design, lifespan management, and caching layers.
-- [🛰️ Data Sources & Ingestion](docs/DATA_SOURCES.md) — HURSAT-B1, IBTrACS, GDACS RSS, and Open-Meteo integration details.
-- [🧠 Deep Learning Methodology](docs/ML_METHODOLOGY.md) — Loss functions, convolutional backbones, LSTM cells, and Grad-CAM math.
-- [🔀 Multi-Source Sensor Fusion](docs/MULTI_SOURCE_FUSION.md) — Late fusion strategy combining multi-spectral satellite imagery.
-- [⚠️ Limitations & Scientific Boundaries](docs/LIMITATIONS.md) — Meteorological limitations, resolution constraints, and safety guidelines.
+| Source | Type | Usage |
+|:---|:---|:---|
+| [GDACS RSS](https://www.gdacs.org/xml/rss.xml) | 🟢 OBSERVED | Live active cyclone alerts on Dashboard & Live Feed |
+| [Open-Meteo Marine](https://open-meteo.com) | 🟢 OBSERVED | 12-station Indian Ocean marine grid; point weather queries |
+| [NASA GIBS WMTS](https://gibs.earthdata.nasa.gov) | 🟢 OBSERVED | MODIS/VIIRS satellite tile layers on Map & Live Feed |
+| [Windy.com](https://www.windy.com) | 🟢 OBSERVED | Wind streamlines on Live Satellite page (embedded) |
+| [IBTrACS](https://www.ncei.noaa.gov/products/international-best-track-archive) | 🔵 HISTORICAL | Best-track archive, training labels, Historical catalog |
+| [HURSAT-B1](https://www.ncei.noaa.gov/products/hursat) | 🔵 HISTORICAL | Satellite IR images for detection/classification training |
+| INSAT-3D / Kalpana-1 | 🔵 HISTORICAL | Multi-source fusion encoder (second branch) |
 
 ---
 
-## 👥 Smart India Hackathon (SIH)
+## 🛠️ Technology Stack
 
-- **Project**: Tropical Cyclone AI Platform (Cyclone AI)
-- **Theme**: Disaster Management / AI & Space Weather Applications
-- **Author / Lead**: Prince Nigam ([@Prince-Nigam](https://github.com/Prince-Nigam))
-- **Repository**: [Prince-Nigam/Cyclone-AI](https://github.com/Prince-Nigam/Cyclone-AI)
-- **License**: [MIT License](LICENSE)
+| Layer | Technology |
+|:---|:---|
+| **Frontend** | Next.js 14.2.5 (App Router), React 18, TypeScript 5.3 |
+| **Styling** | Tailwind CSS 3.4, custom CSS design tokens |
+| **Charts** | Recharts 2.10 |
+| **Maps** | Leaflet 1.9 + react-leaflet 4.2 |
+| **State** | Zustand 4.5 |
+| **HTTP Client** | Axios 1.6 |
+| **Icons** | lucide-react 0.312 |
+| **Backend** | FastAPI (Python 3.10+) |
+| **ORM** | SQLAlchemy 2.0 |
+| **Validation** | Pydantic v2 + pydantic-settings |
+| **Database (dev)** | SQLite |
+| **Database (prod)** | PostgreSQL 15 |
+| **Cache** | Redis 7 (optional) |
+| **ML Framework** | PyTorch 2.1 + torchvision |
+| **CNN Backbones** | EfficientNet-B0, ResNet50 (ImageNet pretrained) |
+| **Deployment** | Docker Compose (local) · Render (backend) · Vercel (frontend) |
+
+---
+
+## 📖 Documentation
+
+| Document | Description |
+|:---|:---|
+| [docs/API.md](docs/API.md) | Complete REST API endpoint reference |
+| [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) | System design & component interaction |
+| [docs/ML_METHODOLOGY.md](docs/ML_METHODOLOGY.md) | Deep learning architectures & loss functions |
+| [docs/DATA_SOURCES.md](docs/DATA_SOURCES.md) | Data ingestion pipeline details |
+| [docs/LIMITATIONS.md](docs/LIMITATIONS.md) | Scientific constraints & operational boundaries |
+| [docs/MULTI_SOURCE_FUSION.md](docs/MULTI_SOURCE_FUSION.md) | Late fusion strategy |
+
+---
+
+## 👤 Project Info
+
+| Field | Detail |
+|:---|:---|
+| **Project Name** | Tropical Cyclone AI Platform |
+| **Event** | Smart India Hackathon (SIH) 2026 |
+| **Organization** | Ministry of Earth Sciences (MoES), Government of India |
+| **Theme** | Disaster Management / AI & Space Weather Applications |
+| **Category** | Software |
+| **Author / Lead** | Prince Nigam · [@Prince-Nigam](https://github.com/Prince-Nigam) |
+| **Repository** | [Prince-Nigam/Cyclone-AI](https://github.com/Prince-Nigam/Cyclone-AI) |
+| **Live Demo** | [cyclone-ai-sih.vercel.app](https://cyclone-ai-sih.vercel.app) |
+| **License** | [MIT License](LICENSE) |
+
+---
 
 <div align="center">
-<sub>Built with ❤️ for the Smart India Hackathon. Dedicated to advancing meteorological AI research and disaster preparedness.</sub>
+  <sub>Built for Smart India Hackathon 2026 · Ministry of Earth Sciences · Advancing meteorological AI for disaster preparedness</sub>
 </div>
