@@ -177,7 +177,7 @@ export default function DashboardPage() {
     (c) => c.basin === "NI" || c.basin === "SI"
   ).length;
 
-  const STATS = [
+  const STATS = [ 
     {
       icon: ShieldAlert,
       label: "Active Cyclones",
