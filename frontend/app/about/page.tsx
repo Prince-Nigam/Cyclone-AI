@@ -9,7 +9,7 @@ import type { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "About — Cyclone AI Platform",
-  description: "About the SIH 2024 AI Cyclone Platform — MoES problem statement, approach, team and disclaimer.",
+  description: "About the SIH 2026 AI Cyclone Platform — MoES problem statement, approach, team and disclaimer.",
 };
 
 const MODULES = [

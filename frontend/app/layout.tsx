@@ -12,10 +12,10 @@ export const metadata: Metadata = {
   },
   description:
     "AI/ML based Tropical Cyclone Identification, Classification and Prediction System. " +
-    "Built for Smart India Hackathon 2024 — Ministry of Earth Sciences (MoES) problem statement. " +
+    "Built for Smart India Hackathon 2026 — Ministry of Earth Sciences (MoES) problem statement. " +
     "Features EfficientNet detection, ResNet50 classification, LSTM track forecasting & Grad-CAM XAI.",
   keywords: [
-    "cyclone detection", "tropical cyclone AI", "SIH 2024", "MoES", "GDACS",
+    "cyclone detection", "tropical cyclone AI", "SIH 2026", "MoES", "GDACS",
     "satellite imagery", "machine learning", "deep learning", "weather prediction",
     "Indian Ocean", "IBTrACS", "Smart India Hackathon",
   ],
